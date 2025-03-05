@@ -27,10 +27,12 @@ const Form = ({ players, setPlayers, submitPlayers }) => {
   return (
     <div className="inputs">
       {players.map((player, index) => (
-        <div key={index}>
+        <div key={index} className='player-input'>
+          <label htmlFor={index}>{index+1}</label>
           <input
             type="text"
             placeholder="Nombre"
+            id={index}
             value={player.name}
             onChange={(e) => handleChange(index, 'name', e.target.value)}
           />
