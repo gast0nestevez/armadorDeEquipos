@@ -59,7 +59,7 @@ const Teams = ({ teams }) => {
         )}
       </div>
 
-      <button className='copy-button' onClick={copyToClipboard}>Copiar equipos</button>
+      <button className='action-button copy-button' onClick={copyToClipboard}>Copiar equipos</button>
 
       {copyMessageVisible && (
         <div className="copy-message">

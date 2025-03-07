@@ -24,6 +24,11 @@ const Form = ({ players, setPlayers, submitPlayers }) => {
     submitPlayers()
   }*/
 
+  const deletePlayer = (index) => {
+    const newPlayers = players.filter((_, playerIndex) => playerIndex !== index)
+    setPlayers(newPlayers)
+  }
+
   return (
     <div className="inputs">
       {players.map((player, index) => (
@@ -42,9 +47,12 @@ const Form = ({ players, setPlayers, submitPlayers }) => {
             value={player.skill}
             onChange={(e) => handleChange(index, 'skill', e.target.value)}
           />
+          <button className='delete-button' tabIndex="-1" onClick={() => deletePlayer(index)}>
+            <img src="delete.png" alt="delete player"/>
+          </button>
         </div>
       ))}
-      <button disabled={disabled} onClick={submitPlayers}>Armar equipos</button>
+      <button className='action-button' disabled={disabled} onClick={submitPlayers}>Armar equipos</button>
     </div>
   )
 }
