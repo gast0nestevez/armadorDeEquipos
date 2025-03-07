@@ -21,11 +21,79 @@ div.main-container {
 div.inputs {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: center/*flex-start*/;
   flex-direction: column;
   width: 50%;
   padding: 20px;
   background-color: #ffffff;
+  max-height: 100%;
+  overflow-y: scroll;
+}
+
+label {
+  min-width: 5%;
+  margin-right: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.player-input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+  margin: 2px 0;
+}
+
+input[type="text"], input[type="number"] {
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  width: 40%;
+  font-size: 16px;
+}
+
+input[type="text"]:focus, input[type="number"]:focus {
+  border-color: #66afe9;
+  outline: none;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+button {
+  padding: 10px 20px;
+  margin: 10px 5px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 200px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+button:first-of-type {
+  background-color: #0056b3;
+}
+
+button:first-of-type:hover {
+  background-color: #003f7f;
+}
+
+h1 {
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #007bff;
 }
 
 /* Right Section (Equipos) */
@@ -65,67 +133,4 @@ div.teams {
   padding: 5px 0;
   font-size: 16px;
   color: #555;
-}
-
-input[type="text"], input[type="number"] {
-  padding: 10px;
-  border: 2px solid #ccc;
-  border-radius: 4px;
-  width: 40%;
-  font-size: 16px;
-}
-
-input[type="text"]:focus, input[type="number"]:focus {
-  border-color: #66afe9;
-  outline: none;
-}
-
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.player-input {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 2px 0;
-}
-
-label {
-  margin-right: 10px;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-button {
-  padding: 10px 20px;
-  margin: 10px 5px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  width: 200px;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-button:first-of-type {
-  background-color: #0056b3;
-}
-
-button:first-of-type:hover {
-  background-color: #003f7f;
-}
-
-h1 {
-  font-weight: bold;
-  margin-bottom: 20px;
-  text-align: center;
-  color: #007bff;
 }
