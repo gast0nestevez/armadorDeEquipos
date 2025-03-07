@@ -5,7 +5,7 @@ import Form from './Form'
 import Teams from './Teams'
 
 function App() {
-  const [players, setPlayers] = useState([{ name: '', skill: '' }])
+  const [players, setPlayers] = useState([{ name: '', skill: '' }]/*Array.from({ length: 10 }, () => ({ name: '', skill: '' }))*/)
   const [teams, setTeams] = useState([])
 
   const submitPlayers = () => {

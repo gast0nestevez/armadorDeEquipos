@@ -31,6 +31,7 @@ const Form = ({ players, setPlayers, submitPlayers }) => {
 
   return (
     <div className="inputs">
+      <h1>Jugadores</h1>
       {players.map((player, index) => (
         <div key={index} className='player-input'>
           <label htmlFor={index}>{index+1}</label>
