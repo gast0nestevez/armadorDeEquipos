@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 function capitalize(s) {
   return String(s[0]).toUpperCase() + String(s).slice(1)
 }
 
 const Teams = ({ teams }) => {
-  const copyToClipboard = () => {
+  const [copyMessageVisible, setCopyMessageVisible] = useState(false)
+
+  function teamsToString() {
     let teamsString = ''
 
     teams.forEach((team, index) => {
@@ -19,8 +21,20 @@ const Teams = ({ teams }) => {
       }
       teamsString += '\n'
     })
-    
+    return teamsString
+  }
+
+  function showMessage() {
+    setCopyMessageVisible(true)
+    setTimeout(() => {
+      setCopyMessageVisible(false)
+    }, 2000)
+  }
+
+  const copyToClipboard = () => {
+    const teamsString = teamsToString()
     navigator.clipboard.writeText(teamsString)
+    showMessage()
   }
 
   return (
@@ -44,8 +58,14 @@ const Teams = ({ teams }) => {
           ))
         )}
       </div>
-      
+
       <button className='copy-button' onClick={copyToClipboard}>Copiar equipos</button>
+
+      {copyMessageVisible && (
+        <div className="copy-message">
+          Equipos copiados correctamente!
+        </div>
+      )}
     </div>
   )
 }
