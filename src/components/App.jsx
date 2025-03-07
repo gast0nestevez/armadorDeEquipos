@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import './App.css'
-import TeamsMaker from './algorithm'
+import '../css/App.css'
+import TeamsMaker from '../algorithm'
 import Form from './Form'
 import Teams from './Teams'
 
