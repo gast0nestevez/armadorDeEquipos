@@ -11,7 +11,7 @@ body {
 
 div.main-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: stretch;
   width: 100%;
   height: inherit;
@@ -20,8 +20,9 @@ div.main-container {
 /* Left Section (inputs) */
 div.inputs {
   display: flex;
+  flex-grow: 1;
   align-items: center;
-  justify-content: flex-start/*center*/;
+  justify-content: flex-start;
   flex-direction: column;
   width: 50%;
   padding: 10px 20px;
@@ -103,8 +104,8 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 10%;
-  min-width: 10%;
+  width: 9%;
+  min-width: 7%;
 }
 
 .delete-button img {
@@ -116,6 +117,7 @@ h1 {
 /* Right Section (Equipos) */
 div.teams-details {
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
@@ -172,7 +174,7 @@ div.teams {
   left: 50%;
   transform: translateX(-50%);
   background-color: #28a745;
-  color: white;
+  color: #ffffff;
   padding: 10px 20px;
   border-radius: 4px;
   font-size: 16px;
@@ -182,4 +184,25 @@ div.teams {
 
 .copy-message.fade {
   opacity: 0;
+}
+
+@media (max-width: 850px) {
+  div.inputs, div.teams-details {
+    width: 100%;
+  }
+
+  .player-input {
+    width: 50%;
+  }
+
+  div.main-container {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .player-input {
+    width: 80%;
+  }
 }
