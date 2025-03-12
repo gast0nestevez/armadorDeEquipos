@@ -8,11 +8,10 @@ const Form = ({ players, setPlayers, submitPlayers }) => {
     newPlayers[index][field] = value
     setPlayers(newPlayers)
   
-    // Automatically add a new player if the last one is fully filled
+    // Automatically add a new input if the last onw is being filled
     if (
       index === players.length - 1 && 
-      newPlayers[index].name.trim() !== '' &&
-      newPlayers[index].skill.trim() !== ''
+      newPlayers[index].name.trim() !== ''
     ) {
       setPlayers([...newPlayers, { name: '', skill: '' }])
     }
