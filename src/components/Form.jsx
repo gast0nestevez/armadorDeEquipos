@@ -1,33 +1,18 @@
 import React, { useState } from 'react'
+import usePlayers from '../hooks/usePlayers'
 
-const Form = ({ players, setPlayers, submitPlayers }) => {
+const Form = ({ players, handleChange, deletePlayer, submitPlayers }) => {
   const [disabled, setDisabled] = useState(false)
 
-  const handleChange = (index, field, value) => {
-    const newPlayers = [...players]
-    newPlayers[index][field] = value
-    setPlayers(newPlayers)
-  
-    // Automatically add a new player if the last one is fully filled
-    if (
-      index === players.length - 1 && 
-      newPlayers[index].name.trim() !== '' &&
-      newPlayers[index].skill.trim() !== ''
-    ) {
-      setPlayers([...newPlayers, { name: '', skill: '' }])
-    }
-  }
-
   /*const submitPressed = () => {
+    const valid_players = players
+      .filter(player => player.name.trim() !== '' && player.skill.trim() !== '')
+      .map(player => ({ name: player.name, skill: Number(player.skill) }))
+
     setDisabled(true)
     setTimeout(() => setDisabled(false), 100)
-    submitPlayers()
+    submitPlayers(valid_players)
   }*/
-
-  const deletePlayer = (index) => {
-    const newPlayers = players.filter((_, playerIndex) => playerIndex !== index)
-    setPlayers(newPlayers)
-  }
 
   return (
     <div className="inputs">

@@ -7,24 +7,16 @@ function capitalize(s) {
 const Teams = ({ teams }) => {
   const [copyMessageVisible, setCopyMessageVisible] = useState(false)
 
-  function teamsToString() {
-    let teamsString = ''
-
-    teams.forEach((team, index) => {
-      teamsString += `Equipo ${index + 1}:\n`
-      if (team.players.length === 0) {
-        teamsString += '  Sin jugadores\n'
-      } else {
-        team.players.forEach((player) => {
-          teamsString += `  - ${capitalize(player.name)}\n`
-        })
-      }
-      teamsString += '\n'
-    })
-    return teamsString
+  const teamsToString = () => {
+    return teams.map((team, index) => 
+      `Equipo ${index + 1}:\n` + 
+      (team.players.length === 0 
+        ? '  Sin jugadores\n' 
+        : team.players.map(player => `  - ${capitalize(player.name)}`).join('\n'))
+    ).join('\n\n')
   }
 
-  function showMessage() {
+  const showMessage = () => {
     setCopyMessageVisible(true)
     setTimeout(() => {
       setCopyMessageVisible(false)
@@ -32,8 +24,7 @@ const Teams = ({ teams }) => {
   }
 
   const copyToClipboard = () => {
-    const teamsString = teamsToString()
-    navigator.clipboard.writeText(teamsString)
+    navigator.clipboard.writeText(teamsToString())
     showMessage()
   }
 
