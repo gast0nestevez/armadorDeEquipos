@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import usePlayers from '../hooks/usePlayers'
 
 const Form = ({ players, handleChange, deletePlayer, submitPlayers }) => {
   const [disabled, setDisabled] = useState(false)

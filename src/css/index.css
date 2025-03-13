@@ -1,14 +1,11 @@
-/* index.css or within <style> in index.html */
-
-/* Ensure the root container occupies full width and height */
 html, body {
   margin: 0;
   padding: 0;
-  height: 100%;  /* Make sure body and html take full height */
-  width: 100%;   /* Make sure body and html take full width */
+  height: 100%;
+  width: 100%;
 }
 
 #root {
-  height: 100%;  /* Make sure #root occupies full height */
-  width: 100%;   /* Make sure #root occupies full width */
+  height: 100%;
+  width: 100%;
 }

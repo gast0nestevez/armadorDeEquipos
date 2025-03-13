@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import '../css/App.css'
+import '../css/classic.css'
 import TeamsMaker from '../algorithm'
 import usePlayers from '../hooks/usePlayers'
-import Form from './Form'
-import Teams from './Teams'
+import Form from '../components/Form'
+import Teams from '../components/Teams'
 
 function App() {
   const { players, setPlayers, handleChange, deletePlayer } = usePlayers([{ name: '', skill: '' }]/*Array.from({ length: 10 }, () => ({ name: '', skill: '' }))*/)

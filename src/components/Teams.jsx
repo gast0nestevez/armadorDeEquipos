@@ -11,7 +11,7 @@ const Teams = ({ teams }) => {
     return teams.map((team, index) => 
       `Equipo ${index + 1}:\n` + 
       (team.players.length === 0 
-        ? '  Sin jugadores\n' 
+        ? 'Sin jugadores\n' 
         : team.players.map(player => `  - ${capitalize(player.name)}`).join('\n'))
     ).join('\n\n')
   }
