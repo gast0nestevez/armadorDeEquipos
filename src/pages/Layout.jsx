@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import '../css/Layout.css'
+import '../css/layout.css'
 
 const Layout = () => {
   return (
@@ -13,7 +13,7 @@ const Layout = () => {
         <h3>Modos</h3>
         <ul>
           <li>
-            <Link to="/classic">Clásico (2 equipos)</Link>
+            <Link to="/clasico">Clásico (2 equipos)</Link>
           </li>
           {/*
           <li>
