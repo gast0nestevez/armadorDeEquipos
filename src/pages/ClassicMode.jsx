@@ -5,7 +5,7 @@ import usePlayers from '../hooks/usePlayers'
 import Form from '../components/Form'
 import Teams from '../components/Teams'
 
-function App() {
+function ClassicMode() {
   const { players, setPlayers, handleChange, deletePlayer } = usePlayers([{ name: '', skill: '' }]/*Array.from({ length: 10 }, () => ({ name: '', skill: '' }))*/)
   const [teams, setTeams] = useState([])
 
@@ -34,4 +34,4 @@ function App() {
   )
 }
 
-export default App
+export default ClassicMode
