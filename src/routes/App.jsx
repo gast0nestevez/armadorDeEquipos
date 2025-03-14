@@ -1,0 +1,47 @@
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
+import { AnimatePresence, motion } from 'framer-motion'
+import Home from '../pages/Home'
+import ClassicMode from '../pages/ClassicMode'
+
+const pageVariants = {
+  initial: { opacity: 0, x: -20 },
+  animate: { opacity: 1, x: 0, transition: { duration: 0.1 } },
+  exit: { opacity: 0, x: 20, transition: { duration: 0.1 } }
+}
+
+function PageWrapper({ children }) {
+  return (
+    <motion.div
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={pageVariants}
+      style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+function AnimatedRoutes() {
+  const location = useLocation()
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
+        <Route path="/clasico" element={<PageWrapper><ClassicMode /></PageWrapper>} />
+      </Routes>
+    </AnimatePresence>
+  )
+}
+
+function App() {
+  return (
+    <Router>
+      <AnimatedRoutes />
+    </Router>
+  )
+}
+
+export default App
