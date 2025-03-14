@@ -4,11 +4,14 @@ import '../css/home.css'
 const Home = () => {
   return (
     <div className="home-page">
-      <h1>
-        <span>Armá</span>
-        <span>Tus</span>
-        <span>Equipos</span>
-      </h1>
+      <div className="title-and-desc">
+        <h1>
+          <span>Armá</span>
+          <span>Tus</span>
+          <span>Equipos</span>
+        </h1>
+        <p>Puntúa a tus amigos y generá equipos balanceados en segundos.</p>
+      </div>
       <nav>
         <h3>Modos</h3>
         <ul>

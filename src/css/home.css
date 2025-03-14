@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -14,18 +18,33 @@ body {
   height: 100vh;
 }
 
-.home-page h1 {
-  align-self: center;
+.title-and-desc {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 50%;
-  font-size: 100px;
+  height: inherit;
+  margin: 0;
+}
+
+.title-and-desc h1 {
+  font-size: 80px;
   text-align: center;
   white-space: normal;
-  margin: 0;
+  margin: 30px 30px;
   color: #333;
 }
 
-.home-page h1 span {
+.title-and-desc h1 span {
   display: block;
+}
+
+.title-and-desc p {
+  font-size: 22px;
+  text-align: center;
+  margin: 0 40px;
+  color: #333;
 }
 
 nav {
@@ -83,13 +102,20 @@ a:hover {
     height: 100vh;
   }
 
-  .home-page h1 {
+  .title-and-desc {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    font-size: 50px;
     width: 100%;
     height: 50%;
+  }
+
+  .title-and-desc h1 {
+    font-size: 50px;
+  }
+
+  .title-and-desc p {
+    display: none;
   }
 
   nav {
