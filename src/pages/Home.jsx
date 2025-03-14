@@ -10,7 +10,7 @@ const Home = () => {
           <span>Tus</span>
           <span>Equipos</span>
         </h1>
-        <p>Puntúa a tus amigos y generá equipos balanceados en segundos.</p>
+        <p>Puntuá a tus amigos y generá equipos balanceados en segundos.</p>
       </div>
       <nav>
         <h3>Modos</h3>
