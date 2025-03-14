@@ -8,7 +8,7 @@ body {
   background-color: #f9f9fb;
 }
 
-div.main-container {
+.main-container {
   display: flex;
   justify-content: center;
   align-items: stretch;
@@ -114,7 +114,7 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 /* Right Section (Equipos) */
-div.teams-details {
+.teams-details {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -179,6 +179,7 @@ div.teams-details {
   top: 20px;
   left: 50%;
   font-size: 16px;
+  text-align: center;
   border-radius: 4px;
   padding: 10px 20px;
   color: #f9f9fb;
@@ -193,7 +194,7 @@ div.teams-details {
 }
 
 @media (max-width: 850px) {
-  div.inputs, div.teams-details {
+  .inputs, .teams-details {
     width: 100%;
   }
 
@@ -201,18 +202,27 @@ div.teams-details {
     width: 50%;
   }
 
-  div.main-container {
+  .main-container {
     flex-direction: column;
     align-items: center;
   }
 }
 
 @media (max-width: 600px) {
+  .inputs {
+    min-height: 50%;
+    padding: 20px;
+  }
+
   .player-input {
     width: 80%;
   }
 
   .teams-details {
     min-height: 50%;
+  }
+
+  .team-container {
+    width: 45%;
   }
 }
