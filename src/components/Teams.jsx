@@ -12,7 +12,10 @@ const Teams = ({ teams }) => {
       `Equipo ${index + 1}:\n` + 
       (team.players.length === 0 
         ? 'Sin jugadores\n' 
-        : team.players.map(player => `  - ${capitalize(player.name)}`).join('\n'))
+        : team.players
+            .sort()
+            .map(player => `  - ${capitalize(player.name)}`)
+            .join('\n'))
     ).join('\n\n')
   }
 
@@ -40,9 +43,11 @@ const Teams = ({ teams }) => {
             <div key={index} className="team-container">
               <h3>Equipo {index + 1}</h3>
               <ul>
-                {team.players.map((player, i) => (
-                  <li key={i}>{capitalize(player.name)}</li>
-                ))}
+                {team.players
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map((player, i) => (
+                    <li key={i}>{capitalize(player.name)}</li>
+                  ))}
                 {team.players.length === 0 && <li>Sin jugadores</li>}
               </ul>
             </div>
@@ -50,7 +55,9 @@ const Teams = ({ teams }) => {
         )}
       </div>
 
-      <button className='action-button copy-button' onClick={copyToClipboard}>Copiar equipos</button>
+      <button className='action-button copy-button' onClick={copyToClipboard}>
+        Copiar equipos
+      </button>
 
       {copyMessageVisible && (
         <div className="copy-message">
