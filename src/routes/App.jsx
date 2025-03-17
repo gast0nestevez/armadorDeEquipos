@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
+import { Analytics } from '@vercel/analytics/react'
+
 import Home from '../pages/Home'
 import ClassicMode from '../pages/ClassicMode'
 
@@ -19,6 +21,7 @@ function PageWrapper({ children }) {
       style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}
     >
       {children}
+      <Analytics />
     </motion.div>
   )
 }
