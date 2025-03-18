@@ -35,11 +35,7 @@ const Teams = ({ teams, loading }) => {
   return (
     <div className="teams-details">
       <div className="teams">
-        {teams.length === 0 ? (
-          <div className="team-container">
-            <h3>Acá van a estar tus equipos</h3>
-          </div>
-        ) : (
+        {(
           teams.map((team, index) => (
             <div key={index} className="team-container">
               <h3>Equipo {index + 1}</h3>

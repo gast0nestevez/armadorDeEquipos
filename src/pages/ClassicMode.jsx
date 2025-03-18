@@ -6,9 +6,9 @@ import Form from '../components/Form'
 import Teams from '../components/Teams'
 
 function ClassicMode() {
-  const { players, setPlayers, handleChange, deletePlayer } = usePlayers([{ name: '', skill: '' }]/*Array.from({ length: 10 }, () => ({ name: '', skill: '' }))*/)
+  const { players, setPlayers, handleChange, deletePlayer } = usePlayers([{ name: '', skill: '' }])
+  const [teams, setTeams] = useState([{ players: [], skill: '' }, { players: [], skill: '' }])
   const [loading, setLoading] = useState(false)
-  const [teams, setTeams] = useState([])
 
   const submitPlayers = () => {
     setLoading(true)
