@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+const LIMIT = 25
+
 function usePlayers(initialPlayers = [{ name: '', skill: '' }]) {
   const [players, setPlayers] = useState(initialPlayers)
 
@@ -11,7 +13,8 @@ function usePlayers(initialPlayers = [{ name: '', skill: '' }]) {
     // Automatically add a new input if the last one is being filled
     if (
       index === players.length - 1 &&
-      newPlayers[index].name.trim() !== ''
+      newPlayers[index].name.trim() !== '' &&
+      index < LIMIT
     ) {
       setPlayers([...newPlayers, { name: '', skill: '' }])
     }
