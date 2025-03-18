@@ -7,16 +7,23 @@ import Teams from '../components/Teams'
 
 function ClassicMode() {
   const { players, setPlayers, handleChange, deletePlayer } = usePlayers([{ name: '', skill: '' }]/*Array.from({ length: 10 }, () => ({ name: '', skill: '' }))*/)
+  const [loading, setLoading] = useState(false)
   const [teams, setTeams] = useState([])
 
   const submitPlayers = () => {
+    setLoading(true)
+
     const valid_players = players
       .filter(player => player.name.trim() !== '' && player.skill.trim() !== '')
       .map(player => ({ name: player.name, skill: Number(player.skill) }))
 
     const teamsMaker = new TeamsMaker()
-    const result = teamsMaker.makeTeams(valid_players)
-    setTeams(result)
+    
+    setTimeout(() => {
+      const result = teamsMaker.makeTeams(valid_players)
+      setTeams(result)
+      setLoading(false)
+    }, 10)
   }
 
   return (
@@ -29,6 +36,7 @@ function ClassicMode() {
       />
       <Teams
         teams={teams}
+        loading={loading}
       />
     </div>
   )

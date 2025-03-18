@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
+import Loader from './Loader'
 
 function capitalize(s) {
   return String(s[0]).toUpperCase() + String(s).slice(1)
 }
 
-const Teams = ({ teams }) => {
+const Teams = ({ teams, loading }) => {
   const [copyMessageVisible, setCopyMessageVisible] = useState(false)
 
   const teamsToString = () => {
@@ -42,14 +43,21 @@ const Teams = ({ teams }) => {
           teams.map((team, index) => (
             <div key={index} className="team-container">
               <h3>Equipo {index + 1}</h3>
-              <ul>
-                {team.players
-                  .sort((a, b) => a.name.localeCompare(b.name))
-                  .map((player, i) => (
-                    <li key={i}>{capitalize(player.name)}</li>
-                  ))}
-                {team.players.length === 0 && <li>Sin jugadores</li>}
-              </ul>
+              {loading ? (
+                <Loader />
+              ) : (
+                <ul>
+                  {team.players.length > 0 ? (
+                    team.players
+                      .sort((a, b) => a.name.localeCompare(b.name))
+                      .map((player, i) => (
+                        <li key={i}>{capitalize(player.name)}</li>
+                      ))
+                  ) : (
+                    <li>Sin jugadores</li>
+                  )}
+                </ul>
+              )}
             </div>
           ))
         )}
