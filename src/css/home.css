@@ -105,17 +105,19 @@ a:hover {
   .title-and-desc {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-evenly;
     width: 100%;
     height: 50%;
+    margin: 10px 0;
   }
 
   .title-and-desc h1 {
-    font-size: 50px;
+    font-size: 45px;
+    margin: 0;
   }
 
   .title-and-desc p {
-    display: none;
+    font-size: 20px;
   }
 
   nav {
