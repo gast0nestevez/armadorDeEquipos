@@ -1,11 +1,19 @@
 import { useState } from 'react'
 
-const LIMIT = 25
+const MAX_INPUTS = 25
 
 function usePlayers(initialPlayers = [{ name: '', skill: '' }]) {
   const [players, setPlayers] = useState(initialPlayers)
 
+  function limitSkillInputLength(value) {
+    return value.slice(0, 3)
+  }
+
   const handleChange = (index, field, value) => {
+    if (field === 'skill') {
+      value = limitSkillInputLength(value)
+    }
+
     const newPlayers = [...players]
     newPlayers[index][field] = value
     setPlayers(newPlayers)
@@ -14,7 +22,7 @@ function usePlayers(initialPlayers = [{ name: '', skill: '' }]) {
     if (
       index === players.length - 1 &&
       newPlayers[index].name.trim() !== '' &&
-      index < LIMIT
+      index < MAX_INPUTS
     ) {
       setPlayers([...newPlayers, { name: '', skill: '' }])
     }
