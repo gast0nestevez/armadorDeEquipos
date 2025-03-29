@@ -9,10 +9,21 @@ function usePlayers(initialPlayers = [{ name: '', skill: '' }]) {
     return value.slice(0, 3)
   }
 
-  const handleChange = (index, field, value) => {
+  function removeUnsafeCharacters(input) {
+    return input.replace(/[^a-zA-Z0-9 _-]/g, "")
+  }
+
+  function validateValue(value, field) {
     if (field === 'skill') {
       value = limitSkillInputLength(value)
+    } else {
+      value = removeUnsafeCharacters(value)
     }
+    return value
+  }
+
+  const handleChange = (index, field, value) => {
+    value = validateValue(value, field)
 
     const newPlayers = [...players]
     newPlayers[index][field] = value
