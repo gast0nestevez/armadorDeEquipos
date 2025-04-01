@@ -16,7 +16,8 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers }) => {
             onChange={(e) => handleChange(index, 'name', e.target.value)}
           />
           <input
-            type="number"
+            type="text"
+            inputMode="numeric"
             placeholder="Puntaje"
             value={player.skill}
             onChange={(e) => handleChange(index, 'skill', e.target.value)}

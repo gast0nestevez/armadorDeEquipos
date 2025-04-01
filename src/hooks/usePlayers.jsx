@@ -6,7 +6,7 @@ function usePlayers(initialPlayers = [{ name: '', skill: '' }]) {
   const [players, setPlayers] = useState(initialPlayers)
 
   function limitSkillInputLength(value) {
-    return value.slice(0, 3)
+    return value.replace(/[^0-9]/g, '').slice(0, 3)
   }
 
   function removeUnsafeCharacters(input) {
