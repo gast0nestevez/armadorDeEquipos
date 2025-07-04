@@ -28,7 +28,11 @@ class TeamsMaker {
     // Randomize input to get different teams each run
     this.playersData.sort(() => Math.random() - 0.5)
     
-    this.findMinDiffTeams()
+    // Fix first player in team1
+    const team1 = new Team()
+    const team2 = new Team()
+    team1.addToTeam(this.playersData[0])
+    this.findMinDiffTeams(team1, team2, 1)
     return [
       { players: this.finalTeam1.players, skill: this.finalTeam1.skill },
       { players: this.finalTeam2.players, skill: this.finalTeam2.skill }
@@ -58,6 +62,14 @@ class TeamsMaker {
     }
   }
 
+  tryAddPlayer(targetTeam, otherTeam, index, player) {
+    if (this.teamIsNotFull(targetTeam)) {
+      targetTeam.addToTeam(player)
+      this.findMinDiffTeams(targetTeam, otherTeam, index + 1)
+      targetTeam.removeFromTeam(player)
+    }
+  }
+
   teamIsNotFull(team) {
     return team.players.length < Math.ceil(this.playersData.length / 2)
   }
@@ -70,20 +82,8 @@ class TeamsMaker {
     }
 
     const currentPlayer = this.playersData[index]
-
-    // Add player to team 1
-    if (this.teamIsNotFull(team1)) {
-      team1.addToTeam(currentPlayer)
-      this.findMinDiffTeams(team1, team2, index + 1)
-      team1.removeFromTeam(currentPlayer)
-    }
-    
-    // Add player to team 2
-    if (this.teamIsNotFull(team2)) {
-      team2.addToTeam(currentPlayer)
-      this.findMinDiffTeams(team1, team2, index + 1)
-      team2.removeFromTeam(currentPlayer)
-    }
+    this.tryAddPlayer(team1, team2, index, currentPlayer)
+    this.tryAddPlayer(team2, team1, index, currentPlayer)
   }
 }
 
