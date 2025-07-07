@@ -1,89 +1,84 @@
-const STARTING_DIFF = 1000
-
-class Team {
-  constructor() {
-    this.players = []
-    this.skill = 0
-  }
-
-  addToTeam(player) {
-    this.players.push(player)
-    this.skill += player.skill
-  }
-
-  removeFromTeam(player) {
-    this.players = this.players.filter(p => p !== player)
-    this.skill -= player.skill
-  }
-}
-
 class TeamsMaker {
-  constructor() {
-    this.resetAttributes()
+  resetAttributes(players) {
+    // Get different teams each run
+    this.players = this.randomizePlayers(players)
+
+    this.playersLength = this.players.length
+    this.halfPlayersLength = Math.floor(this.playersLength / 2)
+    this.totalSkill = players.reduce((sum, player) => sum + player.skill, 0)
+    this.maxSkillPerTeam = Math.floor(this.totalSkill / 2)
+  }
+  
+  randomizePlayers(players) {
+    return players.sort(() => Math.random() - 0.5)
   }
 
-  makeTeams(playersData) {
-    this.resetAttributes(playersData)
+  makeTeams(players) {
+    this.resetAttributes(players)
     
-    // Randomize input to get different teams each run
-    this.playersData.sort(() => Math.random() - 0.5)
-    
-    // Fix first player in team1
-    const team1 = new Team()
-    const team2 = new Team()
-    team1.addToTeam(this.playersData[0])
-    this.findMinDiffTeams(team1, team2, 1)
+    // Space for 0 to half of players length
+    const memo = Array.from({ length: this.halfPlayersLength + 1 }, () => new Map())
+    this.fillMemoTable(memo)
+
+    const bestSum = this.findClosestSumToOptimal(memo)
+    const { team1, team2 } = this.buildTeams(memo, bestSum) 
+
     return [
-      { players: this.finalTeam1.players, skill: this.finalTeam1.skill },
-      { players: this.finalTeam2.players, skill: this.finalTeam2.skill }
+      { players: team1, skill: team1.reduce((sum, player) => sum + player.skill, 0) },
+      { players: team2, skill: team2.reduce((sum, player) => sum + player.skill, 0) }
     ]
   }
 
-  getMinDiff() {
-    return this.minDiff
-  }
+  fillMemoTable(memo) {
+    // Zero players, zero skill sum
+    memo[0].set(0, new Set())
 
-  resetAttributes(playersData = []) {
-    this.playersData = playersData
-    this.finalTeam1 = new Team()
-    this.finalTeam2 = new Team()
-    this.minDiff = STARTING_DIFF
-  }
+    // memo[count] contains a map where the keys are reachable sums and the values are set of indexes of the players that make up that sum
+    // memo[3] = { 6: {0, 2} } means that using exactly 3 players, exists a sum equal to 6 formed by players at indexes 0 and 2
+    for (let i = 0; i < this.playersLength; i++) {
+      const skill = this.players[i].skill
 
-  allPlayersAssigned(index) {
-    return index === this.playersData.length
-  }
+      // Iterate backwards to avoid using the same player twice
+      for (let count = this.halfPlayersLength - 1; count >= 0; count--) {
+        for (const [sum, indexes] of memo[count]) {
+          const newSum = sum + skill
 
-  processPotentialSolution(team1, team2) {
-    if (Math.abs(team1.skill - team2.skill) < this.minDiff) {
-      this.minDiff = Math.abs(team1.skill - team2.skill)
-      this.finalTeam1 = { players: [...team1.players], skill: team1.skill }
-      this.finalTeam2 = { players: [...team2.players], skill: team2.skill }
+          // If the new sum is valid and not already added, store it
+          if (newSum <= this.maxSkillPerTeam && !memo[count + 1].has(newSum)) {
+            memo[count + 1].set(newSum, new Set(indexes).add(i))
+          }
+        }
+      }
     }
   }
 
-  tryAddPlayer(targetTeam, otherTeam, index, player) {
-    if (this.teamIsNotFull(targetTeam)) {
-      targetTeam.addToTeam(player)
-      this.findMinDiffTeams(targetTeam, otherTeam, index + 1)
-      targetTeam.removeFromTeam(player)
+  findClosestSumToOptimal(memo) {
+    let bestSum = 0
+    for (const [sum, _] of memo[this.halfPlayersLength]) {
+      if (this.newBestSum(sum, bestSum)) {
+        bestSum = sum
+      }
     }
+    return bestSum
   }
 
-  teamIsNotFull(team) {
-    return team.players.length < Math.ceil(this.playersData.length / 2)
+  newBestSum(sum, bestSum) {
+    return Math.abs(this.totalSkill - 2 * sum) < Math.abs(this.totalSkill - 2 * bestSum)
   }
 
-  findMinDiffTeams(team1 = new Team(), team2 = new Team(), index = 0) {
-    // Found a possible solution
-    if (this.allPlayersAssigned(index)) {
-      this.processPotentialSolution(team1, team2)
-      return
-    }
+  buildTeams(memo, bestSum) {
+    const team1Indexes = memo[this.halfPlayersLength].get(bestSum)
+    const team1 = []
+    const team2 = []
 
-    const currentPlayer = this.playersData[index]
-    this.tryAddPlayer(team1, team2, index, currentPlayer)
-    this.tryAddPlayer(team2, team1, index, currentPlayer)
+    for (let i = 0; i < this.playersLength; i++) {
+      if (team1Indexes.has(i)) {
+        team1.push(this.players[i])
+      } else {
+        team2.push(this.players[i])
+      }
+    }
+    return { team1, team2 }
   }
 }
 

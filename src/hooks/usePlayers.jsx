@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const MAX_INPUTS = 25
+const MAX_INPUTS = 40
 
 function usePlayers(initialPlayers = [{ name: '', skill: '' }]) {
   const [players, setPlayers] = useState(initialPlayers)
@@ -33,7 +33,7 @@ function usePlayers(initialPlayers = [{ name: '', skill: '' }]) {
     if (
       index === players.length - 1 &&
       newPlayers[index].name.trim() !== '' &&
-      index < MAX_INPUTS
+      index < MAX_INPUTS-1
     ) {
       setPlayers([...newPlayers, { name: '', skill: '' }])
     }
