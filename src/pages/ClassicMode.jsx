@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import '../css/classic.css'
 import TeamsMaker from '../algorithm'
 import usePlayers from '../hooks/usePlayers'
+import Nav from '../components/Nav'
 import Form from '../components/Form'
 import Teams from '../components/Teams'
+import '../css/classic.css'
 
 function ClassicMode() {
   const { players, setPlayers, handleChange, deletePlayer } = usePlayers([{ name: '', skill: '' }])
@@ -27,17 +28,20 @@ function ClassicMode() {
   }
 
   return (
-    <div className='main-container'>
-      <Form 
-        players={players} 
-        handleChange={handleChange} 
-        deletePlayer={deletePlayer} 
-        submitPlayers={submitPlayers} 
-      />
-      <Teams
-        teams={teams}
-        loading={loading}
-      />
+    <div className='main-container flex flex-col min-h-full max-h-full'>
+      <Nav />
+      <div className="flex flex-col md:flex-row flex-1 h-full overflow-hidden">
+        <Form 
+          players={players} 
+          handleChange={handleChange} 
+          deletePlayer={deletePlayer} 
+          submitPlayers={submitPlayers} 
+        />
+        <Teams
+          teams={teams}
+          loading={loading}
+        />
+      </div>
     </div>
   )
 }
