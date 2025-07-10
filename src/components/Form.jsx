@@ -1,6 +1,6 @@
 const Form = ({ players, handleChange, deletePlayer, submitPlayers }) => {
   return (
-    <div className="form w-full md:w-1/2 p-6 flex flex-col justify-between">
+    <div className="form w-full p-6 flex flex-col justify-between">
       <h1 className="text-3xl font-bold mb-4 text-center">Jugadores</h1>
       <div className="m-[15px] p-[8px] overflow-y-scroll">
         {players.map((player, index) => (
@@ -11,7 +11,7 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers }) => {
               placeholder="Nombre"
               maxLength="25"
               id={index}
-              className="border rounded px-3 py-2 "
+              className="border rounded px-3 py-2"
               value={player.name}
               onChange={(e) => handleChange(index, 'name', e.target.value)}
             />

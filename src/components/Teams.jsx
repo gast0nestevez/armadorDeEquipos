@@ -33,7 +33,7 @@ const Teams = ({ teams, loading }) => {
   }
 
   return (
-    <div className="teams w-full md:w-1/2 p-6 bg-blue-100 min-h-full flex flex-col justify-between">
+    <div className="teams w-full p-6 bg-blue-100 min-h-full flex flex-col justify-between">
       <h1 className="text-3xl font-bold mb-4 text-center">Equipos</h1>
       <div className="flex justify-center gap-6 flex-wrap">
         {teams.map((team, index) => (

@@ -28,6 +28,25 @@ nav {
   transition: opacity 1s ease-out;
 }
 
+@media (max-width: 500px) {
+  .main-container > div {
+    overflow: auto;
+  }
+
+  .form input {
+    width: 80%;
+    font-size: 14px;
+  }
+
+  .form div button {
+    min-width: 10%;
+  }
+
+  .teams {
+    min-height: auto;
+  }
+}
+
 /*
 body {
   display: flex;
