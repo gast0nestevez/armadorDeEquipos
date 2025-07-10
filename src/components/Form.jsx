@@ -2,9 +2,9 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers }) => {
   return (
     <div className="form w-full md:w-1/2 p-6 flex flex-col justify-between">
       <h1 className="text-3xl font-bold mb-4 text-center">Jugadores</h1>
-      <div className="m-[8px] p-[8px] overflow-auto">
+      <div className="m-[15px] p-[8px] overflow-y-scroll">
         {players.map((player, index) => (
-          <div key={index} className="flex justify-center items-center gap-2 mb-3">
+          <div key={index} className="flex justify-center items-center gap-2 mt-2 mb-2">
             <label htmlFor={index}>{index + 1}</label>
             <input
               type="text"

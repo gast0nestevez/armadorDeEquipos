@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 const Nav = () => {
   return (
     <nav className="bg-white shadow-md">
-      <div className="container mx-auto p-4 flex justify-between items-center">
+      <div className="w-full mx-auto p-4 flex justify-between items-center">
         <h2 className="text-xl font-bold">
           <Link to="/">Armador</Link>
         </h2>
