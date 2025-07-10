@@ -4,7 +4,6 @@ import usePlayers from '../hooks/usePlayers'
 import Nav from '../components/Nav'
 import Form from '../components/Form'
 import Teams from '../components/Teams'
-import '../css/classic.css'
 
 function ClassicMode() {
   const { players, setPlayers, handleChange, deletePlayer } = usePlayers([{ name: '', skill: '' }])

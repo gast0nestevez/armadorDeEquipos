@@ -5,7 +5,7 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers }) => {
       <div className="m-[15px] p-[8px] overflow-y-scroll">
         {players.map((player, index) => (
           <div key={index} className="flex justify-center items-center gap-2 mt-2 mb-2">
-            <label htmlFor={index}>{index + 1}</label>
+            <label htmlFor={index} className="min-w-[5%] mr-[10px] text-base font-bold text-center">{index + 1}</label>
             <input
               type="text"
               placeholder="Nombre"

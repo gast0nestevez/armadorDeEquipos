@@ -13,14 +13,6 @@ nav {
   color: #f9f9fb;
 }
 
-label {
-  min-width: 5%;
-  margin-right: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  text-align: center;
-}
-
 .copy-message {
   position: fixed;
   top: 20px;
@@ -35,6 +27,7 @@ label {
   transform: translateX(-50%);
   transition: opacity 1s ease-out;
 }
+
 /*
 body {
   display: flex;
