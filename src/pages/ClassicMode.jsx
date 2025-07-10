@@ -20,6 +20,12 @@ function ClassicMode() {
     const teamsMaker = new TeamsMaker()
     
     setTimeout(() => {
+      // Scroll to teams in phone
+      if (window.innerWidth < 500) {
+        const section = document.getElementById('see-teams')
+        if (section) section.scrollIntoView({ behavior: "smooth" })
+      }
+
       const result = teamsMaker.makeTeams(valid_players)
       setTeams(result)
       setLoading(false)

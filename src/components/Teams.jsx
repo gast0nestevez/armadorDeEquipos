@@ -58,7 +58,7 @@ const Teams = ({ teams, loading }) => {
         ))}
       </div>
 
-      <div className="mt-6 text-center">
+      <div className="mt-6 text-center" id='see-teams'>
         <button
           onClick={copyToClipboard}
           className="bg-blue-900 text-white px-6 py-2 rounded hover:bg-blue-800 cursor-pointer"
