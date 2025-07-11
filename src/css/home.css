@@ -28,7 +28,7 @@ nav {
   transition: opacity 1s ease-out;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   .main-container > div {
     overflow: auto;
   }
@@ -40,6 +40,11 @@ nav {
 
   .form div button {
     min-width: 10%;
+  }
+
+  .help-message {
+    position: absolute;
+    left: 15%;
   }
 
   .teams {
