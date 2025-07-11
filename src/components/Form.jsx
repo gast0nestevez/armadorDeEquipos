@@ -1,7 +1,13 @@
+import HelpMessage from "./HelpMessage"
+
 const Form = ({ players, handleChange, deletePlayer, submitPlayers }) => {
   return (
     <div className="form w-full p-6 flex flex-col justify-between">
-      <h1 className="text-3xl font-bold mb-4 text-center">Jugadores</h1>
+      <div className='flex items-center justify-center mb-4 gap-4'>
+          <h1 className="text-3xl font-bold text-center">Jugadores</h1>
+          <HelpMessage />
+      </div>
+
       <div className="m-[15px] p-[8px] overflow-y-scroll">
         {players.map((player, index) => (
           <div key={index} className="flex justify-center items-center gap-2 mt-2 mb-2">
@@ -24,7 +30,7 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers }) => {
               onChange={(e) => handleChange(index, 'skill', e.target.value)}
             />
             <button onClick={() => deletePlayer(index)} tabIndex="-1">
-              <img src="delete.png" alt="delete player" className="w-5 h-5 cursor-pointer" />
+              <img src="delete.png" alt="delete_input" className="w-5 h-5 cursor-pointer" />
             </button>
           </div>
         ))}

@@ -47,7 +47,7 @@ const Teams = ({ teams, loading }) => {
                   team.players
                     .sort((a, b) => a.name.localeCompare(b.name))
                     .map((player, i) => (
-                      <li key={i} className='py-2'>{capitalize(player.name)}</li>
+                      <li key={i} className='py-1'>{capitalize(player.name)}</li>
                     ))
                 ) : (
                   <li>Sin jugadores</li>
