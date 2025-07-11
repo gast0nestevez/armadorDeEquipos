@@ -2,7 +2,7 @@ import HelpMessage from "./HelpMessage"
 
 const Form = ({ players, handleChange, deletePlayer, submitPlayers }) => {
   return (
-    <div className="form w-full p-6 flex flex-col justify-between flex-1 relative">
+    <div className="form w-full p-6 flex flex-col justify-between max-[600px]:flex-1 relative">
       <div className='flex items-center justify-center mb-4 gap-4'>
           <h1 className="text-3xl font-bold text-center">Jugadores</h1>
           <HelpMessage />
