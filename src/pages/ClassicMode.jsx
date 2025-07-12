@@ -23,7 +23,7 @@ function ClassicMode() {
       // Scroll to teams in phone
       if (window.innerWidth < 500) {
         const section = document.getElementById('see-teams')
-        if (section) section.scrollIntoView({ behavior: "smooth" })
+        if (section) section.scrollIntoView({ behavior: 'smooth' })
       }
 
       const result = teamsMaker.makeTeams(valid_players)
@@ -33,9 +33,9 @@ function ClassicMode() {
   }
 
   return (
-    <div className='main-container flex flex-col min-h-full max-h-full'>
+    <div className='main-container flex flex-col h-full'>
       <Nav />
-      <div className="flex flex-col md:flex-row flex-1 h-full overflow-hidden">
+      <div className='flex flex-col md:flex-row flex-1 h-full overflow-hidden'>
         <Form 
           players={players} 
           handleChange={handleChange} 

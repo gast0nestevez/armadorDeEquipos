@@ -33,16 +33,16 @@ const Teams = ({ teams, loading }) => {
   }
 
   return (
-    <div className="teams w-full p-6 bg-blue-100 min-h-full flex flex-col justify-between">
-      <h1 className="text-3xl font-bold mb-4 text-center">Equipos</h1>
-      <div className="flex justify-center gap-6 flex-wrap">
+    <div className='teams flex flex-col justify-between p-6 bg-blue-100 min-h-full w-full'>
+      <h1 className='text-3xl font-bold mb-4 text-center'>Equipos</h1>
+      <div className='flex justify-center gap-6'>
         {teams.map((team, index) => (
-          <div key={index} className="bg-white shadow-md rounded-xl p-6 w-48 text-center">
-            <h3 className="text-xl font-bold mb-2">Equipo {index + 1}</h3>
+          <div key={index} className='bg-white shadow-md rounded-xl p-6 w-48 text-center'>
+            <h3 className='text-xl font-bold mb-2'>Equipo {index + 1}</h3>
             {loading ? (
               <Loader />
             ) : (
-              <ul className="text-gray-700">
+              <ul>
                 {team.players.length > 0 ? (
                   team.players
                     .sort((a, b) => a.name.localeCompare(b.name))
@@ -58,15 +58,15 @@ const Teams = ({ teams, loading }) => {
         ))}
       </div>
 
-      <div className="mt-6 text-center" id='see-teams'>
+      <div className='mt-6 text-center' id='see-teams'>
         <button
           onClick={copyToClipboard}
-          className="bg-blue-900 text-white px-6 py-2 rounded hover:bg-blue-800 cursor-pointer"
+          className='bg-blue-900 text-white px-6 py-2 rounded hover:bg-blue-800 cursor-pointer'
         >
           Copiar equipos
         </button>
         {copyMessageVisible && (
-          <div className="copy-message">Equipos copiados correctamente!</div>
+          <div className='copy-message'>Equipos copiados correctamente!</div>
         )}
       </div>
     </div>
