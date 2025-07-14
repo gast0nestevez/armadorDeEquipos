@@ -21,7 +21,7 @@ const Home = () => {
           <ul className='modos space-y-3'>
             <li>
               <Link
-                to='/clasico'
+                to='/armar'
                 className='block bg-white rounded-xl shadow hover:bg-blue-100 px-6 py-3 text-center font-medium transition'
               >
                 Por habilidad

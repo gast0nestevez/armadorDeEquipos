@@ -33,7 +33,7 @@ function AnimatedRoutes() {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
-        <Route path="/clasico" element={<PageWrapper><ClassicMode /></PageWrapper>} />
+        <Route path="/armar" element={<PageWrapper><ClassicMode /></PageWrapper>} />
       </Routes>
     </AnimatePresence>
   )
