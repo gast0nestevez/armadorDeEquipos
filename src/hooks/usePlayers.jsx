@@ -10,7 +10,13 @@ function usePlayers(initialPlayers = [{ name: '', skill: '' }]) {
   }
 
   function removeUnsafeCharacters(input) {
-    return input.replace(/[^a-zA-Z0-9 _-]/g, "")
+    const lowercase = 'a-z'
+    const uppercase = 'A-Z'
+    const digits    = '0-9'
+    const special   = 'ñÑáÁéÉíÍóÓúÚ'
+    const allowedCharacters = `[^${lowercase}${uppercase}${digits}${special} ]`
+    const regex   = new RegExp(allowedCharacters, 'g')
+    return input.replace(regex, "")
   }
 
   function validateValue(value, field) {
