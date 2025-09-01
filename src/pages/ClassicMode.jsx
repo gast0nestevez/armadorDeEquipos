@@ -3,7 +3,7 @@ import TeamsMaker from '../algorithm'
 import usePlayers from '../hooks/usePlayers'
 import Nav from '../components/Nav'
 import Form from '../components/Form'
-import Teams from '../components/Teams'
+import Teams from '../components/TeamsDisplay'
 
 function ClassicMode() {
   const { players, setPlayers, handleChange, deletePlayer } = usePlayers([{ name: '', skill: '' }])
