@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
+import '../css/home.css'
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -27,7 +28,7 @@ const Nav = () => {
         {/* desktop links */}
         <ul className='hidden md:flex gap-6'>
           <li>
-            <Link to='#' className='hover:text-blue-500'>
+            <Link to='#' className='hover:text-blue-100'>
               Guardá tus partidos
             </Link>
           </li>

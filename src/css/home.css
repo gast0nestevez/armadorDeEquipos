@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-h1, p, .modos *, .form *, .teams * {
+h1, p, .modos *, .form *, .teams *, .black-text {
   color: #333;
 }
 
