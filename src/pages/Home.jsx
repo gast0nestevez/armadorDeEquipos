@@ -16,15 +16,14 @@ const Home = () => {
         </p>
 
         <div className='w-full max-w-sm space-y-4'>
-          <div className='text-xl font-semibold mb-2'>Modos</div>
 
           <ul className='modos space-y-3'>
             <li>
               <Link
                 to='/armar'
-                className='block bg-white rounded-xl shadow hover:bg-blue-100 px-6 py-3 text-center font-medium transition'
+                className='block bg-white rounded-xl shadow hover:bg-blue-100 px-6 py-3 font-extrabold text-center font-medium transition'
               >
-                Por habilidad
+                Armar
               </Link>
             </li>
           </ul>
