@@ -6,7 +6,7 @@ import Form from '../components/Form'
 import Teams from '../components/TeamsDisplay'
 
 function ClassicMode() {
-  const { players, setPlayers, handleChange, deletePlayer } = usePlayers([{ name: '', skill: '' }])
+  const { players, handleChange, deletePlayer } = usePlayers([{ name: '', skill: '' }])
   const [teams, setTeams] = useState([{ players: [], skill: '' }, { players: [], skill: '' }])
   const [loading, setLoading] = useState(false)
 
