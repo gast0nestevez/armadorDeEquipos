@@ -3,11 +3,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import { GoogleLogin, googleLogout } from '@react-oauth/google'
 import { jwtDecode } from 'jwt-decode'
 import { Menu, X } from 'lucide-react'
+import { config } from '../../constants'
 import '../css/home.css'
 
-const API_BASE_PATH = import.meta.env.VITE_API_BASE_PATH
+const API_BASE_URL = config.apiUrl
 
 const Nav = () => {
+  console.info(config)
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
   const isLogged = localStorage.getItem('token')
@@ -35,7 +37,7 @@ const Nav = () => {
     const idToken = credentialResponse.credential
 
     // Send token to backend
-    const url = `${API_BASE_PATH}/auth`
+    const url = `${API_BASE_URL}/auth`
     const options = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -48,10 +50,11 @@ const Nav = () => {
       const result = await response.json()
       localStorage.setItem('token', result.token)
     } catch (err) {
-      console.log(err)
+      console.error(err)
       // y aca un error groso en el front
     }
     
+    setIsOpen(false)
     navigate('/')
   }
 
