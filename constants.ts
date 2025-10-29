@@ -1,7 +1,7 @@
 const production = {
   environment: 'production',
   clientId: '312146115793-rqafksbjmodtd0pcajtsd5qvam7vfeue.apps.googleusercontent.com',
-  apiUrl: 'http://localhost:3000',
+  apiUrl: 'https://armador-api.netlify.app',
 }
 
 const development = {
