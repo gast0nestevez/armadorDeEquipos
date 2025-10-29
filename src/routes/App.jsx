@@ -3,8 +3,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Analytics } from '@vercel/analytics/react'
 
 import Home from '../pages/Home'
+import Profile from '../pages/Profile'
 import MakeTeams from '../pages/MakeTeams'
-import Soon from '../pages/Soon'
 
 const pageVariants = {
   initial: { opacity: 0, x: -20 },
@@ -35,7 +35,7 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path='/' element={<PageWrapper><Home /></PageWrapper>} />
         <Route path='/armar' element={<PageWrapper><MakeTeams /></PageWrapper>} />
-        <Route path='/perfil' element={<PageWrapper><Soon /></PageWrapper>} />
+        <Route path='/perfil' element={<PageWrapper><Profile /></PageWrapper>} />
       </Routes>
     </AnimatePresence>
   )
