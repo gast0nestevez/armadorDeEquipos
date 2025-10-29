@@ -3,8 +3,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Analytics } from '@vercel/analytics/react'
 
 import Home from '../pages/Home'
-import ClassicMode from '../pages/ClassicMode'
-import Soon from '../pages/Soon'
+import Profile from '../pages/Profile'
+import MakeTeams from '../pages/MakeTeams'
 
 const pageVariants = {
   initial: { opacity: 0, x: -20 },
@@ -15,9 +15,9 @@ const pageVariants = {
 function PageWrapper({ children }) {
   return (
     <motion.div
-      initial="initial"
-      animate="animate"
-      exit="exit"
+      initial='initial'
+      animate='animate'
+      exit='exit'
       variants={pageVariants}
       style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}
     >
@@ -31,11 +31,11 @@ function AnimatedRoutes() {
   const location = useLocation()
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode='wait'>
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
-        <Route path="/armar" element={<PageWrapper><ClassicMode /></PageWrapper>} />
-        <Route path="/perfil" element={<PageWrapper><Soon /></PageWrapper>} />
+        <Route path='/' element={<PageWrapper><Home /></PageWrapper>} />
+        <Route path='/armar' element={<PageWrapper><MakeTeams /></PageWrapper>} />
+        <Route path='/perfil' element={<PageWrapper><Profile /></PageWrapper>} />
       </Routes>
     </AnimatePresence>
   )
