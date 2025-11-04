@@ -28,6 +28,21 @@ nav {
   transition: opacity 1s ease-out;
 }
 
+.error-message {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  font-size: 16px;
+  text-align: center;
+  border-radius: 4px;
+  padding: 10px 20px;
+  color: #f9f9fb;
+  background-color: #a72828;
+  opacity: 1;
+  transform: translateX(-50%);
+  transition: opacity 1s ease-out;
+}
+
 @media (max-width: 600px) {
   .main-container > div {
     overflow: auto;

@@ -12,6 +12,7 @@ const Nav = () => {
   console.info(config)
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
+  const [errorMessageVisible, setErrorMessageVisible] = useState(false)
   const isLogged = localStorage.getItem('token')
 
   /* ooooor we could just validate it in the back
@@ -48,14 +49,20 @@ const Nav = () => {
       if (!response.ok) throw new Error('Something went wrong during fetch')
       
       const result = await response.json()
+      console.log('result: ', result)
       localStorage.setItem('token', result.token)
     } catch (err) {
-      console.error(err)
-      // y aca un error groso en el front
+      console.error('Error in backend: ', err)
     }
     
     setIsOpen(false)
     navigate('/')
+  }
+
+  const handleGoogleError = (err) => {
+    console.log('asddasdsadss')
+    console.error(err)
+    showErrorMessage()
   }
 
   const handleGoogleLogout = () => {
@@ -63,6 +70,13 @@ const Nav = () => {
     localStorage.removeItem('token')
     setIsOpen(false)
     navigate('/')
+  }
+
+  const showErrorMessage = () => {
+    setErrorMessageVisible(true)
+    setTimeout(() => {
+      setErrorMessageVisible(false)
+    }, 2000)
   }
 
   return (
@@ -88,7 +102,7 @@ const Nav = () => {
               size='large'
               shape='rectangular'
               onSuccess={handleGoogleLogin}
-              onError={error => console.log(error)}
+              onError={handleGoogleError}
             >
             </GoogleLogin>
           </div>
@@ -124,7 +138,7 @@ const Nav = () => {
                 size='large'
                 shape='rectangular'
                 onSuccess={handleGoogleLogin}
-                onError={error => console.log(error)}
+                onError={handleGoogleError}
               >
               </GoogleLogin>
             </div>
@@ -150,6 +164,10 @@ const Nav = () => {
               </li>
             </ul>
           }
+
+          {errorMessageVisible && (
+            <div className='error-message'>Inicio de sesión no disponible... :(</div>
+          )}
         </div>
       )}
     </nav>
