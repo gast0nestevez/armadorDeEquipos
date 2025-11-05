@@ -40,7 +40,9 @@ const Teams = ({ teams, loading }) => {
           <div key={index} className='flex flex-col bg-white shadow-md rounded-xl p-6 w-48 text-center'>
             <h3 className='text-xl font-bold mb-2'>Equipo {index + 1}</h3>
             {loading ? (
-              <Loader />
+              <div>
+                <Loader />
+              </div>
             ) : (
               <ul className='py-1 max-h-full overflow-y-auto'>
                 {team.players.length > 0 ? (
