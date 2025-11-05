@@ -1,35 +1,22 @@
-import { useState, useEffect } from 'react'
+import { useState, useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { GoogleLogin, googleLogout } from '@react-oauth/google'
+import { googleLogout } from '@react-oauth/google'
 import { jwtDecode } from 'jwt-decode'
 import { Menu, X } from 'lucide-react'
 import { config } from '../../constants'
+import { UserContext } from '../context/userContext'
+import AuthButtons from './AuthButtons'
+import MobileAuthMenu from './MobileAuthMenu'
 import '../css/home.css'
 
 const API_BASE_URL = config.apiUrl
 
 const Nav = () => {
-  console.info(config)
   const navigate = useNavigate()
+  const { user, setUser } = useContext(UserContext)
   const [isOpen, setIsOpen] = useState(false)
   const [errorMessageVisible, setErrorMessageVisible] = useState(false)
-  const isLogged = localStorage.getItem('token')
 
-  /* ooooor we could just validate it in the back
-  // Each time a user opens the page we call the server to validate jwt
-  // Otherwise any user could just create a token in localStorage
-  useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (token) {
-      try {
-        const decoded = jwtDecode(token)
-        setUser(decoded)
-      } catch (err) {
-        console.error('Invalid token', err)
-      }
-    }
-  }, [])*/
-  
   const toggleMenu = () => {
     setIsOpen(!isOpen)
   }
@@ -49,8 +36,10 @@ const Nav = () => {
       if (!response.ok) throw new Error('Something went wrong during fetch')
       
       const result = await response.json()
-      console.log('result: ', result)
       localStorage.setItem('token', result.token)
+
+      const decoded = jwtDecode(result.token)
+      setUser(decoded)
     } catch (err) {
       console.error('Error in backend: ', err)
     }
@@ -60,23 +49,15 @@ const Nav = () => {
   }
 
   const handleGoogleError = (err) => {
-    console.log('asddasdsadss')
     console.error(err)
-    showErrorMessage()
   }
 
   const handleGoogleLogout = () => {
     googleLogout()
     localStorage.removeItem('token')
     setIsOpen(false)
+    setUser(null)
     navigate('/')
-  }
-
-  const showErrorMessage = () => {
-    setErrorMessageVisible(true)
-    setTimeout(() => {
-      setErrorMessageVisible(false)
-    }, 2000)
   }
 
   return (
@@ -86,89 +67,30 @@ const Nav = () => {
           <Link to='/'>Armador</Link>
         </h2>
 
-        {/* menu button */}
-        <button
-          onClick={toggleMenu}
-          className='md:hidden focus:outline-none'
-        >
+        {/* menu icon for mobile */}
+        <button onClick={toggleMenu} className='md:hidden focus:outline-none'>
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
-        {/* desktop links */}
-        {!isLogged &&
-          <div className='max-md:hidden md:block'>
-            <GoogleLogin
-              theme='outline'
-              size='large'
-              shape='rectangular'
-              onSuccess={handleGoogleLogin}
-              onError={handleGoogleError}
-            >
-            </GoogleLogin>
-          </div>
-        }
-        {isLogged &&
-          <ul className='hidden md:flex gap-6'>
-            <li>
-              <Link to='/perfil' className='hover:text-blue-100'>
-                Perfil
-              </Link>
-            </li>
-            <li>
-              <button
-                className='hover:text-blue-100 cursor-pointer'
-                onClick={handleGoogleLogout}
-              >
-                Cerrar sesión
-              </button>
-            </li>
-          </ul>
-        }
+        {/* desktop buttons */}
+        <AuthButtons
+          user={user}
+          onLogin={handleGoogleLogin}
+          onLogout={handleGoogleLogout}
+          onError={handleGoogleError}
+        />
       </div>
 
-      {/* mobile links */}
+      {/* mobile menu */}
       {isOpen && (
-        <div
-          className='md:hidden fixed left-0 right-0 top-[64px] bg-white border-t shadow-lg h-full bg-gray-900 z-50'
-        >
-          {!isLogged &&
-            <div className='flex justify-center align-center'>
-              <GoogleLogin
-                theme='outline'
-                size='large'
-                shape='rectangular'
-                onSuccess={handleGoogleLogin}
-                onError={handleGoogleError}
-              >
-              </GoogleLogin>
-            </div>
-          }
-          {isLogged && 
-            <ul className='flex flex-col px-4 divide-y divide-gray-400'>
-              <li>
-                <Link
-                  to='/perfil'
-                  className='block hover:text-blue-500 p-[5px] m-[5px] my-3 black-text font-bold text-center'
-                  onClick={() => setIsOpen(false)}
-                >
-                  Perfil
-                </Link>
-              </li>
-              <li>
-                <a 
-                  className='block hover:text-blue-500 p-[5px] m-[5px] my-3 black-text font-bold text-center'
-                  onClick={handleGoogleLogout}
-                >
-                  Cerrar sesión
-                </a>
-              </li>
-            </ul>
-          }
-
-          {errorMessageVisible && (
-            <div className='error-message'>Inicio de sesión no disponible... :(</div>
-          )}
-        </div>
+        <MobileAuthMenu
+          user={user}
+          onLogin={handleGoogleLogin}
+          onLogout={handleGoogleLogout}
+          onError={handleGoogleError}
+          setIsOpen={setIsOpen}
+          errorMessageVisible={errorMessageVisible}
+        />
       )}
     </nav>
   )

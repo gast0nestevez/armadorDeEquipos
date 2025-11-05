@@ -12,7 +12,8 @@ const Home = () => {
           Armá tus equipos
         </h1>
         <p className='text-lg mb-10 max-w-md'>
-          Puntuá a tus amigos y generá equipos balanceados en segundos.
+          Puntuá a tus amigos y generá equipos balanceados en segundos. <br />
+          Registrate para guardar partidos y generar estadísticas.
         </p>
 
         <div className='w-full max-w-sm space-y-4'>
