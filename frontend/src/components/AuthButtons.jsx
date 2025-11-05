@@ -5,7 +5,7 @@ const AuthButtons = ({ user, onLogin, onLogout, onError }) => {
   return (
     <div className='hidden md:flex items-center gap-6'>
       {!user ? (
-        <div className='flex justify-center items-center mt-6 google-login-wrapper'>
+        <div className='flex justify-center items-center'>
           <GoogleLogin
             theme='outline'
             size='large'
