@@ -9,7 +9,7 @@ const NavButtons = ({ user, onLogin, onError, variant='desktop', setIsOpen }) =>
     : 'hidden md:flex items-center gap-6'
 
   const ulClass = isMobile
-    ? 'flex flex-col px-4 divide-y divide-gray-400'
+    ? 'flex flex-col px-4 divide-y divide-gray-400 bg-gray-200 active:bg-gray-300'
     : 'flex gap-6'
 
   const linkClass = isMobile
