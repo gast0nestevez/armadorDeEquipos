@@ -1,3 +1,4 @@
+import { Trash2 } from 'lucide-react'
 import HelpMessage from './HelpMessage'
 
 const Form = ({ players, handleChange, deletePlayer, submitPlayers }) => {
@@ -30,10 +31,11 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers }) => {
               onChange={(e) => handleChange(index, 'skill', e.target.value)}
             />
             <button 
+              className='cursor-pointer'
               onClick={() => deletePlayer(index)}
               tabIndex='-1'
             >
-              <img src='delete.png' alt='delete_input' className='w-5 h-5 cursor-pointer' />
+              <Trash2 />
             </button>
           </div>
         ))}

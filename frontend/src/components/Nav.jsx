@@ -57,7 +57,7 @@ const Nav = () => {
         </h2>
 
         {/* menu icon for mobile */}
-        <button onClick={toggleMenu} className='md:hidden focus:outline-none'>
+        <button onClick={toggleMenu} className='md:hidden focus:outline-none cursor-pointer'>
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
