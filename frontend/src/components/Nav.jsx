@@ -1,12 +1,10 @@
 import { useState, useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { googleLogout } from '@react-oauth/google'
-import { jwtDecode } from 'jwt-decode'
 import { Menu, X } from 'lucide-react'
+import { jwtDecode } from 'jwt-decode'
 import { config } from '../../constants'
 import { UserContext } from '../context/userContext'
-import AuthButtons from './AuthButtons'
-import MobileAuthMenu from './MobileAuthMenu'
+import NavButtons from './NavButtons'
 import '../css/home.css'
 
 const API_BASE_URL = config.apiUrl
@@ -15,7 +13,6 @@ const Nav = () => {
   const navigate = useNavigate()
   const { user, setUser } = useContext(UserContext)
   const [isOpen, setIsOpen] = useState(false)
-  const [errorMessageVisible, setErrorMessageVisible] = useState(false)
 
   const toggleMenu = () => {
     setIsOpen(!isOpen)
@@ -49,15 +46,7 @@ const Nav = () => {
   }
 
   const handleGoogleError = (err) => {
-    console.error(err)
-  }
-
-  const handleGoogleLogout = () => {
-    googleLogout()
-    localStorage.removeItem('token')
-    setIsOpen(false)
-    setUser(null)
-    navigate('/')
+    console.error('Google error: ', err)
   }
 
   return (
@@ -73,23 +62,22 @@ const Nav = () => {
         </button>
 
         {/* desktop buttons */}
-        <AuthButtons
+        <NavButtons
           user={user}
           onLogin={handleGoogleLogin}
-          onLogout={handleGoogleLogout}
           onError={handleGoogleError}
+          setIsOpen={setIsOpen}
         />
       </div>
 
       {/* mobile menu */}
       {isOpen && (
-        <MobileAuthMenu
+        <NavButtons
           user={user}
           onLogin={handleGoogleLogin}
-          onLogout={handleGoogleLogout}
           onError={handleGoogleError}
+          variant='mobile'
           setIsOpen={setIsOpen}
-          errorMessageVisible={errorMessageVisible}
         />
       )}
     </nav>
