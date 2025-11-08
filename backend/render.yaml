@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: armador-backend
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: BASE_URL
+        value: https://equipo-backend.onrender.com
+      - key: MONGO_URI
+        sync: false
