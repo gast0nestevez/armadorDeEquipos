@@ -12,6 +12,8 @@ const Teams = ({ teams, loading }) => {
   const { user } = useContext(UserContext)
   const copyMessage = useFlashMessage()
   const saveMessage = useFlashMessage()
+
+  const playersNotEmpty = teams[0].players.length > 0 || teams[1].players.length > 0
   
   const teamsToString = () => {
     return teams.map((team, index) =>
@@ -72,16 +74,18 @@ const Teams = ({ teams, loading }) => {
       </div>
 
       <div className='flex justify-around mt-6 text-center' id='see-teams'>
-        <button
-          onClick={copyToClipboard}
-          className='bg-blue-900 text-white px-6 py-2 rounded hover:bg-blue-800 cursor-pointer'
-        >
-          Copiar equipos
-        </button>
-        {copyMessage.visible && (
-          <div className='flash-message'>Equipos copiados!</div>
-        )}
-        {user && 
+        {playersNotEmpty && 
+          <button
+            onClick={copyToClipboard}
+            className='bg-blue-900 text-white px-6 py-2 rounded hover:bg-blue-800 cursor-pointer'
+          >
+            Copiar equipos
+          </button>
+        }
+
+        {copyMessage.visible && ( <div className='flash-message'>Equipos copiados!</div> )}
+
+        {user && playersNotEmpty && 
           <button
             onClick={saveMatch}
             className='bg-blue-900 text-white px-6 py-2 rounded hover:bg-blue-800 cursor-pointer'
@@ -89,9 +93,7 @@ const Teams = ({ teams, loading }) => {
             Guardar partido
           </button>
         }
-        {saveMessage.visible && (
-          <div className='flash-message'>Partido guardado!</div>
-        )}
+        {saveMessage.visible && ( <div className='flash-message'>Partido guardado!</div> )}
       </div>
     </div>
   )

@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
+import rateLimit from 'express-rate-limit'
 import authRouter from './src/routes/auth.route'
 import matchRouter from './src/routes/match.route'
 import connectDB from './src/config/db'
@@ -10,9 +11,19 @@ dotenv.config()
 
 const app = express()
 
-app.use(cors())
-app.use(helmet())
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes 
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
+app.use(cors({
+  origin: process.env.FRONTEND_URL
+}))
 app.use(express.json())
+app.use(helmet())
+app.use(limiter)
 
 app.use('/auth', authRouter)
 app.use('/match', matchRouter)
