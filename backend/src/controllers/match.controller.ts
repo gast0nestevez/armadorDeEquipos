@@ -4,14 +4,12 @@ import Match from '../models/match.model'
 export default class MatchController {
   async createMatch(req: Request, res: Response) {
     const { userId, players } = req.body
-    console.log(userId, players)
     if (!userId || !players) return res.status(400).json({ message: 'userId and players are required' })
     
     try {
       const match = new Match({ userId, players })
       console.log(match)
       await match.save()
-      console.log('llegue aca')
   
       res.status(201).json(match)
     } catch (error) {

@@ -1,18 +1,23 @@
-import { useState } from 'react'
-import Loader from './Loader'
+import { useContext } from 'react'
+import { UserContext } from '../context/userContext'
+import { config } from '../../constants'
+import TeamCard from './TeamCard'
+import useFlashMessage from '../hooks/useFlashMessage'
 
-function capitalize(s) {
-  return String(s[0]).toUpperCase() + String(s).slice(1)
-}
+const API_BASE_URL = config.apiUrl
+
+const capitalize = (s) => String(s[0]).toUpperCase() + String(s).slice(1)
 
 const Teams = ({ teams, loading }) => {
-  const [copyMessageVisible, setCopyMessageVisible] = useState(false)
-
+  const { user } = useContext(UserContext)
+  const copyMessage = useFlashMessage()
+  const saveMessage = useFlashMessage()
+  
   const teamsToString = () => {
-    return teams.map((team, index) => 
-      `Equipo ${index + 1}:\n` + 
-      (team.players.length === 0 
-        ? 'Sin jugadores\n' 
+    return teams.map((team, index) =>
+      `Equipo ${index + 1}:\n` +
+      (team.players.length === 0
+        ? 'Sin jugadores\n'
         : team.players
             .sort()
             .map(player => `  - ${capitalize(player.name)}`)
@@ -20,16 +25,37 @@ const Teams = ({ teams, loading }) => {
     ).join('\n\n')
   }
 
-  const showMessage = () => {
-    setCopyMessageVisible(true)
-    setTimeout(() => {
-      setCopyMessageVisible(false)
-    }, 2000)
-  }
-
   const copyToClipboard = () => {
     navigator.clipboard.writeText(teamsToString())
-    showMessage()
+    copyMessage.trigger()
+  }
+
+  const mapTeamsToPlayers = (teams) =>
+    teams.flatMap((team, index) =>
+      team.players.map(p => ({
+        name: capitalize(p.name),
+        skill: p.skill,
+        team: index + 1
+      }))
+    )
+
+  const saveMatch = async () => {
+    const players = mapTeamsToPlayers(teams)
+
+    const url = `${API_BASE_URL}/match`
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: user.userId, players })
+    }
+
+    try {
+      const response = await fetch(url, options)
+      if (!response.ok) throw new Error('Something went wrong during posting match')
+      saveMessage.trigger()
+    } catch (err) {
+      console.error('Error in backend: ', err)
+    }
   }
 
   return (
@@ -37,43 +63,38 @@ const Teams = ({ teams, loading }) => {
       <h1 className='text-3xl font-bold mb-4 text-center'>Equipos</h1>
       <div className='flex justify-center gap-6 overflow-hidden'>
         {teams.map((team, index) => (
-          <div key={index} className='flex flex-col bg-white shadow-md rounded-xl p-6 w-48 text-center'>
-            <h3 className='text-xl font-bold mb-2'>Equipo {index + 1}</h3>
-            {loading ? (
-              <div>
-                <Loader />
-              </div>
-            ) : (
-              <ul className='py-1 max-h-full overflow-y-auto'>
-                {team.players.length > 0 ? (
-                  team.players
-                    .sort((a, b) => a.name.localeCompare(b.name))
-                    .map((player, i) => (
-                      <li key={i} className='py-1 truncate'>{capitalize(player.name)}</li>
-                    ))
-                ) : (
-                  <li>Sin jugadores</li>
-                )}
-              </ul>
-            )}
-          </div>
+          <TeamCard
+            index={index}
+            players={team.players}
+            loading={loading}
+          />
         ))}
       </div>
 
-      <div className='mt-6 text-center' id='see-teams'>
+      <div className='flex justify-around mt-6 text-center' id='see-teams'>
         <button
           onClick={copyToClipboard}
           className='bg-blue-900 text-white px-6 py-2 rounded hover:bg-blue-800 cursor-pointer'
         >
           Copiar equipos
         </button>
-        {copyMessageVisible && (
-          <div className='copy-message'>Equipos copiados correctamente!</div>
+        {copyMessage.visible && (
+          <div className='flash-message'>Equipos copiados!</div>
+        )}
+        {user && 
+          <button
+            onClick={saveMatch}
+            className='bg-blue-900 text-white px-6 py-2 rounded hover:bg-blue-800 cursor-pointer'
+          >
+            Guardar partido
+          </button>
+        }
+        {saveMessage.visible && (
+          <div className='flash-message'>Partido guardado!</div>
         )}
       </div>
     </div>
   )
 }
-
 
 export default Teams
