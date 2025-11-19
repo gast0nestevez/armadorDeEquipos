@@ -66,10 +66,11 @@ const Profile = () => {
 
         <div className='bg-white rounded-xl shadow-lg p-6 w-full max-w-2xl mb-8'>
           <h2 className='text-xl font-semibold mb-4'>Tus partidos</h2>
-            <MatchesList
-              matches={matches}
-              loadingMatches={loadingMatches}
-            />
+          <MatchesList
+            matches={matches}
+            setMatches={setMatches}
+            loadingMatches={loadingMatches}
+          />
         </div>
 
         <button

@@ -12,8 +12,8 @@ export default class MatchController {
       await match.save()
   
       res.status(201).json(match)
-    } catch (error) {
-      console.error(error)
+    } catch (e) {
+      console.error(e)
       res.status(500).json({ message: 'Error creating match' })
     }
   }
@@ -24,9 +24,21 @@ export default class MatchController {
     try {
       const matches = await Match.find({ userId })
       res.status(200).json(matches)
-    } catch (error) {
-      console.error(error)
+    } catch (e) {
+      console.error(e)
       res.status(500).json({ message: 'Error fetching matches' })
+    }
+  }
+
+  async deleteMatch(req: Request, res: Response) {
+    const { matchId } = req.params
+
+    try {
+      await Match.findByIdAndDelete(matchId)
+      res.status(200).json({ ok: true, deleted: matchId })
+    } catch (e) {
+      console.log(e)
+      res.status(500).json({ ok: false, message: 'Error deleting match' })
     }
   }
 }
