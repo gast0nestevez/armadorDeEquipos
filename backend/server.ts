@@ -19,7 +19,7 @@ const limiter = rateLimit({
 })
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL
+  //origin: process.env.FRONTEND_URL
 }))
 app.use(express.json())
 app.use(helmet())
