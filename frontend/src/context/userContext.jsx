@@ -1,29 +1,56 @@
 import { createContext, useState, useEffect } from 'react'
-import { jwtDecode } from 'jwt-decode'
+import { config } from '../../constants'
 
 export const UserContext = createContext()
 
+const API_BASE_URL = config.apiUrl
+
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-  // Each time a user opens the page we call the server to validate jwt
-  // Otherwise any user could just create a token in localStorage
   useEffect(() => {
     const token = localStorage.getItem('token')
-    if (token) {
+    if (!token) {
+      console.error('No token')
+      setLoading(false)
+      return
+    }
+
+    const validate = async () => {
+      const url = `${API_BASE_URL}/auth/validate`
+      const options = { 
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+
       try {
-        const decoded = jwtDecode(token)
-        // validate in back
-        setUser(decoded)
-      } catch(err) {
-        console.log(err)
+        const response = await fetch(url, options)
+        console.log('api response: ', response)
+
+        if (!response.ok) {
+          localStorage.removeItem('token')
+          setUser(null)
+        }
+        
+        const data = await response.json()
+        setUser(data.user)
+        console.log('User data: ', data)
+      } catch (err) {
+        console.error(err)
         localStorage.removeItem('token')
+        setUser(null)
+      } finally {
+        setLoading(false)
       }
     }
+
+    validate()
   }, [])
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, loading }}>
       {children}
     </UserContext.Provider>
   )
