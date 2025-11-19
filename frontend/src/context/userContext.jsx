@@ -7,13 +7,11 @@ const API_BASE_URL = config.apiUrl
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (!token) {
-      console.error('No token')
-      setLoading(false)
+      console.warn('No token')
       return
     }
 
@@ -27,8 +25,6 @@ export const UserProvider = ({ children }) => {
 
       try {
         const response = await fetch(url, options)
-        console.log('api response: ', response)
-
         if (!response.ok) {
           localStorage.removeItem('token')
           setUser(null)
@@ -36,13 +32,10 @@ export const UserProvider = ({ children }) => {
         
         const data = await response.json()
         setUser(data.user)
-        console.log('User data: ', data)
       } catch (err) {
         console.error(err)
         localStorage.removeItem('token')
         setUser(null)
-      } finally {
-        setLoading(false)
       }
     }
 
@@ -50,7 +43,7 @@ export const UserProvider = ({ children }) => {
   }, [])
 
   return (
-    <UserContext.Provider value={{ user, setUser, loading }}>
+    <UserContext.Provider value={{ user, setUser }}>
       {children}
     </UserContext.Provider>
   )

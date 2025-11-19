@@ -10,7 +10,7 @@ const API_BASE_URL = config.apiUrl
 
 const Nav = () => {
   const navigate = useNavigate()
-  const { user } = useContext(UserContext)
+  const { user, setUser } = useContext(UserContext)
   const [isOpen, setIsOpen] = useState(false)
 
   const toggleMenu = () => {
@@ -18,13 +18,13 @@ const Nav = () => {
   }
 
   const handleGoogleLogin = async (credentialResponse) => {
-    const idToken = credentialResponse.credential
+    const googleToken = credentialResponse.credential
 
     const url = `${API_BASE_URL}/auth`
     const options = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: idToken })
+      body: JSON.stringify({ googleToken })
     }
 
     try {
@@ -33,8 +33,9 @@ const Nav = () => {
       
       const data = await response.json()
       localStorage.setItem('token', data.token)
+      setUser(data.user)
     } catch (err) {
-      console.error('Error in backend: ', err)
+      console.error('Error while login: ', err)
     }
     
     setIsOpen(false)
