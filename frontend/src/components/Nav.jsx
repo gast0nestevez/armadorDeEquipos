@@ -1,7 +1,6 @@
 import { useState, useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
-import { jwtDecode } from 'jwt-decode'
 import { config } from '../../constants'
 import { UserContext } from '../context/userContext'
 import NavButtons from './NavButtons'
@@ -11,7 +10,7 @@ const API_BASE_URL = config.apiUrl
 
 const Nav = () => {
   const navigate = useNavigate()
-  const { user, setUser } = useContext(UserContext)
+  const { user } = useContext(UserContext)
   const [isOpen, setIsOpen] = useState(false)
 
   const toggleMenu = () => {
@@ -21,22 +20,19 @@ const Nav = () => {
   const handleGoogleLogin = async (credentialResponse) => {
     const idToken = credentialResponse.credential
 
-    // Send token to backend
     const url = `${API_BASE_URL}/auth`
     const options = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token: idToken })
     }
+
     try {
       const response = await fetch(url, options)
       if (!response.ok) throw new Error('Something went wrong during fetch')
       
-      const result = await response.json()
-      localStorage.setItem('token', result.token)
-
-      const decoded = jwtDecode(result.token)
-      setUser(decoded)
+      const data = await response.json()
+      localStorage.setItem('token', data.token)
     } catch (err) {
       console.error('Error in backend: ', err)
     }
