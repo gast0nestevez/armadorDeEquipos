@@ -32,7 +32,7 @@ const MatchesList = ({ matches, setMatches, loadingMatches }) => {
           <div className='flex items-center gap-2 px-3 py-1 rounded-md bg-green-100 text-green-800 border border-green-300'>
             G {stats['Win']}
           </div>
-          <div className='flex items-center gap-2 px-3 py-1 rounded-md bg-gray-100 text-gray-800 border border-gray-300'>
+          <div className='flex items-center gap-2 px-3 py-1 rounded-md bg-yellow-100 text-yellow-800 border border-gray-300'>
             E {stats.Draw}
           </div>
           <div className='flex items-center gap-2 px-3 py-1 rounded-md bg-red-100 text-red-800 border border-red-300'>

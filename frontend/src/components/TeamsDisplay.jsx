@@ -55,8 +55,8 @@ const Teams = ({ teams, loading }) => {
     try {
       const response = await fetch(url, options)
       if (!response.ok) throw new Error('Something went wrong during posting match')
-    } catch (err) {
-      console.error('Error in backend: ', err)
+    } catch (e) {
+      console.error('Error in backend: ', e)
     }
   }
 

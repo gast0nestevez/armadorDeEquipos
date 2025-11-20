@@ -33,8 +33,8 @@ authRouter.post('/', async (req: Request, res: Response) => {
     )
 
     res.json({ token: appToken, user })
-  } catch (err) {
-    console.error(err)
+  } catch (e) {
+    console.error(e)
     res.status(401).json({ message: 'Invalid Google token' })
   }
 })
@@ -65,8 +65,8 @@ authRouter.get('/validate', (req: Request, res: Response) => {
     }
 
     return res.json({ user })
-  } catch (err) {
-    console.error('Token validation error:', err)
+  } catch (e) {
+    console.error('Token validation error:', e)
     return res.status(401).json({ message: 'Invalid or expired token' })
   }
 })

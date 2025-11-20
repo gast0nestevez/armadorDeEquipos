@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Trophy, Minus, X } from 'lucide-react'
 import { config } from '../../constants'
+import Loader from './Loader'
 
 const API_BASE_URL = config.apiUrl
 
@@ -9,7 +10,8 @@ const Match = ({ match, setMatches }) => {
   const [goals1, setGoals1] = useState(match.goals1 ?? 0)
   const [goals2, setGoals2] = useState(match.goals2 ?? 0)
   const [result, setResult] = useState(match.result)
-
+  const [loading, setLoading] = useState(false)
+  
   const resultButtonClasses = (type, currentResult) => {
     const isActive = currentResult === type
 
@@ -31,6 +33,7 @@ const Match = ({ match, setMatches }) => {
   }
 
   const saveChanges = async () => {
+    setLoading(true)
     const url = `${API_BASE_URL}/match/${match._id}`
     const body = {
       goals1,
@@ -43,40 +46,21 @@ const Match = ({ match, setMatches }) => {
       body: JSON.stringify(body)
     }
 
-
     try {
       const response = await fetch(url, options)
       if (!response.ok) throw new Error('Error actualizando partido')
       const data = await response.json()
 
-      setMatches(prev => prev.map(m => m._id === match._id ? data.updatedMatch : m))
+      setMatches(prevMatches => prevMatches.map(m => m._id === match._id ? data.updatedMatch : m))
       setShowActions(false)
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-  const updateMatchResult = async (matchId, result) => {
-    const url = `${API_BASE_URL}/match/${matchId}`
-    const options = {
-      method: 'PUT',
-      headers: {'Content-Type': 'application/json' },
-      body: JSON.stringify({ result })
-    }
-
-    try {
-      const response = await fetch(url, options)
-      if (!response.ok) throw new Error('Error updating match result')
-
-      const data = await response.json()
-
-      setMatches(prev => prev.map(m => m._id === matchId ? data.updatedMatch : m))
-    } catch (err) {
-      console.error(err)
+      setLoading(false)
+    } catch (e) {
+      console.error(e)
     }
   }
 
   const deleteMatch = async (matchId) => {
+    setLoading(true)
     const url = `${API_BASE_URL}/match/${matchId}`
     const options = {
       method: 'DELETE',
@@ -89,11 +73,18 @@ const Match = ({ match, setMatches }) => {
         if (!response.ok) throw new Error('Something went wrong during fetch')
           
         setMatches(prevMatches => prevMatches.filter(m => m._id !== matchId))
-      } catch (err) {
-        console.error(err)
+        setLoading(false)
+      } catch (e) {
+        console.error(e)
       }
     }
   }
+
+  if (loading) return (
+    <div className='flex justify-center items-center'>
+      <Loader />
+    </div>
+  )
 
   return (
     <div className='flex flex-col gap-[15px]'>

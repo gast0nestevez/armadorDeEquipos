@@ -34,8 +34,8 @@ const Nav = () => {
       const data = await response.json()
       localStorage.setItem('token', data.token)
       setUser(data.user)
-    } catch (err) {
-      console.error('Error while login: ', err)
+    } catch (e) {
+      console.error('Error while login: ', e)
     }
     
     setIsOpen(false)
