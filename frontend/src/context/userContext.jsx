@@ -32,8 +32,8 @@ export const UserProvider = ({ children }) => {
         
         const data = await response.json()
         setUser(data.user)
-      } catch (err) {
-        console.error(err)
+      } catch (e) {
+        console.error(e)
         localStorage.removeItem('token')
         setUser(null)
       }
