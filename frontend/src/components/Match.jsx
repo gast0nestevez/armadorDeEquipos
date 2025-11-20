@@ -6,8 +6,8 @@ const API_BASE_URL = config.apiUrl
 
 const Match = ({ match, setMatches }) => {
   const [showActions, setShowActions] = useState(false)
-  const [goals1, setGoals1] = useState(match.goals1)
-  const [goals2, setGoals2] = useState(match.goals2)
+  const [goals1, setGoals1] = useState(match.goals1 ?? 0)
+  const [goals2, setGoals2] = useState(match.goals2 ?? 0)
   const [result, setResult] = useState(match.result)
 
   const resultButtonClasses = (type, currentResult) => {
@@ -98,8 +98,8 @@ const Match = ({ match, setMatches }) => {
   return (
     <div className='flex flex-col gap-[15px]'>
       <div className='flex justify-between'>
-        <div>
-          <h3 className='font-semibold text-gray-800 mb-2'>Equipo 1</h3>
+        <div className='grow'>
+          <h3 className='font-semibold text-gray-800 mb-2 text-nowrap'>Equipo 1</h3>
           <ul className='space-y-1'>
             {match.players
               .filter((p) => p.team === 1)
@@ -111,7 +111,7 @@ const Match = ({ match, setMatches }) => {
           </ul>
         </div>
 
-        <div className='flex justify-center items-center font-semibold text-2xl'>
+        <div className='flex justify-center items-center font-semibold text-2xl text-nowrap'>
           {!showActions ?
             <span>{ match.goals1 } - { match.goals2 }</span>
           : (
@@ -133,8 +133,8 @@ const Match = ({ match, setMatches }) => {
           )}
         </div>
 
-        <div className='flex flex-col'>
-          <h3 className='font-semibold text-gray-800 mb-2 text-right'>Equipo 2</h3>
+        <div className='grow'>
+          <h3 className='font-semibold text-gray-800 mb-2 text-right text-nowrap'>Equipo 2</h3>
           <ul className='space-y-1'>
             {match.players
               .filter((p) => p.team === 2)
@@ -147,7 +147,7 @@ const Match = ({ match, setMatches }) => {
         </div>
       </div>
 
-      <div className={`flex ${showActions ? 'justify-between' : 'justify-center'} items-center`}>
+      <div className={`flex flex-col sm:flex-row ${showActions ? 'justify-between' : 'justify-center'} items-center gap-3`}>
         {showActions && (
           <div className='flex justify-center items-center gap-[10px]'>
             <button
@@ -174,7 +174,7 @@ const Match = ({ match, setMatches }) => {
         )}
 
         <button
-          className='px-3 py-1 rounded-lg bg-white shadow-sm border border-gray-200 text-gray-700 transition cursor-pointer hover:shadow-md hover:bg-gray-50'
+          className='px-3 py-2 rounded-lg bg-white shadow-sm border border-gray-200 text-gray-700 text-center transition cursor-pointer hover:shadow-md hover:bg-gray-50'
           onClick={showActions ? saveChanges : () => setShowActions(true)}
         >
           {showActions ? 'Listo' : 'Editar'}
