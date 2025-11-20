@@ -43,6 +43,13 @@ nav {
   transition: opacity 1s ease-out;
 }
 
+/* Remove number input arrows (Chrome, Edge, Safari) */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 @media (max-width: 600px) {
   .main-container > div {
     overflow: auto;

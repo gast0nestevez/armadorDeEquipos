@@ -60,10 +60,6 @@ const Profile = () => {
       <Nav />
 
       <main className='flex flex-col items-center flex-1 w-full px-4 py-8 bg-gray-100'>
-        <div className='bg-white rounded-xl shadow-lg p-8 w-full max-w-2xl text-center mb-8'>
-          <h1 className='text-3xl font-bold mb-2'>{user.name.split(' ')[0]}</h1>
-        </div>
-
         <div className='bg-white rounded-xl shadow-lg p-6 w-full max-w-2xl mb-8'>
           <MatchesList
             matches={matches}

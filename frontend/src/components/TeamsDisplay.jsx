@@ -28,8 +28,8 @@ const Teams = ({ teams, loading }) => {
   }
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(teamsToString())
     copyMessage.trigger()
+    navigator.clipboard.writeText(teamsToString())
   }
 
   const mapTeamsToPlayers = (teams) =>
@@ -42,6 +42,7 @@ const Teams = ({ teams, loading }) => {
     )
 
   const saveMatch = async () => {
+    saveMessage.trigger()
     const players = mapTeamsToPlayers(teams)
 
     const url = `${API_BASE_URL}/match`
@@ -50,11 +51,10 @@ const Teams = ({ teams, loading }) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId: user.userId, players })
     }
-
+    
     try {
       const response = await fetch(url, options)
       if (!response.ok) throw new Error('Something went wrong during posting match')
-      saveMessage.trigger()
     } catch (err) {
       console.error('Error in backend: ', err)
     }
