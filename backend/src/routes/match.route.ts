@@ -5,6 +5,7 @@ const matchRouter = express.Router()
 const matchController = new MatchController()
 
 matchRouter.post('/', matchController.createMatch)
+matchRouter.put('/:matchId', matchController.updateMatch)
 matchRouter.get('/:userId', matchController.getUserMatches)
 matchRouter.delete('/:matchId', matchController.deleteMatch)
 

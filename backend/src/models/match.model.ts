@@ -1,14 +1,17 @@
 import mongoose, { Schema, Document } from 'mongoose'
 
 export interface Player {
-  name: string
-  skill: number
-  team: number
+  name: String
+  skill: Number
+  team: Number
 }
 
 export interface Match extends Document {
-  userId: string
+  userId: String
   players: Player[]
+  goals1: Number
+  goals2: Number
+  result: String
 }
 
 const PlayerSchema = new Schema<Player>({
@@ -20,6 +23,11 @@ const PlayerSchema = new Schema<Player>({
 const MatchSchema = new Schema<Match>({
   userId: { type: String, required: true },
   players: { type: [PlayerSchema], required: true },
+  goals1: { type: Number },
+  goals2: { type: Number },
+  result: { type: String, enum: ['Lose', 'Draw', 'Win'] },
+}, {
+  timestamps: true
 })
 
 export default mongoose.model<Match>('Match', MatchSchema)

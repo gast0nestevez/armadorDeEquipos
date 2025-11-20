@@ -1,6 +1,11 @@
 import { Request, Response } from 'express'
 import Match from '../models/match.model'
 
+const sanitize = (body: Object, allowed: String[]) =>
+  Object.fromEntries(
+    Object.entries(body).filter(([k]) => allowed.includes(k))
+  )
+
 export default class MatchController {
   async createMatch(req: Request, res: Response) {
     const { userId, players } = req.body
@@ -8,13 +13,12 @@ export default class MatchController {
     
     try {
       const match = new Match({ userId, players })
-      console.log(match)
       await match.save()
   
       res.status(201).json(match)
     } catch (e) {
       console.error(e)
-      res.status(500).json({ message: 'Error creating match' })
+      res.status(500).json({ ok: false, message: 'Error creating match' })
     }
   }
   
@@ -22,11 +26,11 @@ export default class MatchController {
     const { userId } = req.params
     
     try {
-      const matches = await Match.find({ userId })
+      const matches = await Match.find({ userId }).sort({ createdAt: -1 })
       res.status(200).json(matches)
     } catch (e) {
       console.error(e)
-      res.status(500).json({ message: 'Error fetching matches' })
+      res.status(500).json({ ok: false, message: 'Error fetching matches' })
     }
   }
 
@@ -37,8 +41,30 @@ export default class MatchController {
       await Match.findByIdAndDelete(matchId)
       res.status(200).json({ ok: true, deleted: matchId })
     } catch (e) {
-      console.log(e)
+      console.error(e)
       res.status(500).json({ ok: false, message: 'Error deleting match' })
+    }
+  }
+
+  async updateMatch(req: Request, res: Response) {
+    const { matchId } = req.params
+    const filteredBody = sanitize(req.body, [
+      'players',
+      'goals1',
+      'goals2',
+      'result'
+    ])
+
+    try {
+      const updatedMatch = await Match.findByIdAndUpdate(
+        matchId,
+        filteredBody,
+        { new: true, runValidators: true }
+      )
+      res.status(200).json({ updatedMatch })
+    } catch (e) {
+      console.error(e)
+      res.status(500).json({ ok: false, message: 'Error updating match' })
     }
   }
 }

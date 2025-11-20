@@ -1,4 +1,4 @@
-const Match = ({ players }) => (
+const Match = ({ players, goals1, goals2 }) => (
   <div className='flex justify-between'>
     <div>
       <h3 className='font-semibold text-gray-800 mb-2'>Equipo 1</h3>
@@ -11,6 +11,10 @@ const Match = ({ players }) => (
             </li>
           ))}
       </ul>
+    </div>
+
+    <div className='flex justify-center items-center font-semibold text-2xl'>
+      <span>{ goals1 } - { goals2 }</span>
     </div>
 
     <div className='flex flex-col'>
