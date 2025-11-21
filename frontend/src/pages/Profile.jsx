@@ -10,14 +10,13 @@ const API_BASE_URL = config.apiUrl
 
 const Profile = () => {
   const navigate = useNavigate()
-  const { user, setUser } = useContext(UserContext)
+  const { user, clearContext } = useContext(UserContext)
   const [matches, setMatches] = useState([])
   const [loadingMatches, setLoadingMatches] = useState(false)
 
   const handleGoogleLogout = () => {
     googleLogout()
-    localStorage.removeItem('token')
-    setUser(null)
+    clearContext()
     navigate('/')
   }
 

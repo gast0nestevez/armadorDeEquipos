@@ -42,7 +42,10 @@ const Match = ({ match, setMatches }) => {
     }
     const options = {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
       body: JSON.stringify(body)
     }
 
@@ -64,6 +67,10 @@ const Match = ({ match, setMatches }) => {
     const url = `${API_BASE_URL}/match/${matchId}`
     const options = {
       method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
     }
 
     let userChoice = confirm('¿Seguro que querés eliminar este partido?')

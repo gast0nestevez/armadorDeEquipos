@@ -48,7 +48,10 @@ const Teams = ({ teams, loading }) => {
     const url = `${API_BASE_URL}/match`
     const options = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
       body: JSON.stringify({ userId: user.userId, players })
     }
     
@@ -56,7 +59,7 @@ const Teams = ({ teams, loading }) => {
       const response = await fetch(url, options)
       if (!response.ok) throw new Error('Something went wrong during posting match')
     } catch (e) {
-      console.error('Error in backend: ', e)
+      console.error(e)
     }
   }
 
