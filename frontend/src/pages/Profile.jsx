@@ -1,10 +1,10 @@
 import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { googleLogout } from '@react-oauth/google'
 import Nav from '../components/Nav'
 import MatchesList from '../components/MatchesList'
 import { UserContext } from '../context/userContext'
 import { config } from '../../constants'
+import { handleGoogleLogout } from '../utils/googleOAuth'
 
 const API_BASE_URL = config.apiUrl
 
@@ -14,15 +14,8 @@ const Profile = () => {
   const [matches, setMatches] = useState([])
   const [loadingMatches, setLoadingMatches] = useState(false)
 
-  const handleGoogleLogout = () => {
-    googleLogout()
-    clearContext()
-    navigate('/')
-  }
-
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (!token) {
+    if (!user) {
       navigate('/')
       return
     }
@@ -68,7 +61,7 @@ const Profile = () => {
 
         <button
           className='bg-gray-300 text-gray-800 py-2.5 px-6 rounded-lg font-bold hover:bg-gray-400 transition cursor-pointer'
-          onClick={handleGoogleLogout}
+          onClick={() => handleGoogleLogout(clearContext, navigate)}
         >
           Cerrar sesión
         </button>

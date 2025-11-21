@@ -1,12 +1,9 @@
 import { useState, useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
-import { config } from '../../constants'
-import { UserContext } from '../context/userContext'
 import NavButtons from './NavButtons'
-import '../css/home.css'
-
-const API_BASE_URL = config.apiUrl
+import { UserContext } from '../context/userContext'
+import { handleGoogleLogin, handleGoogleError } from '../utils/googleOAuth'
 
 const Nav = () => {
   const navigate = useNavigate()
@@ -17,36 +14,6 @@ const Nav = () => {
     setIsOpen(!isOpen)
   }
 
-  const handleGoogleLogin = async (credentialResponse) => {
-    const googleToken = credentialResponse.credential
-
-    const url = `${API_BASE_URL}/auth`
-    const options = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ googleToken })
-    }
-
-    try {
-      const response = await fetch(url, options)
-      if (!response.ok) throw new Error('Something went wrong during fetch')
-      
-      const data = await response.json()
-      localStorage.setItem('user', JSON.stringify(data.user))
-      localStorage.setItem('token', data.token)
-      setUser(data.user)
-    } catch (e) {
-      console.error('Error while login: ', e)
-    }
-    
-    setIsOpen(false)
-    navigate('/')
-  }
-
-  const handleGoogleError = (err) => {
-    console.error('Google error: ', err)
-  }
-
   return (
     <nav className='relative bg-white shadow-md'>
       <div className='flex justify-between items-center p-4 w-full'>
@@ -55,14 +22,23 @@ const Nav = () => {
         </h2>
 
         {/* menu icon for mobile */}
-        <button onClick={toggleMenu} className='md:hidden focus:outline-none cursor-pointer'>
+        <button
+          onClick={toggleMenu}
+          className='md:hidden focus:outline-none cursor-pointer'
+        >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
         {/* desktop buttons */}
         <NavButtons
           user={user}
-          onLogin={handleGoogleLogin}
+          onLogin={(credentialResponse) =>
+            handleGoogleLogin(
+              credentialResponse,
+              setUser,
+              setIsOpen,
+              navigate
+            )}
           onError={handleGoogleError}
           setIsOpen={setIsOpen}
         />
@@ -72,7 +48,13 @@ const Nav = () => {
       {isOpen && (
         <NavButtons
           user={user}
-          onLogin={handleGoogleLogin}
+          onLogin={(credentialResponse) =>
+            handleGoogleLogin(
+              credentialResponse,
+              setUser,
+              setIsOpen,
+              navigate
+            )}
           onError={handleGoogleError}
           variant='mobile'
           setIsOpen={setIsOpen}
