@@ -32,6 +32,7 @@ const Nav = () => {
       if (!response.ok) throw new Error('Something went wrong during fetch')
       
       const data = await response.json()
+      localStorage.setItem('user', JSON.stringify(data.user))
       localStorage.setItem('token', data.token)
       setUser(data.user)
     } catch (e) {
