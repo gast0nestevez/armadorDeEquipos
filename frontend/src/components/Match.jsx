@@ -59,7 +59,7 @@ const Match = ({ match, setMatches }) => {
 
     try {
       const response = await fetch(url, options)
-      if (!response.ok) throw new Error('Error actualizando partido')
+      if (!response.ok) throw new Error('Something went wrong during update')
       const data = await response.json()
 
       setMatches(prevMatches => prevMatches.map(m => m._id === match._id ? data.updatedMatch : m))
@@ -71,6 +71,9 @@ const Match = ({ match, setMatches }) => {
   }
 
   const deleteMatch = async (matchId) => {
+    let userChoice = confirm('¿Seguro que querés eliminar este partido?')
+    if (!userChoice) return
+
     setLoading(true)
     const url = `${API_BASE_URL}/match/${matchId}`
     const options = {
@@ -81,17 +84,14 @@ const Match = ({ match, setMatches }) => {
       }
     }
 
-    let userChoice = confirm('¿Seguro que querés eliminar este partido?')
-    if (userChoice) {
-      try {
-        const response = await fetch(url, options)
-        if (!response.ok) throw new Error('Something went wrong during fetch')
-          
-        setMatches(prevMatches => prevMatches.filter(m => m._id !== matchId))
-        setLoading(false)
-      } catch (e) {
-        console.error(e)
-      }
+    try {
+      const response = await fetch(url, options)
+      if (!response.ok) throw new Error('Something went wrong during fetch')
+      
+      setMatches(prevMatches => prevMatches.filter(m => m._id !== matchId))
+      setLoading(false)
+    } catch (e) {
+      console.error(e)
     }
   }
 
