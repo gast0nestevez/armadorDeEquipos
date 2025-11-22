@@ -6,6 +6,7 @@ import Loader from './Loader'
 const API_BASE_URL = config.apiUrl
 
 const Match = ({ match, setMatches }) => {
+  const [showDetails, setShowDetails] = useState(false)
   const [showActions, setShowActions] = useState(false)
   const [goals1, setGoals1] = useState(match.goals1 ?? 0)
   const [goals2, setGoals2] = useState(match.goals2 ?? 0)
@@ -30,6 +31,13 @@ const Match = ({ match, setMatches }) => {
     }
 
     return `${base} ${styles[type]}`
+  }
+
+  const expandMatch = (e) => {
+    // Avoid buttons and inputs
+    if (['DIV', 'H3', 'SPAN', 'UL', 'LI'].includes(e.target.tagName)) {
+      setShowDetails(!showDetails)
+    }
   }
 
   const saveChanges = async () => {
@@ -94,19 +102,24 @@ const Match = ({ match, setMatches }) => {
   )
 
   return (
-    <div className='flex flex-col gap-[15px]'>
+    <div
+      className={`flex flex-col justify-center p-4 cursor-pointer ${showDetails ? 'gap-[15px]' : ''}`}
+      onClick={(e) => expandMatch(e)}
+    >
       <div className='flex justify-between'>
         <div className='grow'>
           <h3 className='font-semibold text-gray-800 mb-2 text-nowrap'>Equipo 1</h3>
-          <ul className='space-y-1'>
-            {match.players
-              .filter((p) => p.team === 1)
-              .map((p) => (
-                <li key={p._id} className='text-gray-700'>
-                  {p.name}
-                </li>
-              ))}
-          </ul>
+          {showDetails &&
+            <ul className='space-y-1'>
+              {match.players
+                .filter((p) => p.team === 1)
+                .map((p) => (
+                  <li key={p._id} className='text-gray-700'>
+                    {p.name}
+                  </li>
+                ))}
+            </ul>
+          }
         </div>
 
         <div className='flex justify-center items-center font-semibold text-2xl text-nowrap'>
@@ -133,15 +146,17 @@ const Match = ({ match, setMatches }) => {
 
         <div className='grow'>
           <h3 className='font-semibold text-gray-800 mb-2 text-right text-nowrap'>Equipo 2</h3>
-          <ul className='space-y-1'>
-            {match.players
-              .filter((p) => p.team === 2)
-              .map((p) => (
-                <li key={p._id} className='text-gray-700 text-right'>
-                  {p.name}
-                </li>
-              ))}
-          </ul>
+          {showDetails &&
+            <ul className='space-y-1'>
+              {match.players
+                .filter((p) => p.team === 2)
+                .map((p) => (
+                  <li key={p._id} className='text-gray-700 text-right'>
+                    {p.name}
+                  </li>
+                ))}
+            </ul>
+          }
         </div>
       </div>
 
@@ -171,12 +186,14 @@ const Match = ({ match, setMatches }) => {
           </div>
         )}
 
-        <button
+        {showDetails &&
+          <button
           className='px-3 py-2 rounded-lg bg-white shadow-sm border border-gray-200 text-gray-700 text-center transition cursor-pointer hover:shadow-md hover:bg-gray-50'
           onClick={showActions ? saveChanges : () => setShowActions(true)}
-        >
-          {showActions ? 'Listo' : 'Editar'}
-        </button>
+          >
+            {showActions ? 'Listo' : 'Editar'}
+          </button>
+        }
 
         {showActions && (
           <div>

@@ -52,7 +52,7 @@ const MatchesList = ({ matches, setMatches, loadingMatches }) => {
           {matches.map((match) => (
             <li
             key={match._id}
-            className={`flex flex-col gap-[15px] border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition ${matchBorderColor(match.result)}`}
+            className={`flex flex-col gap-[15px] border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition ${matchBorderColor(match.result)}`}
             >
               <Match
                 match={match}
