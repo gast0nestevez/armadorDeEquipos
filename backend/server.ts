@@ -12,15 +12,13 @@ dotenv.config()
 const app = express()
 
 const limiter = rateLimit({
-  windowMs: 10 * 60 * 1000, // 10 minutes 
-  max: 30,
+  windowMs: 5 * 60 * 1000, // 5 minutes 
+  max: 300,
   standardHeaders: true,
   legacyHeaders: false,
 })
 
-app.use(cors({
-  //origin: process.env.FRONTEND_URL
-}))
+app.use(cors())
 app.use(express.json())
 app.use(helmet())
 app.use(limiter)
