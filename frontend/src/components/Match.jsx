@@ -37,6 +37,7 @@ const Match = ({ match, setMatches }) => {
     // Avoid buttons and inputs
     if (['DIV', 'H3', 'SPAN', 'UL', 'LI'].includes(e.target.tagName)) {
       setShowDetails(!showDetails)
+      setShowActions(false)
     }
   }
 
@@ -106,15 +107,15 @@ const Match = ({ match, setMatches }) => {
       className={`flex flex-col justify-center p-4 cursor-pointer ${showDetails ? 'gap-[15px]' : ''}`}
       onClick={(e) => expandMatch(e)}
     >
-      <div className='flex justify-between'>
-        <div className='grow'>
+      <div className='flex justify-between gap-1'>
+        <div className='grow max-w-1/3'>
           <h3 className='font-semibold text-gray-800 mb-2 text-nowrap'>Equipo 1</h3>
           {showDetails &&
             <ul className='space-y-1'>
               {match.players
                 .filter((p) => p.team === 1)
                 .map((p) => (
-                  <li key={p._id} className='text-gray-700'>
+                  <li key={p._id} className='text-gray-700 truncate'>
                     {p.name}
                   </li>
                 ))}
@@ -126,32 +127,32 @@ const Match = ({ match, setMatches }) => {
           {!showActions ?
             <span>{ match.goals1 } - { match.goals2 }</span>
           : (
-            <div className='flex items-center gap-3'>
+            <div className='flex items-center gap-1'>
               <input
                 type='number'
                 value={goals1}
                 onChange={(e) => setGoals1(Number(e.target.value))}
-                className='w-14 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
+                className='w-8 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
               />
               <span>-</span>
               <input
                 type='number'
                 value={goals2}
                 onChange={(e) => setGoals2(Number(e.target.value))}
-                className='w-14 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
+                className='w-8 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
               />
             </div>
           )}
         </div>
 
-        <div className='grow'>
+        <div className='grow max-w-1/3'>
           <h3 className='font-semibold text-gray-800 mb-2 text-right text-nowrap'>Equipo 2</h3>
           {showDetails &&
             <ul className='space-y-1'>
               {match.players
                 .filter((p) => p.team === 2)
                 .map((p) => (
-                  <li key={p._id} className='text-gray-700 text-right'>
+                  <li key={p._id} className='text-gray-700 text-right truncate'>
                     {p.name}
                   </li>
                 ))}
@@ -160,7 +161,7 @@ const Match = ({ match, setMatches }) => {
         </div>
       </div>
 
-      <div className={`flex flex-col sm:flex-row ${showActions ? 'justify-between' : 'justify-center'} items-center gap-3`}>
+      <div className={`flex flex-1 flex-col sm:flex-row ${showActions ? 'justify-between' : 'justify-center'} items-center gap-3`}>
         {showActions && (
           <div className='flex justify-center items-center gap-[10px]'>
             <button
