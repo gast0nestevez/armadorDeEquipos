@@ -8,11 +8,15 @@ const sanitize = (body: Object, allowed: String[]) =>
 
 export default class MatchController {
   async createMatch(req: Request, res: Response) {
-    const { userId, players } = req.body
+    const { userId, players, goals1, goals2, result } = req.body
     if (!userId || !players) return res.status(400).json({ message: 'userId and players are required' })
     
+    const validPlayers = players.filter(
+      (player: any) => player && player.name && player.team && player.name.trim() !== ''
+    )
+
     try {
-      const match = new Match({ userId, players })
+      const match = new Match({ userId, players: validPlayers, goals1, goals2, result })
       await match.save()
   
       res.status(201).json(match)
