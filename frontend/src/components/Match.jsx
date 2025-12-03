@@ -16,7 +16,7 @@ const Match = ({ match, setMatches }) => {
   const resultButtonClasses = (type, currentResult) => {
     const isActive = currentResult === type
 
-    const base = 'l-2 px-2 py-1 rounded-md transition flex items-center justify-center border cursor-pointer'
+    const base = 'flex justify-center items-center l-2 px-2 py-1 rounded-md transition border cursor-pointer'
 
     const styles = {
       Win: isActive
