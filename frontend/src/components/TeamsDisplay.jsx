@@ -52,7 +52,7 @@ const Teams = ({ teams, loading }) => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       },
-      body: JSON.stringify({ userId: user.userId, players })
+      body: JSON.stringify({ players })
     }
     
     try {

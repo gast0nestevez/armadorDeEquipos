@@ -16,7 +16,7 @@ const Match = ({ match, setMatches }) => {
   const resultButtonClasses = (type, currentResult) => {
     const isActive = currentResult === type
 
-    const base = 'l-2 px-2 py-1 rounded-md transition flex items-center justify-center border cursor-pointer'
+    const base = 'flex justify-center items-center l-2 px-2 py-1 rounded-md transition border cursor-pointer'
 
     const styles = {
       Win: isActive
@@ -189,7 +189,7 @@ const Match = ({ match, setMatches }) => {
 
         {showDetails &&
           <button
-          className='px-3 py-2 rounded-lg bg-white shadow-sm border border-gray-200 text-gray-700 text-center transition cursor-pointer hover:shadow-md hover:bg-gray-50'
+          className='px-3 py-2 rounded-lg bg-blue-500 text-white font-semibold shadow-sm border border-gray-200 text-gray-700 text-center transition cursor-pointer hover:shadow-md hover:bg-blue-600'
           onClick={showActions ? saveChanges : () => setShowActions(true)}
           >
             {showActions ? 'Listo' : 'Editar'}

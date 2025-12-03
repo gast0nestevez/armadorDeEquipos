@@ -16,7 +16,7 @@ export interface Match extends Document {
 
 const PlayerSchema = new Schema<Player>({
   name: { type: String, required: true },
-  skill: { type: Number, required: true },
+  skill: { type: Number },
   team: { type: Number, required: true },
 })
 
