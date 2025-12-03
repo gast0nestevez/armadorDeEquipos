@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Nav from '../components/Nav'
+import { config } from '../../constants'
 import MatchesList from '../components/MatchesList'
 import { UserContext } from '../context/userContext'
-import { config } from '../../constants'
 import { handleGoogleLogout } from '../utils/googleOAuth'
 
 const API_BASE_URL = config.apiUrl
@@ -22,10 +22,16 @@ const Profile = () => {
 
     const fetchMatches = async () => {
       setLoadingMatches(true)
-      const url = `${API_BASE_URL}/match/${user.userId}`
+      const url = `${API_BASE_URL}/match`
+      const options = {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      }
       
       try {
-        const response = await fetch(url)
+        const response = await fetch(url, options)
         if (!response.ok) throw new Error('Error fetching matches')
         const data = await response.json()
         setMatches(data)

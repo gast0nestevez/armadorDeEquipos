@@ -1,5 +1,11 @@
 import { Request, Response } from 'express'
+import { JwtPayload } from 'jsonwebtoken';
+import { RequestWithUserInfo } from '../middleware/auth.middleware'
 import Match from '../models/match.model'
+
+interface JwtUserPayload extends JwtPayload {
+  userId: string;
+}
 
 const sanitize = (body: Object, allowed: String[]) =>
   Object.fromEntries(
@@ -7,8 +13,9 @@ const sanitize = (body: Object, allowed: String[]) =>
   )
 
 export default class MatchController {
-  async createMatch(req: Request, res: Response) {
-    const { userId, players, goals1, goals2, result } = req.body
+  async createMatch(req: RequestWithUserInfo, res: Response) {
+    const { userId } = req.user as JwtUserPayload
+    const { players, goals1, goals2, result } = req.body
     if (!userId || !players) return res.status(400).json({ message: 'userId and players are required' })
     
     const validPlayers = players.filter(
@@ -26,8 +33,8 @@ export default class MatchController {
     }
   }
   
-  async getUserMatches(req: Request, res: Response) {
-    const { userId } = req.params
+  async getUserMatches(req: RequestWithUserInfo, res: Response) {
+    const { userId } = req.user as JwtUserPayload
     
     try {
       const matches = await Match.find({ userId }).sort({ createdAt: -1 })

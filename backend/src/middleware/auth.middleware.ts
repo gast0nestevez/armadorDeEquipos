@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction } from 'express'
-import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export interface RequestWithUserInfo extends Request {
+  user?: string | JwtPayload
+}
+
+export const authMiddleware = (req: RequestWithUserInfo, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization
   if (!authHeader) return res.status(401).json({ error: 'Authorization header missing' })
 
@@ -10,6 +14,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string)
+    req.user = decoded
     next()
   } catch (e) {
     return res.status(403).json({ error: 'Invalid or expired token' })

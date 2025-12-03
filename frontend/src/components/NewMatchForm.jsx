@@ -1,12 +1,10 @@
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { Trophy, Minus, X } from 'lucide-react'
-import { UserContext } from '../context/userContext'
 import { config } from '../../constants'
 
 const API_BASE_URL = config.apiUrl
 
 const Match = ({ setMatches, formSubmited }) => {
-  const { user } = useContext(UserContext)
   const [playerCount, setPlayerCount] = useState(10)
   const [players, setPlayers] = useState([])
   const [goals1, setGoals1] = useState(null)
@@ -52,7 +50,6 @@ const Match = ({ setMatches, formSubmited }) => {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       },
       body: JSON.stringify({
-        userId: user.userId,
         players,
         goals1,
         goals2,
