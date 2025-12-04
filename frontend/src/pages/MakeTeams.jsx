@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import TeamsMaker from '../algorithm'
+import TeamsMaker from '../utils/teamsMaker'
 import usePlayers from '../hooks/usePlayers'
 import Nav from '../components/Nav'
 import Form from '../components/Form'

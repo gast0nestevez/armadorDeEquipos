@@ -63,7 +63,7 @@ class TeamsMaker {
   }
 
   newBestSum(sum, bestSum) {
-    return Math.abs(this.totalSkill - 2 * sum) < Math.abs(this.totalSkill - 2 * bestSum)
+    return (this.totalSkill - sum) < (this.totalSkill - bestSum)
   }
 
   buildTeams(memo, bestSum) {
