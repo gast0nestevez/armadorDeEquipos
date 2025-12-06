@@ -82,7 +82,7 @@ const Teams = ({ teams, loading }) => {
             onClick={copyToClipboard}
             className='bg-blue-900 text-white px-6 py-2 rounded hover:bg-blue-800 cursor-pointer'
           >
-            Copiar equipos
+            Copiar
           </button>
         }
 

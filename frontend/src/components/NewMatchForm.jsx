@@ -11,6 +11,7 @@ const Match = ({ setMatches, formSubmited }) => {
   const [goals1, setGoals1] = useState(null)
   const [goals2, setGoals2] = useState(null)
   const [result, setResult] = useState(null)
+  const [date, setDate] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
   const resultButtonClasses = (type, currentResult) => {
@@ -56,7 +57,8 @@ const Match = ({ setMatches, formSubmited }) => {
         players,
         goals1,
         goals2,
-        result
+        result,
+        date
       })
     }
     
@@ -179,6 +181,15 @@ const Match = ({ setMatches, formSubmited }) => {
           >
             <X size={24} />
           </button>
+        </div>
+
+        <div className='flex justify-center items-center'>
+          <input
+            type='date'
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className='bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 text-center'
+          />
         </div>
 
         <button

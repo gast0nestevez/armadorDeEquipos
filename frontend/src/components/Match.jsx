@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Trophy, Minus, X } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { config } from '../../constants'
 import Loader from './Loader'
 
@@ -11,8 +12,9 @@ const Match = ({ match, setMatches }) => {
   const [goals1, setGoals1] = useState(match.goals1 ?? 0)
   const [goals2, setGoals2] = useState(match.goals2 ?? 0)
   const [result, setResult] = useState(match.result)
+  const [date, setDate] = useState(match.date ?? '')
   const [loading, setLoading] = useState(false)
-  
+
   const resultButtonClasses = (type, currentResult) => {
     const isActive = currentResult === type
 
@@ -33,6 +35,12 @@ const Match = ({ match, setMatches }) => {
     return `${base} ${styles[type]}`
   }
 
+  const formatDate = (isoDate) => {
+    if (!isoDate) return ''
+    const [year, month, day] = isoDate.split('-')
+    return `${day}/${month}/${year}`
+  }
+
   const expandMatch = (e) => {
     // Avoid buttons and inputs
     if (['DIV', 'H3', 'SPAN', 'UL', 'LI'].includes(e.target.tagName)) {
@@ -40,6 +48,7 @@ const Match = ({ match, setMatches }) => {
       setShowActions(false)
     }
   }
+  console.log(match)
 
   const saveChanges = async () => {
     setLoading(true)
@@ -47,7 +56,8 @@ const Match = ({ match, setMatches }) => {
     const body = {
       goals1,
       goals2,
-      result
+      result,
+      date
     }
     const options = {
       method: 'PUT',
@@ -96,37 +106,66 @@ const Match = ({ match, setMatches }) => {
     }
   }
 
-  if (loading) return (
-    <div className='flex justify-center items-center'>
-      <Loader />
-    </div>
-  )
+  if (loading)
+    return (
+      <div className='flex justify-center items-center'>
+        <Loader />
+      </div>
+    )
 
   return (
     <div
       className={`flex flex-col justify-center p-4 cursor-pointer ${showDetails ? 'gap-[15px]' : ''}`}
       onClick={(e) => expandMatch(e)}
     >
+      {!showActions && (
+        <div className='text-center text-gray-600 text-sm mb-2'>
+          {match.date ? formatDate(match.date) : 'Sin fecha'}
+        </div>
+      )}
+      {showActions && (
+        <div className='flex justify-center items-center'>
+          <input
+            type='date'
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className='bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 text-center'
+          />
+        </div>
+      )}
+      
       <div className='flex justify-between gap-1'>
         <div className='grow max-w-1/3'>
-          <h3 className='font-semibold text-gray-800 mb-2 text-nowrap'>Equipo 1</h3>
-          {showDetails &&
-            <ul className='space-y-1'>
-              {match.players
-                .filter((p) => p.team === 1)
-                .map((p) => (
-                  <li key={p._id} className='text-gray-700 truncate'>
-                    {p.name}
-                  </li>
-                ))}
-            </ul>
-          }
+          <AnimatePresence>
+            {showDetails && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className='overflow-hidden'
+              >
+                <h3 className='font-semibold text-gray-800 mb-2 text-nowrap'>Equipo 1</h3>
+                <ul className='space-y-1'>
+                  {match.players
+                    .filter((p) => p.team === 1)
+                    .map((p) => (
+                      <li key={p._id} className='text-gray-700 truncate'>
+                        {p.name}
+                      </li>
+                    ))}
+                </ul>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         <div className='flex justify-center items-center font-semibold text-2xl text-nowrap'>
-          {!showActions ?
-            <span>{ match.goals1 } - { match.goals2 }</span>
-          : (
+          {!showActions ? (
+            <span>
+              {match.goals1} - {match.goals2}
+            </span>
+          ) : (
             <div className='flex items-center gap-1'>
               <input
                 type='number'
@@ -146,55 +185,56 @@ const Match = ({ match, setMatches }) => {
         </div>
 
         <div className='grow max-w-1/3'>
-          <h3 className='font-semibold text-gray-800 mb-2 text-right text-nowrap'>Equipo 2</h3>
-          {showDetails &&
-            <ul className='space-y-1'>
-              {match.players
-                .filter((p) => p.team === 2)
-                .map((p) => (
-                  <li key={p._id} className='text-gray-700 text-right truncate'>
-                    {p.name}
-                  </li>
-                ))}
-            </ul>
-          }
+          <AnimatePresence>
+            {showDetails && (
+              <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className='overflow-hidden'
+              >
+                <h3 className='font-semibold text-gray-800 mb-2 text-right text-nowrap'>Equipo 2</h3>
+                <ul className='space-y-1'>
+                  {match.players
+                    .filter((p) => p.team === 2)
+                    .map((p) => (
+                      <li key={p._id} className='text-gray-700 text-right truncate'>
+                        {p.name}
+                      </li>
+                    ))}
+                </ul>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
       <div className={`flex flex-1 flex-col sm:flex-row ${showActions ? 'justify-between' : 'justify-center'} items-center gap-3`}>
         {showActions && (
           <div className='flex justify-center items-center gap-[10px]'>
-            <button
-              className={resultButtonClasses('Win', result)}
-              onClick={() => setResult('Win')}
-            >
+            <button className={resultButtonClasses('Win', result)} onClick={() => setResult('Win')}>
               <Trophy />
             </button>
 
-            <button
-              className={resultButtonClasses('Draw', result)}
-              onClick={() => setResult('Draw')}
-            >
+            <button className={resultButtonClasses('Draw', result)} onClick={() => setResult('Draw')}>
               <Minus />
             </button>
 
-            <button
-              className={resultButtonClasses('Lose', result)}
-              onClick={() => setResult('Lose')}
-            >
+            <button className={resultButtonClasses('Lose', result)} onClick={() => setResult('Lose')}>
               <X />
             </button>
           </div>
         )}
 
-        {showDetails &&
+        {showDetails && (
           <button
-          className='px-3 py-2 rounded-lg bg-blue-500 text-white font-semibold shadow-sm border border-gray-200 text-gray-700 text-center transition cursor-pointer hover:shadow-md hover:bg-blue-600'
-          onClick={showActions ? saveChanges : () => setShowActions(true)}
+            className='px-3 py-2 rounded-lg bg-blue-500 text-white font-semibold shadow-sm border border-gray-200 text-gray-700 text-center transition cursor-pointer hover:shadow-md hover:bg-blue-600'
+            onClick={showActions ? saveChanges : () => setShowActions(true)}
           >
             {showActions ? 'Listo' : 'Editar'}
           </button>
-        }
+        )}
 
         {showActions && (
           <div>
@@ -202,8 +242,8 @@ const Match = ({ match, setMatches }) => {
               className='cursor-pointer bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors w-fit'
               onClick={() => deleteMatch(match._id)}
               tabIndex='-1'
-              >
-                Borrar partido
+            >
+              Borrar partido
             </button>
           </div>
         )}
