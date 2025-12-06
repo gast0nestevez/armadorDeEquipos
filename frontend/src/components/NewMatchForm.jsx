@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Trophy, Minus, X } from 'lucide-react'
 import { config } from '../../constants'
+import Loader from './Loader'
 
 const API_BASE_URL = config.apiUrl
 
@@ -10,6 +11,8 @@ const Match = ({ setMatches, formSubmited }) => {
   const [goals1, setGoals1] = useState(null)
   const [goals2, setGoals2] = useState(null)
   const [result, setResult] = useState(null)
+  const [date, setDate] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const resultButtonClasses = (type, currentResult) => {
     const isActive = currentResult === type
@@ -38,6 +41,7 @@ const Match = ({ setMatches, formSubmited }) => {
   }
 
   const addMatch = async () => {
+    setIsLoading(true)
     players
       .filter(player => player && player.name && player.name.trim() !== '')
       .map(player => ({ name: player.name, team: player.team }))
@@ -53,7 +57,8 @@ const Match = ({ setMatches, formSubmited }) => {
         players,
         goals1,
         goals2,
-        result
+        result,
+        date
       })
     }
     
@@ -70,10 +75,18 @@ const Match = ({ setMatches, formSubmited }) => {
       setGoals2(null)
       setResult(null)
       formSubmited()
+      setIsLoading(false)
     } catch (e) {
       console.error(e)
     }
   }
+
+  if (isLoading)
+    return (
+      <div className='flex justify-center items-center'>
+        <Loader />
+      </div>
+    )
 
   return (
     <div className='flex flex-col justify-center p-4 max-w-4xl mx-auto'>
@@ -168,6 +181,15 @@ const Match = ({ setMatches, formSubmited }) => {
           >
             <X size={24} />
           </button>
+        </div>
+
+        <div className='flex justify-center items-center'>
+          <input
+            type='date'
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className='bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 text-center'
+          />
         </div>
 
         <button

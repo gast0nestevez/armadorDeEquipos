@@ -1,81 +1,50 @@
 import { Request, Response } from 'express'
-import { JwtPayload } from 'jsonwebtoken';
+import { JwtPayload } from 'jsonwebtoken'
 import { RequestWithUserInfo } from '../middleware/auth.middleware'
-import Match from '../models/match.model'
+import matchService from '../services/match.service'
 
 interface JwtUserPayload extends JwtPayload {
-  userId: string;
+  userId: string
 }
-
-const sanitize = (body: Object, allowed: String[]) =>
-  Object.fromEntries(
-    Object.entries(body).filter(([k]) => allowed.includes(k))
-  )
 
 export default class MatchController {
   async createMatch(req: RequestWithUserInfo, res: Response) {
-    const { userId } = req.user as JwtUserPayload
-    const { players, goals1, goals2, result } = req.body
-    if (!userId || !players) return res.status(400).json({ message: 'userId and players are required' })
-    
-    const validPlayers = players.filter(
-      (player: any) => player && player.name && player.team && player.name.trim() !== ''
-    )
-
     try {
-      const match = new Match({ userId, players: validPlayers, goals1, goals2, result })
-      await match.save()
-  
+      const { userId } = req.user as JwtUserPayload
+      const match = await matchService.createMatch(userId, req.body)
       res.status(201).json(match)
     } catch (e) {
-      console.error(e)
       res.status(500).json({ ok: false, message: 'Error creating match' })
     }
   }
-  
+
   async getUserMatches(req: RequestWithUserInfo, res: Response) {
-    const { userId } = req.user as JwtUserPayload
-    
     try {
-      const matches = await Match.find({ userId }).sort({ createdAt: -1 })
+      const { userId } = req.user as JwtUserPayload
+      const matches = await matchService.getUserMatches(userId)
       res.status(200).json(matches)
     } catch (e) {
-      console.error(e)
       res.status(500).json({ ok: false, message: 'Error fetching matches' })
     }
   }
-
-  async deleteMatch(req: Request, res: Response) {
-    const { matchId } = req.params
-
-    try {
-      await Match.findByIdAndDelete(matchId)
-      res.status(200).json({ ok: true, deleted: matchId })
-    } catch (e) {
-      console.error(e)
-      res.status(500).json({ ok: false, message: 'Error deleting match' })
-    }
-  }
-
+  
   async updateMatch(req: Request, res: Response) {
     const { matchId } = req.params
-    const filteredBody = sanitize(req.body, [
-      'players',
-      'goals1',
-      'goals2',
-      'result'
-    ])
-
     try {
-      const updatedMatch = await Match.findByIdAndUpdate(
-        matchId,
-        filteredBody,
-        { new: true, runValidators: true }
-      )
+      const updatedMatch = await matchService.updateMatch(matchId, req.body)
       res.status(200).json({ updatedMatch })
     } catch (e) {
-      console.error(e)
       res.status(500).json({ ok: false, message: 'Error updating match' })
+    }
+  }
+  
+  async deleteMatch(req: Request, res: Response) {
+    const { matchId } = req.params
+    try {
+      await matchService.deleteMatch(matchId)
+      res.status(200).json({ ok: true, deleted: matchId })
+    } catch (e) {
+      res.status(500).json({ ok: false, message: 'Error deleting match' })
     }
   }
 }
