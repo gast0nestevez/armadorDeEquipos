@@ -12,6 +12,7 @@ export interface Match extends Document {
   goals1: Number
   goals2: Number
   result: String
+  date: String
 }
 
 const PlayerSchema = new Schema<Player>({
@@ -26,6 +27,11 @@ const MatchSchema = new Schema<Match>({
   goals1: { type: Number },
   goals2: { type: Number },
   result: { type: String, enum: ['Lose', 'Draw', 'Win'] },
+  date: { 
+    type: String, 
+    match: /^\d{4}-\d{2}-\d{2}$/, // YYYY-MM-DD
+    required: false
+  }
 }, {
   timestamps: true
 })
