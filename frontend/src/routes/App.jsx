@@ -2,9 +2,9 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { AnimatePresence, motion } from 'framer-motion'
 import { Analytics } from '@vercel/analytics/react'
 
-import Home from '../pages/Home'
-import Profile from '../pages/Profile'
-import MakeTeams from '../pages/MakeTeams'
+import Home from '@/pages/Home'
+import Profile from '@/pages/Profile'
+import MakeTeams from '@/pages/MakeTeams'
 
 const pageVariants = {
   initial: { opacity: 0, x: -20 },

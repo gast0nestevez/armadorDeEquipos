@@ -1,9 +1,10 @@
 import { useState, useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
-import NavButtons from './NavButtons'
-import { UserContext } from '../context/userContext'
-import { handleGoogleLogin, handleGoogleError } from '../utils/googleOAuth'
+
+import NavButtons from '@/components/NavButtons'
+import { UserContext } from '@/context/userContext'
+import { handleGoogleLogin, handleGoogleError } from '@/utils/googleOAuth'
 
 const Nav = () => {
   const navigate = useNavigate()

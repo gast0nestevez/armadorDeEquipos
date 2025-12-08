@@ -1,4 +1,4 @@
-import Loader from './Loader'
+import Loader from '@/components/Loader'
 
 const capitalize = (s) => String(s[0]).toUpperCase() + String(s).slice(1)
 

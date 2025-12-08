@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Trophy, Minus, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Env } from '../utils/env'
-import Loader from './Loader'
+
+import { Env } from '@/utils/env'
+import Loader from '@/components/Loader'
 
 const API_BASE_URL = Env.getString('VITE_API_BASE_PATH')
 

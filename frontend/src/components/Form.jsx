@@ -1,5 +1,6 @@
 import { Trash2 } from 'lucide-react'
-import HelpMessage from './HelpMessage'
+
+import HelpMessage from '@/components/HelpMessage'
 
 const Form = ({ players, handleChange, deletePlayer, submitPlayers }) => {
   return (

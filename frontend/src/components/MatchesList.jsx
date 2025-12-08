@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import Match from './Match'
-import Loader from './Loader'
-import NewMatchForm from './NewMatchForm'
+
+import Match from '@/components/Match'
+import Loader from '@/components/Loader'
+import NewMatchForm from '@/components/NewMatchForm'
 
 const MatchesList = ({ matches, setMatches, loadingMatches }) => {
   const [newMatchForm, setNewMatchForm] = useState(false)

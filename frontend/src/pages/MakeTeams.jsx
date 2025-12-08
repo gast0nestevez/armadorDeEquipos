@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import TeamsMaker from '../utils/teamsMaker'
-import usePlayers from '../hooks/usePlayers'
-import Nav from '../components/Nav'
-import Form from '../components/Form'
-import Teams from '../components/TeamsDisplay'
+
+import TeamsMaker from '@/utils/teamsMaker'
+import usePlayers from '@/hooks/usePlayers'
+import Nav from '@/components/Nav'
+import Form from '@/components/Form'
+import Teams from '@/components/TeamsDisplay'
 
 function ClassicMode() {
   const { players, handleChange, deletePlayer } = usePlayers([{ name: '', skill: '' }])

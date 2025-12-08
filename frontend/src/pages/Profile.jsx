@@ -1,10 +1,11 @@
 import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Nav from '../components/Nav'
-import { Env } from '../utils/env'
-import MatchesList from '../components/MatchesList'
-import { UserContext } from '../context/userContext'
-import { handleGoogleLogout } from '../utils/googleOAuth'
+
+import { Env } from '@/utils/env'
+import { UserContext } from '@/context/userContext'
+import { handleGoogleLogout } from '@/utils/googleOAuth'
+import Nav from '@/components/Nav'
+import MatchesList from '@/components/MatchesList'
 
 const API_BASE_URL = Env.getString('VITE_API_BASE_PATH')
 
@@ -47,7 +48,7 @@ const Profile = () => {
   if (!user) {
     return (
       <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100'>
-        <p className='text-gray-600 text-lg animate-pulse'>Cargando perfil...</p>
+        <p className='text-gray-600 text-lg animate-pulse'>Cargando perfilsrc.</p>
       </div>
     )
   }
