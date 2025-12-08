@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { Trophy, Minus, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { config } from '../../constants'
+import { Env } from '../utils/env'
 import Loader from './Loader'
 
-const API_BASE_URL = config.apiUrl
+const API_BASE_URL = Env.getString('VITE_API_BASE_PATH')
+
+const capitalize = (s) => String(s[0]).toUpperCase() + String(s).slice(1)
 
 const Match = ({ match, setMatches }) => {
   const [showDetails, setShowDetails] = useState(false)
@@ -48,7 +50,6 @@ const Match = ({ match, setMatches }) => {
       setShowActions(false)
     }
   }
-  console.log(match)
 
   const saveChanges = async () => {
     setLoading(true)
@@ -151,7 +152,7 @@ const Match = ({ match, setMatches }) => {
                     .filter((p) => p.team === 1)
                     .map((p) => (
                       <li key={p._id} className='text-gray-700 truncate'>
-                        {p.name}
+                        {capitalize(p.name)}
                       </li>
                     ))}
                 </ul>
@@ -200,7 +201,7 @@ const Match = ({ match, setMatches }) => {
                     .filter((p) => p.team === 2)
                     .map((p) => (
                       <li key={p._id} className='text-gray-700 text-right truncate'>
-                        {p.name}
+                        {capitalize(p.name)}
                       </li>
                     ))}
                 </ul>

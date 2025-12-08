@@ -1,7 +1,7 @@
 import { googleLogout } from '@react-oauth/google'
-import { config } from '../../constants'
+import { Env } from '../utils/env'
 
-const API_BASE_URL = config.apiUrl
+const API_BASE_URL = Env.getString('VITE_API_BASE_PATH')
 
 export const handleGoogleLogin = async (credentialResponse, setUser, setIsOpen, navigate) => {
   const googleToken = credentialResponse.credential

@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Nav from '../components/Nav'
-import { config } from '../../constants'
+import { Env } from '../utils/env'
 import MatchesList from '../components/MatchesList'
 import { UserContext } from '../context/userContext'
 import { handleGoogleLogout } from '../utils/googleOAuth'
 
-const API_BASE_URL = config.apiUrl
+const API_BASE_URL = Env.getString('VITE_API_BASE_PATH')
 
 const Profile = () => {
   const navigate = useNavigate()
