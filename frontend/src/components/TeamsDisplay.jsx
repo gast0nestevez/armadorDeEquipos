@@ -1,8 +1,9 @@
 import { useContext } from 'react'
-import { UserContext } from '../context/userContext'
-import { Env } from '../utils/env'
-import TeamCard from './TeamCard'
-import useFlashMessage from '../hooks/useFlashMessage'
+
+import { Env } from '@/utils/env'
+import TeamCard from '@/components/TeamCard'
+import { UserContext } from '@/context/userContext'
+import useFlashMessage from '@/hooks/useFlashMessage'
 
 const API_BASE_URL = Env.getString('VITE_API_BASE_PATH')
 

@@ -1,5 +1,6 @@
 import { googleLogout } from '@react-oauth/google'
-import { Env } from '../utils/env'
+
+import { Env } from '@/utils/env'
 
 const API_BASE_URL = Env.getString('VITE_API_BASE_PATH')
 
