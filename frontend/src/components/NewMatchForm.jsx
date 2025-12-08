@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Trophy, Minus, X } from 'lucide-react'
-import { config } from '../../constants'
+import { Env } from '../utils/env'
 import Loader from './Loader'
 
-const API_BASE_URL = config.apiUrl
+const API_BASE_URL = Env.getString('VITE_API_BASE_PATH')
 
 const Match = ({ setMatches, formSubmited }) => {
   const [playerCount, setPlayerCount] = useState(10)
@@ -187,6 +187,7 @@ const Match = ({ setMatches, formSubmited }) => {
           <input
             type='date'
             value={date}
+            placeholder='Fecha'
             onChange={(e) => setDate(e.target.value)}
             className='bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 text-center'
           />
@@ -196,7 +197,7 @@ const Match = ({ setMatches, formSubmited }) => {
           className='w-full md:w-auto px-6 py-3 rounded-lg bg-blue-500 text-white font-semibold transition cursor-pointer hover:bg-blue-600'
           onClick={() => addMatch()}
         >
-          Listo
+          Guardar
         </button>
       </div>
     </div>
