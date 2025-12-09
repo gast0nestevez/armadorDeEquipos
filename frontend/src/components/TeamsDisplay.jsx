@@ -9,7 +9,7 @@ const API_BASE_URL = Env.getString('VITE_API_BASE_PATH')
 
 const capitalize = (s) => String(s[0]).toUpperCase() + String(s).slice(1)
 
-const Teams = ({ teams, loading }) => {
+const TeamsDisplay = ({ teams, loading, teamsRef }) => {
   const { user } = useContext(UserContext)
   const copyMessage = useFlashMessage()
   const saveMessage = useFlashMessage()
@@ -77,7 +77,7 @@ const Teams = ({ teams, loading }) => {
         ))}
       </div>
 
-      <div className='flex justify-around mt-6 text-center' id='see-teams'>
+      <div className='flex justify-around mt-6 text-center' ref={teamsRef}>
         {playersNotEmpty && 
           <button
             onClick={copyToClipboard}
@@ -103,4 +103,4 @@ const Teams = ({ teams, loading }) => {
   )
 }
 
-export default Teams
+export default TeamsDisplay
