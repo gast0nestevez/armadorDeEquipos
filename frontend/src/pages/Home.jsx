@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 
 import Nav from '@/components/Nav'
+import Footer from '@/components/Footer'
 import '@/css/home.css'
 
 const Home = () => {
@@ -10,15 +11,17 @@ const Home = () => {
       
       <main className='flex flex-col justify-center items-center flex-1 text-center px-4 h-full'>
         <h1 className='text-5xl font-extrabold mb-4'>
-          Armá tus equipos
+          Generador de equipos de fútbol
         </h1>
+        <h2 className='text-xl font-semibold mb-6'>
+          Armá partidos balanceados de forma simple y rápida
+        </h2>
         <p className='text-lg mb-10 max-w-md'>
-          Puntuá a tus amigos y generá equipos balanceados en segundos. <br />
-          Registrate para guardar partidos y generar estadísticas.
+          Puntuá a tus amigos por habilidad y dejá que el sistema forme equipos equilibrados en segundos. <br />
+          Registrate para guardar tus partidos y acceder a estadísticas.
         </p>
 
         <div className='w-full max-w-sm space-y-4'>
-
           <ul className='modos space-y-3'>
             <li>
               <Link
@@ -31,6 +34,8 @@ const Home = () => {
           </ul>
         </div>
       </main>
+
+      <Footer />
     </div>
   )
 }
