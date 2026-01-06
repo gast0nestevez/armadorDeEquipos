@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { Env } from '@/utils/env'
+import Env from '@/utils/env'
 import { UserContext } from '@/context/userContext'
 import { handleGoogleLogout } from '@/utils/googleOAuth'
 import Nav from '@/components/Nav'
@@ -68,7 +68,7 @@ const Profile = () => {
 
         <button
           className='bg-gray-300 text-gray-800 py-2.5 px-6 rounded-lg font-bold hover:bg-gray-400 transition cursor-pointer'
-          onClick={() => handleGoogleLogout(clearContext, navigate)}
+          onClick={() => handleGoogleLogout(clearContext)}
         >
           Cerrar sesión
         </button>

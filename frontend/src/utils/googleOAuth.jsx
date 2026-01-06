@@ -1,10 +1,10 @@
 import { googleLogout } from '@react-oauth/google'
 
-import { Env } from '@/utils/env'
+import Env from '@/utils/env'
 
 const API_BASE_URL = Env.getString('VITE_API_BASE_PATH')
 
-export const handleGoogleLogin = async (credentialResponse, setUser, setIsOpen, navigate) => {
+export const handleGoogleLogin = async (credentialResponse, setUser) => {
   const googleToken = credentialResponse.credential
 
   const url = `${API_BASE_URL}/auth`
@@ -25,17 +25,13 @@ export const handleGoogleLogin = async (credentialResponse, setUser, setIsOpen, 
   } catch (e) {
     console.error('Error while login: ', e)
   }
-  
-  setIsOpen(false)
-  navigate('/')
 }
 
 export const handleGoogleError = (err) => {
   console.error('Google error: ', err)
 }
 
-export const handleGoogleLogout = (clearContext, navigate) => {
+export const handleGoogleLogout = (clearContext) => {
   googleLogout()
   clearContext()
-  navigate('/')
 }

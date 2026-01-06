@@ -1,4 +1,4 @@
-export class Env {
+export default class Env {
   // Get a required environment variable as a string
   static getString(key) {
     const value = import.meta.env[key]

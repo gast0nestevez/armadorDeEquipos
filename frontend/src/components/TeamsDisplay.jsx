@@ -1,13 +1,12 @@
 import { useContext } from 'react'
 
-import { Env } from '@/utils/env'
+import Env from '@/utils/env'
 import TeamCard from '@/components/TeamCard'
+import { capitalize } from '@/utils/capitalize'
 import { UserContext } from '@/context/userContext'
 import useFlashMessage from '@/hooks/useFlashMessage'
 
 const API_BASE_URL = Env.getString('VITE_API_BASE_PATH')
-
-const capitalize = (s) => String(s[0]).toUpperCase() + String(s).slice(1)
 
 const TeamsDisplay = ({ teams, loading, teamsRef }) => {
   const { user } = useContext(UserContext)

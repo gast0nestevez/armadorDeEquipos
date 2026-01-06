@@ -2,19 +2,18 @@ import { useState } from 'react'
 import { Trophy, Minus, X } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 
-import { Env } from '@/utils/env'
+import Env from '@/utils/env'
 import Loader from '@/components/Loader'
+import { capitalize } from '@/utils/capitalize'
 
 const API_BASE_URL = Env.getString('VITE_API_BASE_PATH')
-
-const capitalize = (s) => String(s[0]).toUpperCase() + String(s).slice(1)
 
 const Match = ({ match, setMatches }) => {
   const [showDetails, setShowDetails] = useState(false)
   const [showActions, setShowActions] = useState(false)
   const [goals1, setGoals1] = useState(match.goals1 ?? 0)
   const [goals2, setGoals2] = useState(match.goals2 ?? 0)
-  const [result, setResult] = useState(match.result)
+  const [result, setResult] = useState(match.result ?? '')
   const [date, setDate] = useState(match.date ?? '')
   const [loading, setLoading] = useState(false)
 

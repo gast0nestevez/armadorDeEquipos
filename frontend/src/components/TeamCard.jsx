@@ -1,6 +1,5 @@
 import Loader from '@/components/Loader'
-
-const capitalize = (s) => String(s[0]).toUpperCase() + String(s).slice(1)
+import { capitalize } from '@/utils/capitalize'
 
 const TeamCard = ({ index, players, loading }) => (
   <div className='flex flex-col bg-white shadow-md rounded-xl p-6 w-48 text-center'>
