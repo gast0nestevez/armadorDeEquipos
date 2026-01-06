@@ -6,7 +6,7 @@ import Nav from '@/components/Nav'
 import Form from '@/components/Form'
 import TeamsDisplay from '@/components/TeamsDisplay'
 
-function ClassicMode() {
+const MakeTeams = () => {
   const { players, handleChange, deletePlayer } = usePlayers([{ name: '', skill: '' }])
   const [teams, setTeams] = useState([{ players: [], skill: '' }, { players: [], skill: '' }])
   const [loading, setLoading] = useState(false)
@@ -54,4 +54,4 @@ function ClassicMode() {
   )
 }
 
-export default ClassicMode
+export default MakeTeams

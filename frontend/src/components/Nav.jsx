@@ -1,19 +1,11 @@
-import { useState, useContext } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 
 import NavButtons from '@/components/NavButtons'
-import { UserContext } from '@/context/userContext'
-import { handleGoogleLogin, handleGoogleError } from '@/utils/googleOAuth'
 
 const Nav = () => {
-  const navigate = useNavigate()
-  const { user, setUser } = useContext(UserContext)
   const [isOpen, setIsOpen] = useState(false)
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen)
-  }
 
   return (
     <nav className='relative bg-white shadow-md'>
@@ -24,7 +16,7 @@ const Nav = () => {
 
         {/* menu icon for mobile */}
         <button
-          onClick={toggleMenu}
+          onClick={() => setIsOpen(!isOpen)}
           className='md:hidden focus:outline-none cursor-pointer'
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -32,15 +24,6 @@ const Nav = () => {
 
         {/* desktop buttons */}
         <NavButtons
-          user={user}
-          onLogin={(credentialResponse) =>
-            handleGoogleLogin(
-              credentialResponse,
-              setUser,
-              setIsOpen,
-              navigate
-            )}
-          onError={handleGoogleError}
           setIsOpen={setIsOpen}
         />
       </div>
@@ -48,15 +31,6 @@ const Nav = () => {
       {/* mobile menu */}
       {isOpen && (
         <NavButtons
-          user={user}
-          onLogin={(credentialResponse) =>
-            handleGoogleLogin(
-              credentialResponse,
-              setUser,
-              setIsOpen,
-              navigate
-            )}
-          onError={handleGoogleError}
           variant='mobile'
           setIsOpen={setIsOpen}
         />

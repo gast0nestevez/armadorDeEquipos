@@ -1,7 +1,11 @@
+import { useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { GoogleLogin } from '@react-oauth/google'
 
-const NavButtons = ({ user, onLogin, onError, variant='desktop', setIsOpen }) => {
+import { UserContext } from '@/context/userContext'
+
+const NavButtons = ({ setIsOpen, variant='desktop' }) => {
+  const { user } = useContext(UserContext)
+
   const isMobile = variant === 'mobile'
 
   const containerClass = isMobile
@@ -18,18 +22,18 @@ const NavButtons = ({ user, onLogin, onError, variant='desktop', setIsOpen }) =>
   
   return (
     <div className={containerClass}>
-      {!user ? (
-        <div className='flex justify-center items-center'>
-          <GoogleLogin
-            theme='outline'
-            size='large'
-            shape='rectangular'
-            onSuccess={onLogin}
-            onError={onError}
-          />
-        </div>
-      ) : (
-        <ul className={ulClass}>
+      <ul className={ulClass}>
+        {!user ? (
+          <li>
+            <Link
+              to='/login'
+              className={linkClass}
+              onClick={() => setIsOpen(false)}
+            >
+              Ingresar
+            </Link>
+          </li>
+        ) : (
           <li>
             <Link
               to='/perfil'
@@ -39,8 +43,8 @@ const NavButtons = ({ user, onLogin, onError, variant='desktop', setIsOpen }) =>
               Mis Partidos
             </Link>
           </li>
-        </ul>
-      )}
+        )}
+      </ul>
     </div>
   )
 }
