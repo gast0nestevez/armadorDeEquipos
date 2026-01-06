@@ -43,7 +43,7 @@ const Profile = () => {
     }
 
     fetchMatches()
-  }, [user])
+  }, [user, navigate])
 
   if (!user) {
     return (
