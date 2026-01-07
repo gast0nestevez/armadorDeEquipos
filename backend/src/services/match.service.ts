@@ -4,8 +4,7 @@ export default {
   createMatch: async (userId: string, data: any) => {
     const { players, goals1, goals2, result, date } = data
 
-    if (!userId || !players)
-      throw new Error('userId and players are required')
+    if (!userId || !players) throw new Error('userId and players are required')
 
     const validPlayers = players.filter(
       (player: any) => player && player.name && player.team && player.name.trim() !== ''

@@ -1,4 +1,5 @@
 import express from 'express'
+
 import { authMiddleware } from '../middleware/auth.middleware'
 import MatchController from '../controllers/match.controller'
 

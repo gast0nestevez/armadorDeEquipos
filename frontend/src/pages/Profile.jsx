@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import Env from '@/utils/env'
 import { UserContext } from '@/context/userContext'
-import { handleGoogleLogout } from '@/utils/googleOAuth'
+import { handleGoogleLogout } from '@/utils/auth'
 import Nav from '@/components/Nav'
 import MatchesList from '@/components/MatchesList'
 
