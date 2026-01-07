@@ -1,16 +1,13 @@
 import { Request, Response } from 'express'
-import { JwtPayload } from 'jsonwebtoken'
-import { RequestWithUserInfo } from '../middleware/auth.middleware'
+
+import { AuthenticatedRequest } from '../middleware/auth.middleware'
 import matchService from '../services/match.service'
 
-interface JwtUserPayload extends JwtPayload {
-  userId: string
-}
-
 export default class MatchController {
-  async createMatch(req: RequestWithUserInfo, res: Response) {
+  async createMatch(req: Request, res: Response) {
+    const authReq = req as AuthenticatedRequest
     try {
-      const { userId } = req.user as JwtUserPayload
+      const userId = authReq.userId
       const match = await matchService.createMatch(userId, req.body)
       res.status(201).json(match)
     } catch (e) {
@@ -18,9 +15,10 @@ export default class MatchController {
     }
   }
 
-  async getUserMatches(req: RequestWithUserInfo, res: Response) {
+  async getUserMatches(req: Request, res: Response) {
+    const authReq = req as AuthenticatedRequest
     try {
-      const { userId } = req.user as JwtUserPayload
+      const userId = authReq.userId
       const matches = await matchService.getUserMatches(userId)
       res.status(200).json(matches)
     } catch (e) {
