@@ -34,8 +34,9 @@ const Profile = () => {
       try {
         const response = await fetch(url, options)
         if (!response.ok) throw new Error('Error fetching matches')
-        const data = await response.json()
-        setMatches(data)
+        const { data: matches } = await response.json()
+        
+        setMatches(matches)
         setLoadingMatches(false)
       } catch (e) {
         console.error(e)
