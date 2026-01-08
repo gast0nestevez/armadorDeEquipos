@@ -2,7 +2,9 @@ import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { GoogleLogin } from '@react-oauth/google'
 
+import Nav from '@/components/Nav'
 import Loader from '@/components/Loader'
+import Footer from '@/components/Footer'
 import { UserContext } from '@/context/userContext'
 import {
   handleEmailLogin,
@@ -116,104 +118,110 @@ const Auth = () => {
   }
 
   return (
-    <div className='min-h-screen flex justify-center items-center bg-gray-100'>
-      <div className='bg-white p-8 rounded-lg shadow-md w-80'>
-        <h1 className='text-xl font-semibold mb-4 text-center'>
-          {mode === 'login' ? 'Iniciar sesión' : 'Crear cuenta'}
-        </h1>
+    <div className='flex flex-col bg-gray-100 min-h-screen'>
+      <Nav />
 
-        {generalError && (
-          <div className='mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm'>
-            {generalError}
-          </div>
-        )}
+      <div className='flex justify-center items-center h-full'>
+        <div className='bg-white p-8 rounded-lg shadow-md w-80'>
+          <h1 className='text-xl font-semibold mb-4 text-center'>
+            {mode === 'login' ? 'Iniciar sesión' : 'Crear cuenta'}
+          </h1>
 
-        <form onSubmit={handleSubmit} className='space-y-3'>
-          <div>
-            <input
-              type='email' 
-              name='email'
-              placeholder='Mail'
-              value={form.email}
-              onChange={handleChange}
-              className={`w-full px-3 py-2 border rounded ${
-                errors.email ? 'border-red-500 bg-red-50' : 'border-gray-300'
-              }`}
-            />
-            {errors.email && (
-              <p className='text-red-600 text-xs mt-1'>{errors.email}</p>
-            )}
-          </div>
-
-          <div>
-            <input
-              type='password'
-              name='password'
-              placeholder='Contraseña'
-              value={form.password}
-              onChange={handleChange}
-              className={`w-full px-3 py-2 border rounded ${
-                errors.password ? 'border-red-500 bg-red-50' : 'border-gray-300'
-              }`}
-            />
-            {errors.password && (
-              <p className='text-red-600 text-xs mt-1'>{errors.password}</p>
-            )}
-          </div>
-
-          {mode === 'register' && (
-            <div>
-              <input
-                type='password'
-                name='confirmPassword'
-                placeholder='Repetir contraseña'
-                value={form.confirmPassword}
-                onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded ${
-                  errors.confirmPassword ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                }`}
-              />
-              {errors.confirmPassword && (
-                <p className='text-red-600 text-xs mt-1'>{errors.confirmPassword}</p>
-              )}
+          {generalError && (
+            <div className='mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm'>
+              {generalError}
             </div>
           )}
 
+          <form onSubmit={handleSubmit} className='space-y-3'>
+            <div>
+              <input
+                type='email' 
+                name='email'
+                placeholder='Mail'
+                value={form.email}
+                onChange={handleChange}
+                className={`w-full px-3 py-2 border rounded ${
+                  errors.email ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                }`}
+                />
+              {errors.email && (
+                <p className='text-red-600 text-xs mt-1'>{errors.email}</p>
+              )}
+            </div>
+
+            <div>
+              <input
+                type='password'
+                name='password'
+                placeholder='Contraseña'
+                value={form.password}
+                onChange={handleChange}
+                className={`w-full px-3 py-2 border rounded ${
+                  errors.password ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                }`}
+                />
+              {errors.password && (
+                <p className='text-red-600 text-xs mt-1'>{errors.password}</p>
+              )}
+            </div>
+
+            {mode === 'register' && (
+              <div>
+                <input
+                  type='password'
+                  name='confirmPassword'
+                  placeholder='Repetir contraseña'
+                  value={form.confirmPassword}
+                  onChange={handleChange}
+                  className={`w-full px-3 py-2 border rounded ${
+                    errors.confirmPassword ? 'border-red-500 bg-red-50' : 'border-gray-300'
+                  }`}
+                  />
+                {errors.confirmPassword && (
+                  <p className='text-red-600 text-xs mt-1'>{errors.confirmPassword}</p>
+                )}
+              </div>
+            )}
+
+            <button
+              type='submit'
+              className='w-full bg-black text-white py-2 rounded hover:opacity-90 cursor-pointer'
+              >
+              {mode === 'login' ? 'Entrar' : 'Registrarse'}
+            </button>
+          </form>
+
+          <div className='my-4 text-center text-sm text-gray-500'>
+            o continuar con
+          </div>
+
+          <div className='flex justify-center'>
+            <GoogleLogin
+              theme='outline'
+              size='large'
+              shape='rectangular'
+              onSuccess={onSuccessGoogle}
+              onError={handleGoogleError}
+              />
+          </div>
+
           <button
-            type='submit'
-            className='w-full bg-black text-white py-2 rounded hover:opacity-90 cursor-pointer'
-          >
-            {mode === 'login' ? 'Entrar' : 'Registrarse'}
+            className='mt-4 text-sm text-center w-full text-gray-600 hover:underline cursor-pointer'
+            onClick={() => {
+              setMode(mode === 'login' ? 'register' : 'login')
+              setErrors({})
+              setGeneralError('')
+            }}
+            >
+            {mode === 'login'
+              ? 'No tenés cuenta? Registrate'
+              : 'Ya tenés cuenta? Iniciá sesión'}
           </button>
-        </form>
-
-        <div className='my-4 text-center text-sm text-gray-500'>
-          o continuar con
         </div>
-
-        <div className='flex justify-center'>
-          <GoogleLogin
-            theme='outline'
-            size='large'
-            shape='rectangular'
-            onSuccess={onSuccessGoogle}
-            onError={handleGoogleError}
-          />
-        </div>
-
-        <button
-          className='mt-4 text-sm text-center w-full text-gray-600 hover:underline cursor-pointer'
-          onClick={() => {
-            setMode(mode === 'login' ? 'register' : 'login')
-            setErrors({})
-            setGeneralError('')
-          }}
-        >
-          {mode === 'login'
-            ? 'No tenés cuenta? Registrate'
-            : 'Ya tenés cuenta? Iniciá sesión'}
-        </button>
       </div>
+
+      <Footer />
     </div>
   )
 }
