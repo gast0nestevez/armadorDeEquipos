@@ -16,7 +16,7 @@ function usePlayers(initialPlayers = [{ name: '', skill: '' }]) {
     const special   = 'ñÑáÁéÉíÍóÓúÚ'
     const allowedCharacters = `[^${lowercase}${uppercase}${digits}${special} ]`
     const regex   = new RegExp(allowedCharacters, 'g')
-    return input.replace(regex, "")
+    return input.replace(regex, '')
   }
 
   function validateValue(value, field) {

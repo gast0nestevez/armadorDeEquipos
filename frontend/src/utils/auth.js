@@ -18,7 +18,7 @@ export const handleGoogleLogin = async (credentialResponse, setUser) => {
     const response = await fetch(url, options)
     if (!response.ok) throw new Error('Something went wrong during fetch')
     
-    const data = await response.json()
+    const { data } = await response.json()
     localStorage.setItem('user', JSON.stringify(data.user))
     localStorage.setItem('token', data.token)
     setUser(data.user)
@@ -48,7 +48,7 @@ export const handleEmailLogin = async (email, password, setUser) => {
     const response = await fetch(url, options)
     if (!response.ok) throw new Error('Something went wrong during login')
     
-    const data = await response.json()
+    const { data } = await response.json()
     localStorage.setItem('user', JSON.stringify(data.user))
     localStorage.setItem('token', data.token)
     setUser(data.user)
@@ -70,7 +70,7 @@ export const handleEmailRegister = async (email, password, setUser) => {
     const response = await fetch(url, options)
     if (!response.ok) throw new Error('Something went wrong during register')
     
-    const data = await response.json()
+    const { data } = await response.json()
     localStorage.setItem('user', JSON.stringify(data.user))
     localStorage.setItem('token', data.token)
     setUser(data.user)

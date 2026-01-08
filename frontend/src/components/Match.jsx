@@ -72,9 +72,9 @@ const Match = ({ match, setMatches }) => {
     try {
       const response = await fetch(url, options)
       if (!response.ok) throw new Error('Something went wrong during update')
-      const data = await response.json()
+      const { data: updatedMatch } = await response.json()
 
-      setMatches(prevMatches => prevMatches.map(m => m._id === match._id ? data.updatedMatch : m))
+      setMatches(prevMatches => prevMatches.map(m => m._id === match._id ? updatedMatch : m))
       setShowActions(false)
       setLoading(false)
     } catch (e) {

@@ -67,8 +67,8 @@ const Match = ({ setMatches, formSubmited }) => {
       const response = await fetch(url, options)
       if (!response.ok) throw new Error('Error while saving match')
       
-      const data = await response.json()
-      setMatches(prev => [data, ...prev])
+      const { data: match } = await response.json()
+      setMatches(prev => [match, ...prev])
       
       // Clean form states
       setPlayers([])
