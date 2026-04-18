@@ -1,14 +1,16 @@
 import mongoose, { Schema, Document } from 'mongoose'
 
-export interface User extends Document {
+type Provider = 'local' | 'google'
+
+interface IUser extends Document {
   email: string
   name?: string
   passwordHash?: string
-  provider: 'local' | 'google'
+  provider: Provider
   googleId?: string
 }
 
-const userSchema = new Schema<User>({
+const userSchema: Schema = new Schema<IUser>({
   email: {
     type: String,
     required: true,
@@ -24,7 +26,9 @@ const userSchema = new Schema<User>({
   },
   googleId: String,
 }, {
-  timestamps: true
+  timestamps: true,
 })
 
-export default mongoose.model<User>('User', userSchema)
+export { IUser }
+
+export default mongoose.model<IUser>('User', userSchema)

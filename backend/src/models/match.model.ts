@@ -1,39 +1,41 @@
 import mongoose, { Schema, Document } from 'mongoose'
 
-export interface Player {
-  name: String
-  skill: Number
-  team: Number
+interface IPlayer {
+  name: string
+  skill: number
+  team: number
 }
 
-export interface Match extends Document {
-  userId: String
-  players: Player[]
-  goals1: Number
-  goals2: Number
-  result: String
-  date: String
+interface IMatch extends Document {
+  userId: string
+  players: IPlayer[]
+  goals1: number
+  goals2: number
+  result: string
+  date: string
 }
 
-const PlayerSchema = new Schema<Player>({
+const PlayerSchema: Schema<IPlayer> = new Schema<IPlayer>({
   name: { type: String, required: true },
   skill: { type: Number },
   team: { type: Number, required: true },
 })
 
-const MatchSchema = new Schema<Match>({
+const MatchSchema: Schema<IMatch> = new Schema<IMatch>({
   userId: { type: String, required: true },
   players: { type: [PlayerSchema], required: true },
   goals1: { type: Number },
   goals2: { type: Number },
   result: { type: String, enum: ['Lose', 'Draw', 'Win'] },
-  date: { 
-    type: String, 
-    match: /^\d{4}-\d{2}-\d{2}$/, // YYYY-MM-DD
-    required: false
-  }
+  date: {
+    type: String,
+    match: /^\d{4}\-\d{2}\-\d{2}$/,
+    required: false,
+  },
 }, {
-  timestamps: true
+  timestamps: true,
 })
 
-export default mongoose.model<Match>('Match', MatchSchema)
+export { IMatch, IPlayer }
+
+export default mongoose.model<IMatch>('Match', MatchSchema)

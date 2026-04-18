@@ -1,50 +1,57 @@
-import { Request, Response } from 'express'
+import type { Request, Response } from 'express'
 
 import { AuthenticatedRequest } from '../middleware/auth.middleware'
-import matchService from '../services/match.service'
+import { MatchService } from '../services/match.service'
+import { IMatch } from '../models/match.model'
+
+type MatchParams = {
+  matchId: string
+}
+
+const matchService: MatchService = new MatchService()
 
 export default class MatchController {
-  async createMatch(req: Request, res: Response) {
-    const { userId } = req as AuthenticatedRequest
+  async createMatch(req: AuthenticatedRequest, res: Response): Promise<void> {
+    const { userId }: { userId: string } = req
 
-    const match = await matchService.createMatch(userId, req.body)
-    
+    const match: IMatch = await matchService.createMatch(userId, req.body)
+
     res.status(201).json({
       success: true,
       data: match,
     })
   }
 
-  async getUserMatches(req: Request, res: Response) {
-    const { userId } = req as AuthenticatedRequest
-    
-    const matches = await matchService.getUserMatches(userId)
-      
+  async getUserMatches(req: AuthenticatedRequest, res: Response): Promise<void> {
+    const { userId }: { userId: string } = req
+
+    const matches: IMatch[] = await matchService.getUserMatches(userId)
+
     res.status(200).json({
       success: true,
       data: matches,
     })
   }
-  
-  async updateMatch(req: Request, res: Response) {
-    const { matchId } = req.params
 
-    const updatedMatch = await matchService.updateMatch(matchId, req.body)
-      
+  async updateMatch(req: Request<MatchParams>, res: Response): Promise<void> {
+    const { matchId }: { matchId: string } = req.params
+
+    const updatedMatch: IMatch | null = await matchService.updateMatch(matchId, req.body)
+
     res.status(200).json({
       success: true,
       data: updatedMatch,
     })
   }
-  
-  async deleteMatch(req: Request, res: Response) {
-    const { matchId } = req.params
-    
-    await matchService.deleteMatch(matchId) //const deletedMatch y devolverlo
-    
+
+  async deleteMatch(req: Request<MatchParams>, res: Response): Promise<void> {
+    const { matchId }: { matchId: string } = req.params
+
+    const deletedMatch: IMatch | null = await matchService.deleteMatch(matchId)
+
     res.status(200).json({
       success: true,
-      deleted: matchId,
+      deleted: deletedMatch,
     })
   }
 }

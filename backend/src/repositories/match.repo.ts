@@ -1,17 +1,24 @@
-import Match from '../models/match.model'
+import type { FilterQuery } from 'mongoose'
+import type { MatchData } from '../utils/types'
+
+import Match, { IMatch } from '../models/match.model'
+
+type MatchCreateData = MatchData & {
+  userId: string
+}
 
 export default {
-  create: (data: any) => Match.create(data),
+  create: (data: MatchCreateData): Promise<IMatch> => Match.create(data),
 
-  findByUser: (userId: string) =>
-    Match.find({ userId }).sort({ createdAt: -1 }),
+  findByUser: (userId: string): Promise<IMatch[]> =>
+    Match.find({ userId } as FilterQuery<MatchData>).sort({ createdAt: -1 }),
 
-  delete: (matchId: string) =>
+  delete: (matchId: string): Promise<IMatch | null> =>
     Match.findByIdAndDelete(matchId),
 
-  update: (matchId: string, data: any) =>
+  update: (matchId: string, data: Record<string, unknown>): Promise<IMatch | null> =>
     Match.findByIdAndUpdate(matchId, data, {
-      new: true,              // return the new doc
-      runValidators: true
-    })
+      new: true,
+      runValidators: true,
+    }),
 }

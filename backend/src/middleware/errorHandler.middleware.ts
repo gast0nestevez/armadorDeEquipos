@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express'
+import type { Request, Response, NextFunction } from 'express'
 
 import AppError from '../error/app.error'
 import { ErrorCode } from '../error/errorCodes'
@@ -8,12 +8,12 @@ import { ErrorCode } from '../error/errorCodes'
  * Express executes this code when:
  * 1. There is a throw inside a route
  * 2. A promise is rejected
- * 
+ *
  * Express takes the error raised and pass it as the first argument
- */ 
-export const errorHandler = (err: Error, _req: Request, res: Response, _next: NextFunction) => {
+ */
+export const errorHandler: (err: Error, _req: Request, res: Response, _next: NextFunction) => void = (err: Error, _req: Request, res: Response, _next: NextFunction): void => {
   if (err instanceof AppError) {
-    return res.status(err.statusCode).json({
+    res.status(err.statusCode).json({
       success: false,
       error: {
         code: err.code,
@@ -21,11 +21,12 @@ export const errorHandler = (err: Error, _req: Request, res: Response, _next: Ne
         details: err.details,
       },
     })
+    return
   }
 
   console.error(err)
 
-  return res.status(500).json({
+  res.status(500).json({
     success: false,
     error: {
       code: ErrorCode.INTERNAL_SERVER_ERROR,

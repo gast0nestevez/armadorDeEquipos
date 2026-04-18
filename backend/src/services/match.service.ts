@@ -1,10 +1,26 @@
+import type { MatchData, Player } from '../utils/types'
+
 import matchRepo from '../repositories/match.repo'
 import AppError from '../error/app.error'
 import { ErrorCode } from '../error/errorCodes'
+import { IMatch } from '../models/match.model'
 
-export default {
-  createMatch: async (userId: string, data: any) => {
-    const { players, goals1, goals2, result, date } = data
+const ALLOWED_UPDATE_FIELDS: string[] = ['players', 'goals1', 'goals2', 'result', 'date']
+
+const sanitize = (body: object, allowed: string[]): Record<string, unknown> =>
+  Object.fromEntries(
+    Object.entries(body).filter(([key]: [string, unknown]) => allowed.includes(key))
+  )
+
+class MatchService {
+  async createMatch(userId: string, data: MatchData): Promise<IMatch> {
+    const { players, goals1, goals2, result, date }: {
+      players: Player[],
+      goals1: number,
+      goals2: number,
+      result: string,
+      date: string
+    } = data
 
     if (!userId) {
       throw new AppError(
@@ -21,9 +37,9 @@ export default {
         'Players array is required'
       )
     }
-    
-    const validPlayers = players.filter(
-      (player: any) =>
+
+    const validPlayers: Player[] = players.filter(
+      (player: Player) =>
         player &&
         player.name &&
         player.team &&
@@ -36,11 +52,11 @@ export default {
       goals1,
       goals2,
       result,
-      date
+      date,
     })
-  },
+  }
 
-  getUserMatches: async (userId: string) => {
+  async getUserMatches(userId: string): Promise<IMatch[]> {
     if (!userId) {
       throw new AppError(
         ErrorCode.UNAUTHORIZED,
@@ -50,9 +66,9 @@ export default {
     }
 
     return matchRepo.findByUser(userId)
-  },
+  }
 
-  updateMatch: async (matchId: string, body: any) => {
+  async updateMatch(matchId: string, body: MatchData): Promise<IMatch | null> {
     if (!matchId) {
       throw new AppError(
         ErrorCode.VALIDATION_ERROR,
@@ -61,15 +77,9 @@ export default {
       )
     }
 
-    const sanitize = (body: Object, allowed: string[]) =>
-      Object.fromEntries(
-        Object.entries(body).filter(([k]) => allowed.includes(k))
-      )
+    const filteredBody: Record<string, unknown> = sanitize(body, ALLOWED_UPDATE_FIELDS)
 
-    const allowed = ['players', 'goals1', 'goals2', 'result', 'date']
-    const filteredBody = sanitize(body, allowed)
-    
-    const updated = await matchRepo.update(matchId, filteredBody)
+    const updated: IMatch | null = await matchRepo.update(matchId, filteredBody)
 
     if (!updated) {
       throw new AppError(
@@ -80,9 +90,9 @@ export default {
     }
 
     return updated
-  },
+  }
 
-  deleteMatch: async (matchId: string) => {
+  async deleteMatch(matchId: string): Promise<IMatch | null> {
     if (!matchId) {
       throw new AppError(
         ErrorCode.VALIDATION_ERROR,
@@ -91,7 +101,7 @@ export default {
       )
     }
 
-    const deleted = await matchRepo.delete(matchId)
+    const deleted: IMatch | null = await matchRepo.delete(matchId)
 
     if (!deleted) {
       throw new AppError(
@@ -102,5 +112,7 @@ export default {
     }
 
     return deleted
-  },
+  }
 }
+
+export { MatchService }

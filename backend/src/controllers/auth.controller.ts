@@ -1,14 +1,15 @@
-import { Request, Response } from 'express'
+import type { Request, Response } from 'express'
+import type { AuthenticatedUser } from '../services/auth.service'
 
-import AuthService from '../services/auth.service'
+import { AuthService } from '../services/auth.service'
 
-const authService = new AuthService()
+const authService: AuthService = new AuthService()
 
 export default class AuthController {
-  async login(req: Request, res: Response) {
-    const { email, password } = req.body
-    
-    const { appToken, authenticatedUser } = await authService.checkCredentials(email, password)
+  async login(req: Request, res: Response): Promise<void> {
+    const { email, password }: { email: string, password: string } = req.body
+
+    const { appToken, authenticatedUser }: { appToken: string, authenticatedUser: AuthenticatedUser } = await authService.checkCredentials(email, password)
 
     res.json({
       success: true,
@@ -19,10 +20,10 @@ export default class AuthController {
     })
   }
 
-  async register(req: Request, res: Response) {
-    const { email, password } = req.body
-    
-    const { appToken, authenticatedUser } = await authService.createUser(email, password)
+  async register(req: Request, res: Response): Promise<void> {
+    const { email, password }: { email: string, password: string } = req.body
+
+    const { appToken, authenticatedUser }: { appToken: string, authenticatedUser: AuthenticatedUser } = await authService.createUser(email, password)
 
     res.json({
       success: true,
@@ -33,10 +34,10 @@ export default class AuthController {
     })
   }
 
-  async googleLogin(req: Request, res: Response) {
-    const { googleToken } = req.body
-    
-    const { appToken, authenticatedUser } = await authService.validateGoogleToken(googleToken)
+  async googleLogin(req: Request, res: Response): Promise<void> {
+    const { googleToken }: { googleToken: string } = req.body
+
+    const { appToken, authenticatedUser }: { appToken: string, authenticatedUser: AuthenticatedUser } = await authService.validateGoogleToken(googleToken)
 
     res.json({
       success: true,

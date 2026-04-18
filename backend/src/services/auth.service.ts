@@ -1,25 +1,42 @@
+import type { LoginTicket, TokenPayload } from 'google-auth-library'
+
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { OAuth2Client } from 'google-auth-library'
 
-import userModel from '../models/user.model'
+import userModel, { IUser } from '../models/user.model'
 import AppError from '../error/app.error'
 import { ErrorCode } from '../error/errorCodes'
 
-const client = new OAuth2Client()
+const client: OAuth2Client = new OAuth2Client()
 
-interface User {
-  _id?: string | any,
-  name?: string,
-  email?: string,
+type User = {
+  id?: string
+  name?: string
+  email?: string
 }
 
-const EXP_DATE = '365d'
-const LOCAL_PROVIDER = 'local'
-const GOOGLE_PROVIDER = 'google'
+type AuthUserResponse = {
+  appToken: string
+  authenticatedUser: {
+    userId: string
+    name: string
+    email: string
+  }
+}
 
-export default class AuthService {
-  signToken(user: User) {
+const EXP_DATE: number = 60 * 60 * 24 * 365
+const LOCAL_PROVIDER: string = 'local'
+const GOOGLE_PROVIDER: string = 'google'
+
+type AuthenticatedUser = {
+  userId: string
+  name: string
+  email: string
+}
+
+class AuthService {
+  signToken(user: User): string {
     return jwt.sign(
       user,
       process.env.JWT_SECRET as string,
@@ -27,20 +44,20 @@ export default class AuthService {
     )
   }
 
-  async generateAuthUserResponse(user: any) {
+  async generateAuthUserResponse(user: IUser): Promise<AuthUserResponse> {
     const plainUser = user.toObject()
 
     const authenticatedUser = {
-      userId: plainUser._id,
+      userId: plainUser.id,
       name: plainUser.name,
       email: plainUser.email,
     }
-    const appToken = this.signToken(authenticatedUser)
+    const appToken: string = this.signToken(authenticatedUser)
 
     return { appToken, authenticatedUser }
   }
 
-  async checkCredentials(email: string, password: string) {
+  async checkCredentials(email: string, password: string): Promise<AuthUserResponse> {
     if (!email || !password) {
       throw new AppError(
         ErrorCode.VALIDATION_ERROR,
@@ -49,14 +66,16 @@ export default class AuthService {
       )
     }
 
-    const user = await userModel.findOne({ email })
-    if (!user) throw new AppError(
-      ErrorCode.INVALID_CREDENTIALS,
-      401,
-      'Invalid credentials'
-    )
-    
-    const isValidPassword = await bcrypt.compare(password, user.passwordHash as string)
+    const user: IUser | null = await userModel.findOne({ email })
+    if (!user)  {
+      throw new AppError(
+        ErrorCode.INVALID_CREDENTIALS,
+        401,
+        'Invalid credentials'
+      )
+    }
+
+    const isValidPassword: boolean = await bcrypt.compare(password, user.passwordHash as string)
     if (!isValidPassword) {
       throw new AppError(
         ErrorCode.INVALID_CREDENTIALS,
@@ -64,11 +83,11 @@ export default class AuthService {
         'Invalid credentials'
       )
     }
-    
+
     return this.generateAuthUserResponse(user)
   }
 
-  async createUser(email: string, password: string) {
+  async createUser(email: string, password: string): Promise<AuthUserResponse> {
     if (!email || !password) {
       throw new AppError(
         ErrorCode.VALIDATION_ERROR,
@@ -86,10 +105,10 @@ export default class AuthService {
     }
 
     try {
-      const saltRounds = 10
-      const passwordHash = await bcrypt.hash(password, saltRounds)
+      const saltRounds: number = 10
+      const passwordHash: string = await bcrypt.hash(password, saltRounds)
 
-      const user = new userModel({
+      const user: IUser = new userModel({
         email: email.toLowerCase(),
         passwordHash,
         provider: LOCAL_PROVIDER,
@@ -98,8 +117,8 @@ export default class AuthService {
       await user.save()
 
       return this.generateAuthUserResponse(user)
-    } catch (e: any) {
-      if (e.code === 11000) {
+    } catch (err: unknown) {
+      if (err instanceof Error && 'code' in err && err.code === 11000) {
         throw new AppError(
           ErrorCode.EMAIL_ALREADY_EXISTS,
           409,
@@ -107,11 +126,11 @@ export default class AuthService {
         )
       }
 
-      throw e // Unexpected error -> 500
+      throw err
     }
   }
 
-  async validateGoogleToken(googleToken: string) {
+  async validateGoogleToken(googleToken: string): Promise<AuthUserResponse> {
     if (!googleToken) {
       throw new AppError(
         ErrorCode.VALIDATION_ERROR,
@@ -120,14 +139,14 @@ export default class AuthService {
       )
     }
 
-    let payload
+    let payload: TokenPayload | undefined = undefined
 
     try {
-      const loginTicket = await client.verifyIdToken({
+      const loginTicket: LoginTicket = await client.verifyIdToken({
         idToken: googleToken,
         audience: process.env.CLIENT_ID,
       })
-      
+
       payload = loginTicket.getPayload()
     } catch {
       throw new AppError(
@@ -155,7 +174,9 @@ export default class AuthService {
       },
       { upsert: true, new: true }
     )
-    
+
     return this.generateAuthUserResponse(user)
   }
 }
+
+export { AuthService, AuthenticatedUser }
