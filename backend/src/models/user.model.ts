@@ -1,13 +1,13 @@
-import mongoose, { Schema, Document } from 'mongoose'
+import mongoose, { Schema, Document } from 'mongoose';
 
-type Provider = 'local' | 'google'
+type Provider = 'local' | 'google';
 
 interface IUser extends Document {
-  email: string
-  name?: string
-  passwordHash?: string
-  provider: Provider
-  googleId?: string
+  email: string;
+  name?: string;
+  passwordHash?: string;
+  provider: Provider;
+  googleId?: string;
 }
 
 const userSchema: Schema = new Schema<IUser>({
@@ -27,8 +27,8 @@ const userSchema: Schema = new Schema<IUser>({
   googleId: String,
 }, {
   timestamps: true,
-})
+});
 
-export { IUser }
+export { IUser };
 
-export default mongoose.model<IUser>('User', userSchema)
+export default mongoose.model<IUser>('User', userSchema);

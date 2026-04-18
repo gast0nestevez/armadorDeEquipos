@@ -1,7 +1,7 @@
-import type { Request, Response, NextFunction } from 'express'
+import type { Request, Response, NextFunction } from 'express';
 
-import AppError from '../error/app.error'
-import { ErrorCode } from '../error/errorCodes'
+import { AppError } from '../error/app.error';
+import { ErrorCode } from '../error/errorCodes';
 
 /**
  * Error middleware.
@@ -11,7 +11,7 @@ import { ErrorCode } from '../error/errorCodes'
  *
  * Express takes the error raised and pass it as the first argument
  */
-export const errorHandler: (err: Error, _req: Request, res: Response, _next: NextFunction) => void = (err: Error, _req: Request, res: Response, _next: NextFunction): void => {
+const errorHandler: (err: Error, _req: Request, res: Response, _next: NextFunction) => void = (err: Error, _req: Request, res: Response, _next: NextFunction): void => {
   if (err instanceof AppError) {
     res.status(err.statusCode).json({
       success: false,
@@ -20,11 +20,11 @@ export const errorHandler: (err: Error, _req: Request, res: Response, _next: Nex
         message: err.message,
         details: err.details,
       },
-    })
-    return
-  }
+    });
+    return;
+  };
 
-  console.error(err)
+  console.error(err);
 
   res.status(500).json({
     success: false,
@@ -32,5 +32,7 @@ export const errorHandler: (err: Error, _req: Request, res: Response, _next: Nex
       code: ErrorCode.INTERNAL_SERVER_ERROR,
       message: 'Unexpected error',
     },
-  })
-}
+  });
+};
+
+export { errorHandler };

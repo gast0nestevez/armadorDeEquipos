@@ -1,11 +1,11 @@
-import type { FilterQuery } from 'mongoose'
-import type { MatchData } from '../utils/types'
+import type { FilterQuery } from 'mongoose';
+import type { MatchData } from '../utils/types';
 
-import Match, { IMatch } from '../models/match.model'
+import Match, { IMatch } from '../models/match.model';
 
 type MatchCreateData = MatchData & {
-  userId: string
-}
+  userId: string;
+};
 
 export default {
   create: (data: MatchCreateData): Promise<IMatch> => Match.create(data),
@@ -21,4 +21,4 @@ export default {
       new: true,
       runValidators: true,
     }),
-}
+};

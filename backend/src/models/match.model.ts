@@ -1,25 +1,25 @@
 import mongoose, { Schema, Document } from 'mongoose'
 
 interface IPlayer {
-  name: string
-  skill: number
-  team: number
+  name: string;
+  skill: number;
+  team: number;
 }
 
 interface IMatch extends Document {
-  userId: string
-  players: IPlayer[]
-  goals1: number
-  goals2: number
-  result: string
-  date: string
+  userId: string;
+  players: IPlayer[];
+  goals1: number;
+  goals2: number;
+  result: string;
+  date: string;
 }
 
 const PlayerSchema: Schema<IPlayer> = new Schema<IPlayer>({
   name: { type: String, required: true },
   skill: { type: Number },
   team: { type: Number, required: true },
-})
+});
 
 const MatchSchema: Schema<IMatch> = new Schema<IMatch>({
   userId: { type: String, required: true },
@@ -34,8 +34,8 @@ const MatchSchema: Schema<IMatch> = new Schema<IMatch>({
   },
 }, {
   timestamps: true,
-})
+});
 
-export { IMatch, IPlayer }
+export { IMatch, IPlayer };
 
-export default mongoose.model<IMatch>('Match', MatchSchema)
+export default mongoose.model<IMatch>('Match', MatchSchema);

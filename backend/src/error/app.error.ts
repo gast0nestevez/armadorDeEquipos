@@ -1,12 +1,14 @@
-import { ErrorCode } from './errorCodes'
+import { ErrorCode } from './errorCodes';
 
-export default class AppError extends Error {
+class AppError extends Error {
   constructor(
     public readonly code: ErrorCode,
     public readonly statusCode: number,
     message: string,
-    public readonly details?: unknown
+    public readonly details?: unknown,
   ) {
-    super(message)
+    super(message);
   }
 }
+
+export { AppError };
