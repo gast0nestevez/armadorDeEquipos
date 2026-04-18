@@ -7,6 +7,7 @@ import { OAuth2Client } from 'google-auth-library';
 import userModel, { IUser } from '../models/user.model';
 import { AppError } from '../error/app.error';
 import { ErrorCode } from '../error/errorCodes';
+import { getEnv } from '../utils/env';
 
 const client: OAuth2Client = new OAuth2Client();
 
@@ -39,7 +40,7 @@ class AuthService {
   signToken(user: User): string {
     return jwt.sign(
       user,
-      process.env.JWT_SECRET as string,
+      getEnv('JWT_SECRET'),
       { expiresIn: EXP_DATE },
     );
   };
@@ -144,7 +145,7 @@ class AuthService {
     try {
       const loginTicket: LoginTicket = await client.verifyIdToken({
         idToken: googleToken,
-        audience: process.env.CLIENT_ID,
+        audience: getEnv('CLIENT_ID'),
       });
 
       payload = loginTicket.getPayload();

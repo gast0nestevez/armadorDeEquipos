@@ -3,6 +3,8 @@ import type { JwtPayload } from 'jsonwebtoken';
 
 import jwt from 'jsonwebtoken';
 
+import { getEnv } from '../utils/env';
+
 interface AuthenticatedRequest extends Request {
   userId: string;
   userEmail: string;
@@ -24,7 +26,7 @@ const authMiddleware: (req: Request, res: Response, next: NextFunction) => void 
   try {
     const decoded: JwtPayload = jwt.verify(
       token,
-      process.env.JWT_SECRET as string,
+      getEnv('JWT_SECRET'),
     ) as JwtPayload;
 
     if (!decoded.userId) {

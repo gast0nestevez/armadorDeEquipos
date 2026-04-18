@@ -10,6 +10,7 @@ import rateLimit from 'express-rate-limit';
 import authRouter from './src/routes/auth.route';
 import matchRouter from './src/routes/match.route';
 import { connectDB } from './src/config/db';
+import { getEnv } from './src/utils/env';
 
 dotenv.config();
 
@@ -35,5 +36,5 @@ app.get('/health', (_req: Request, res: Response): void => {
 
 connectDB();
 
-const PORT: string = process.env.PORT || '3000';
-app.listen(PORT, (): void => console.log(`Server running on ${process.env.BASE_URL}:${PORT}`));
+const PORT: string = getEnv('PORT') || '3000';
+app.listen(PORT, (): void => console.log(`Server running on ${getEnv('BASE_URL')}:${PORT}`));
