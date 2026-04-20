@@ -1,25 +1,32 @@
-import { useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { useContext } from 'react';
+import { Link } from 'react-router-dom';
 
-import { UserContext } from '@/context/userContext'
+import { UserContext } from '@/context/userContext';
 
-const NavButtons = ({ setIsOpen, variant='desktop' }) => {
-  const { user } = useContext(UserContext)
+type NavVariant = 'desktop' | 'mobile';
 
-  const isMobile = variant === 'mobile'
+type NavButtonsProps = {
+  setIsOpen: (value: boolean) => void;
+  variant?: NavVariant;
+};
 
-  const containerClass = isMobile
+const NavButtons = ({ setIsOpen, variant = 'desktop' }: NavButtonsProps) => {
+  const { user } = useContext(UserContext);
+
+  const isMobile: boolean = variant === 'mobile';
+
+  const containerClass: string = isMobile
     ? 'd:hidden fixed left-0 right-0 top-[64px] bg-white border-t shadow-lg h-full z-50'
-    : 'hidden md:flex items-center gap-6'
+    : 'hidden md:flex items-center gap-6';
 
-  const ulClass = isMobile
+  const ulClass: string = isMobile
     ? 'flex flex-col px-4 divide-y divide-gray-400 bg-gray-200 active:bg-gray-300'
-    : 'flex gap-6'
+    : 'flex gap-6';
 
-  const linkClass = isMobile
+  const linkClass: string = isMobile
     ? 'block py-3 font-bold text-center black-text'
-    : 'hover:text-blue-100'
-  
+    : 'hover:text-blue-100';
+
   return (
     <div className={containerClass}>
       <ul className={ulClass}>
@@ -46,7 +53,7 @@ const NavButtons = ({ setIsOpen, variant='desktop' }) => {
         )}
       </ul>
     </div>
-  )
-}
+  );
+};
 
-export default NavButtons
+export default NavButtons;

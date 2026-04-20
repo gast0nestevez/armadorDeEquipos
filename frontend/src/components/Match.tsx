@@ -1,28 +1,34 @@
-import { useState } from 'react'
-import { Trophy, Minus, X } from 'lucide-react'
-import { AnimatePresence, motion } from 'framer-motion'
+import type { Match, Player, Result } from '@/utils/types';
 
-import Env from '@/utils/env'
-import Loader from '@/components/Loader'
-import { capitalize } from '@/utils/capitalize'
+import { useState } from 'react';
+import { Trophy, Minus, X } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 
-const API_BASE_URL = Env.getString('VITE_API_BASE_PATH')
+import { Env } from '@/utils/env';
+import Loader from '@/components/Loader';
+import { capitalize } from '@/utils/string';
 
-const Match = ({ match, setMatches }) => {
-  const [showDetails, setShowDetails] = useState(false)
-  const [showActions, setShowActions] = useState(false)
-  const [goals1, setGoals1] = useState(match.goals1 ?? 0)
-  const [goals2, setGoals2] = useState(match.goals2 ?? 0)
-  const [result, setResult] = useState(match.result ?? '')
-  const [date, setDate] = useState(match.date ?? '')
-  const [loading, setLoading] = useState(false)
+const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
 
-  const resultButtonClasses = (type, currentResult) => {
-    const isActive = currentResult === type
+type MatchProps = {
+  match: Match;
+  setMatches: React.Dispatch<React.SetStateAction<Match[]>>;
+};
 
-    const base = 'flex justify-center items-center l-2 px-2 py-1 rounded-md transition border cursor-pointer'
+const Match = ({ match, setMatches }: MatchProps) => {
+  const [showDetails, setShowDetails] = useState<boolean>(false);
+  const [showActions, setShowActions] = useState<boolean>(false);
+  const [goals1, setGoals1] = useState<number>(match.goals1 ?? 0);
+  const [goals2, setGoals2] = useState<number>(match.goals2 ?? 0);
+  const [result, setResult] = useState<Result>(match.result ?? '');
+  const [date, setDate] = useState<string>(match.date ?? '');
+  const [loading, setLoading] = useState<boolean>(false);
 
-    const styles = {
+  const resultButtonClasses = (type: Result, currentResult: Result): string => {
+    const isActive: boolean = currentResult === type;
+    const base: string = 'flex justify-center items-center l-2 px-2 py-1 rounded-md transition border cursor-pointer';
+
+    const styles: Record<string, string> = {
       Win: isActive
         ? 'bg-green-500 border-green-600 text-white'
         : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-100',
@@ -32,92 +38,99 @@ const Match = ({ match, setMatches }) => {
       Lose: isActive
         ? 'bg-red-500 border-red-600 text-white'
         : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-100',
+    };
+
+    return `${base} ${styles[type]}`;
+  };
+
+  const formatDate = (isoDate: string): string => {
+    if (!isoDate) {
+      return '';
     }
+    const [year, month, day]: string[] = isoDate.split('-');
+    return `${day}/${month}/${year}`;
+  };
 
-    return `${base} ${styles[type]}`
-  }
-
-  const formatDate = (isoDate) => {
-    if (!isoDate) return ''
-    const [year, month, day] = isoDate.split('-')
-    return `${day}/${month}/${year}`
-  }
-
-  const expandMatch = (e) => {
-    // Avoid buttons and inputs
-    if (['DIV', 'H3', 'SPAN', 'UL', 'LI'].includes(e.target.tagName)) {
-      setShowDetails(!showDetails)
-      setShowActions(false)
+  const expandMatch = (e: React.MouseEvent<HTMLDivElement>): void => {
+    const tag: string = (e.target as HTMLElement).tagName;
+    if (['DIV', 'H3', 'SPAN', 'UL', 'LI'].includes(tag)) {
+      setShowDetails(!showDetails);
+      setShowActions(false);
     }
-  }
+  };
 
-  const saveChanges = async () => {
-    setLoading(true)
-    const url = `${API_BASE_URL}/match/${match._id}`
-    const body = {
-      goals1,
-      goals2,
-      result,
-      date
-    }
-    const options = {
+  const saveChanges = async (): Promise<void> => {
+    setLoading(true);
+    const url: string = `${API_BASE_URL}/match/${match._id}`;
+    const body = { goals1, goals2, result, date };
+    const options: RequestInit = {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
-      body: JSON.stringify(body)
-    }
+      body: JSON.stringify(body),
+    };
 
     try {
-      const response = await fetch(url, options)
-      if (!response.ok) throw new Error('Something went wrong during update')
-      const { data: updatedMatch } = await response.json()
+      const response: Response = await fetch(url, options);
+      if (!response.ok) {
+        throw new Error('Something went wrong during update');
+      }
+      const { data: updatedMatch }: { data: Match } = await response.json();
 
-      setMatches(prevMatches => prevMatches.map(m => m._id === match._id ? updatedMatch : m))
-      setShowActions(false)
-      setLoading(false)
-    } catch (e) {
-      console.error(e)
+      setMatches((prevMatches: Match[]) =>
+        prevMatches.map((m: Match) => (m._id === match._id ? updatedMatch : m))
+      );
+      setShowActions(false);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
-  const deleteMatch = async (matchId) => {
-    let userChoice = confirm('¿Seguro que querés eliminar este partido?')
-    if (!userChoice) return
+  const deleteMatch = async (matchId: string): Promise<void> => {
+    const userChoice: boolean = confirm('¿Seguro que querés eliminar este partido?');
+    if (!userChoice) {
+      return;
+    }
 
-    setLoading(true)
-    const url = `${API_BASE_URL}/match/${matchId}`
-    const options = {
+    setLoading(true);
+    const url: string = `${API_BASE_URL}/match/${matchId}`;
+    const options: RequestInit = {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      }
-    }
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    };
 
     try {
-      const response = await fetch(url, options)
-      if (!response.ok) throw new Error('Something went wrong during fetch')
-      
-      setMatches(prevMatches => prevMatches.filter(m => m._id !== matchId))
-      setLoading(false)
-    } catch (e) {
-      console.error(e)
+      const response: Response = await fetch(url, options);
+      if (!response.ok) {
+        throw new Error('Something went wrong during fetch');
+      }
+      setMatches((prevMatches: Match[]) => prevMatches.filter((m: Match) => m._id !== matchId));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
-  if (loading)
+  if (loading) {
     return (
       <div className='flex justify-center items-center'>
         <Loader />
       </div>
-    )
+    );
+  }
 
   return (
     <div
       className={`flex flex-col justify-center p-4 cursor-pointer ${showDetails ? 'gap-[15px]' : ''}`}
-      onClick={(e) => expandMatch(e)}
+      onClick={expandMatch}
     >
       {!showActions && (
         <div className='text-center text-gray-600 text-sm mb-2'>
@@ -129,12 +142,12 @@ const Match = ({ match, setMatches }) => {
           <input
             type='date'
             value={date}
-            onChange={(e) => setDate(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDate(e.target.value)}
             className='bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 text-center'
           />
         </div>
       )}
-      
+
       <div className='flex justify-between gap-1'>
         <div className='grow max-w-1/3'>
           <AnimatePresence>
@@ -149,8 +162,8 @@ const Match = ({ match, setMatches }) => {
                 <h3 className='font-semibold text-gray-800 mb-2 text-nowrap'>Equipo 1</h3>
                 <ul className='space-y-1'>
                   {match.players
-                    .filter((p) => p.team === 1)
-                    .map((p) => (
+                    .filter((p: Player): boolean => p.team === 1)
+                    .map((p: Player): React.JSX.Element => (
                       <li key={p._id} className='text-gray-700 truncate'>
                         {capitalize(p.name)}
                       </li>
@@ -171,14 +184,14 @@ const Match = ({ match, setMatches }) => {
               <input
                 type='number'
                 value={goals1}
-                onChange={(e) => setGoals1(Number(e.target.value))}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setGoals1(Number.parseInt(e.target.value))}
                 className='w-8 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
               />
               <span>-</span>
               <input
                 type='number'
                 value={goals2}
-                onChange={(e) => setGoals2(Number(e.target.value))}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setGoals2(Number.parseInt(e.target.value))}
                 className='w-8 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
               />
             </div>
@@ -189,17 +202,17 @@ const Match = ({ match, setMatches }) => {
           <AnimatePresence>
             {showDetails && (
               <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className='overflow-hidden'
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className='overflow-hidden'
               >
                 <h3 className='font-semibold text-gray-800 mb-2 text-right text-nowrap'>Equipo 2</h3>
                 <ul className='space-y-1'>
                   {match.players
-                    .filter((p) => p.team === 2)
-                    .map((p) => (
+                    .filter((p: Player): boolean => p.team === 2)
+                    .map((p: Player): React.JSX.Element => (
                       <li key={p._id} className='text-gray-700 text-right truncate'>
                         {capitalize(p.name)}
                       </li>
@@ -217,11 +230,9 @@ const Match = ({ match, setMatches }) => {
             <button className={resultButtonClasses('Win', result)} onClick={() => setResult('Win')}>
               <Trophy />
             </button>
-
             <button className={resultButtonClasses('Draw', result)} onClick={() => setResult('Draw')}>
               <Minus />
             </button>
-
             <button className={resultButtonClasses('Lose', result)} onClick={() => setResult('Lose')}>
               <X />
             </button>
@@ -242,7 +253,7 @@ const Match = ({ match, setMatches }) => {
             <button
               className='cursor-pointer bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors w-fit'
               onClick={() => deleteMatch(match._id)}
-              tabIndex='-1'
+              tabIndex={-1}
             >
               Borrar partido
             </button>
@@ -250,7 +261,7 @@ const Match = ({ match, setMatches }) => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Match
+export default Match;

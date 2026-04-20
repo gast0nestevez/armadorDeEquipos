@@ -1,6 +1,6 @@
-import { Github } from 'lucide-react'
+import { Github } from 'lucide-react';
 
-const Footer = ()  => {
+const Footer = () => {
   return (
     <footer className='flex justify-center w-full bg-black text-sm'>
       <a
@@ -24,7 +24,7 @@ const Footer = ()  => {
         </div>
       </a>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

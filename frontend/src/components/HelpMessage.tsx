@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import { CircleQuestionMark } from 'lucide-react'
+import { useState } from 'react';
+import { CircleQuestionMark } from 'lucide-react';
 
 const HelpMessage = () => {
-  const [showHelpMessage, setShowHelpMessage] = useState(false)
+  const [showHelpMessage, setShowHelpMessage] = useState<boolean>(false);
 
   return (
     <div className='flex justify-center items-center'>
@@ -21,7 +21,7 @@ const HelpMessage = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default HelpMessage
+export default HelpMessage;

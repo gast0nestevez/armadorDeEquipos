@@ -1,120 +1,130 @@
-import { useContext, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { GoogleLogin } from '@react-oauth/google'
+import type { CredentialResponse } from '@react-oauth/google';
 
-import Nav from '@/components/Nav'
-import Loader from '@/components/Loader'
-import Footer from '@/components/Footer'
-import { UserContext } from '@/context/userContext'
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
+
+import Nav from '@/components/Nav';
+import Loader from '@/components/Loader';
+import Footer from '@/components/Footer';
+import { UserContext } from '@/context/userContext';
 import {
   handleEmailLogin,
   handleEmailRegister,
   handleGoogleLogin,
-  handleGoogleError
-} from '@/utils/auth'
+  handleGoogleError,
+} from '@/utils/auth';
+
+type AuthMode = 'login' | 'register';
+
+type FormState = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+};
+
+type FormErrors = Partial<Record<keyof FormState, string>>;
 
 const Auth = () => {
-  const navigate = useNavigate()
-  const { setUser } = useContext(UserContext)
+  const navigate = useNavigate();
+  const { setUser } = useContext(UserContext);
 
-  const [mode, setMode] = useState('login') // 'login' | 'register'
-  const [isLoading, setIsLoading] = useState(false)
-  const [errors, setErrors] = useState({})
-  const [generalError, setGeneralError] = useState('')
+  const [mode, setMode] = useState<AuthMode>('login');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [generalError, setGeneralError] = useState<string>('');
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<FormState>({
     email: '',
     password: '',
-    confirmPassword: ''
-  })
+    confirmPassword: '',
+  });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setForm(prev => ({ ...prev, [name]: value }))
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { name, value }: { name: string; value: string } = e.target;
+    setForm((prev: FormState) => ({ ...prev, [name]: value }));
 
-    // Clean error field when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }))
+    if (errors[name as keyof FormState]) {
+      setErrors((prev: FormErrors) => ({ ...prev, [name]: '' }));
     }
-    setGeneralError('')
-  }
+    setGeneralError('');
+  };
 
-  const validateForm = () => {
-    const newErrors = {}
+  const validateForm = (): FormErrors => {
+    const newErrors: FormErrors = {};
 
     if (!form.email.trim()) {
-      newErrors.email = 'El correo es requerido'
+      newErrors.email = 'El correo es requerido';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      newErrors.email = 'Por favor ingresá un correo válido'
+      newErrors.email = 'Por favor ingresá un correo válido';
     }
 
     if (!form.password.trim()) {
-      newErrors.password = 'La contraseña es requerida'
+      newErrors.password = 'La contraseña es requerida';
     } else if (form.password.length < 8) {
-      newErrors.password = 'La contraseña debe tener al menos 8 caracteres'
+      newErrors.password = 'La contraseña debe tener al menos 8 caracteres';
     }
 
     if (mode === 'register') {
       if (!form.confirmPassword.trim()) {
-        newErrors.confirmPassword = 'Debe confirmar la contraseña'
+        newErrors.confirmPassword = 'Debe confirmar la contraseña';
       } else if (form.password !== form.confirmPassword) {
-        newErrors.confirmPassword = 'Las contraseñas no coinciden'
+        newErrors.confirmPassword = 'Las contraseñas no coinciden';
       }
     }
 
-    return newErrors
-  }
+    return newErrors;
+  };
 
-  const onSuccessGoogle = async (credentialResponse) => {
-    setIsLoading(true)
-    setGeneralError('')
+  const onSuccessGoogle = async (credentialResponse: CredentialResponse): Promise<void> => {
+    setIsLoading(true);
+    setGeneralError('');
 
     try {
-      await handleGoogleLogin(credentialResponse, setUser)
-      navigate('/')
+      await handleGoogleLogin(credentialResponse, setUser);
+      navigate('/');
     } catch (error) {
-      console.error(error)
-      setGeneralError('Error al iniciar sesión con Google. Intenta nuevamente.')
+      console.error(error);
+      setGeneralError('Error al iniciar sesión con Google. Intenta nuevamente.');
     }
-    
-    setIsLoading(false)
-  }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setGeneralError('')
+    setIsLoading(false);
+  };
 
-    const newErrors = validateForm()
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+    setGeneralError('');
+
+    const newErrors: FormErrors = validateForm();
     if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
+      setErrors(newErrors);
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
       mode === 'login'
-      ? await handleEmailLogin(form.email, form.password, setUser)
-      : await handleEmailRegister(form.email, form.password, setUser)
-
-    } catch (e) {
-      console.error(e)
-      const errorMessage = e.message || 'Ocurrió un error. Intenta nuevamente.'
-      setGeneralError(errorMessage)
-      return
+        ? await handleEmailLogin(form.email, form.password, setUser)
+        : await handleEmailRegister(form.email, form.password, setUser);
+    } catch (err) {
+      console.error(err);
+      const errorMessage: string = err instanceof Error ? err.message : 'Ocurrió un error. Intenta nuevamente.';
+      setGeneralError(errorMessage);
+      return;
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-    
-    navigate('/')
-  }
+
+    navigate('/');
+  };
 
   if (isLoading) {
     return (
       <div className='flex justify-center items-center min-h-screen'>
         <Loader />
       </div>
-    )
+    );
   }
 
   return (
@@ -128,7 +138,7 @@ const Auth = () => {
           </h1>
 
           {generalError && (
-            <div className='mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm'>
+            <div className='mb-4 p3 bg-red-50 border border-red-200 rounded text-red-700 text-sm'>
               {generalError}
             </div>
           )}
@@ -136,7 +146,7 @@ const Auth = () => {
           <form onSubmit={handleSubmit} className='space-y-3'>
             <div>
               <input
-                type='email' 
+                type='email'
                 name='email'
                 placeholder='Mail'
                 value={form.email}
@@ -144,7 +154,7 @@ const Auth = () => {
                 className={`w-full px-3 py-2 border rounded ${
                   errors.email ? 'border-red-500 bg-red-50' : 'border-gray-300'
                 }`}
-                />
+              />
               {errors.email && (
                 <p className='text-red-600 text-xs mt-1'>{errors.email}</p>
               )}
@@ -160,7 +170,7 @@ const Auth = () => {
                 className={`w-full px-3 py-2 border rounded ${
                   errors.password ? 'border-red-500 bg-red-50' : 'border-gray-300'
                 }`}
-                />
+              />
               {errors.password && (
                 <p className='text-red-600 text-xs mt-1'>{errors.password}</p>
               )}
@@ -177,7 +187,7 @@ const Auth = () => {
                   className={`w-full px-3 py-2 border rounded ${
                     errors.confirmPassword ? 'border-red-500 bg-red-50' : 'border-gray-300'
                   }`}
-                  />
+                />
                 {errors.confirmPassword && (
                   <p className='text-red-600 text-xs mt-1'>{errors.confirmPassword}</p>
                 )}
@@ -187,7 +197,7 @@ const Auth = () => {
             <button
               type='submit'
               className='w-full bg-black text-white py-2 rounded hover:opacity-90 cursor-pointer'
-              >
+            >
               {mode === 'login' ? 'Entrar' : 'Registrarse'}
             </button>
           </form>
@@ -203,17 +213,17 @@ const Auth = () => {
               shape='rectangular'
               onSuccess={onSuccessGoogle}
               onError={handleGoogleError}
-              />
+            />
           </div>
 
           <button
             className='mt-4 text-sm text-center w-full text-gray-600 hover:underline cursor-pointer'
             onClick={() => {
-              setMode(mode === 'login' ? 'register' : 'login')
-              setErrors({})
-              setGeneralError('')
+              setMode(mode === 'login' ? 'register' : 'login');
+              setErrors({});
+              setGeneralError('');
             }}
-            >
+          >
             {mode === 'login'
               ? 'No tenés cuenta? Registrate'
               : 'Ya tenés cuenta? Iniciá sesión'}
@@ -223,7 +233,7 @@ const Auth = () => {
 
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default Auth
+export default Auth;

@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Menu, X } from 'lucide-react'
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 
-import NavButtons from '@/components/NavButtons'
+import NavButtons from '@/components/NavButtons';
 
 const Nav = () => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
     <nav className='relative bg-white shadow-md'>
@@ -36,7 +36,7 @@ const Nav = () => {
         />
       )}
     </nav>
-  )
-}
+  );
+};
 
-export default Nav
+export default Nav;

@@ -1,19 +1,31 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
-import { AnimatePresence, motion } from 'framer-motion'
-import { Analytics } from '@vercel/analytics/react'
+import type { Location } from 'react-router-dom';
 
-import Home from '@/pages/Home'
-import Login from '@/pages/Login'
-import Profile from '@/pages/Profile'
-import MakeTeams from '@/pages/MakeTeams'
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Analytics } from '@vercel/analytics/react';
 
-const pageVariants = {
+import Home from '@/pages/Home';
+import Login from '@/pages/Login';
+import Profile from '@/pages/Profile';
+import MakeTeams from '@/pages/MakeTeams';
+
+type PageVariants = {
+  initial: { opacity: number; x: number };
+  animate: { opacity: number; x: number; transition: { duration: number } };
+  exit: { opacity: number; x: number; transition: { duration: number } };
+};
+
+const pageVariants: PageVariants = {
   initial: { opacity: 0, x: -20 },
   animate: { opacity: 1, x: 0, transition: { duration: 0.1 } },
-  exit: { opacity: 0, x: 20, transition: { duration: 0.1 } }
-}
+  exit: { opacity: 0, x: 20, transition: { duration: 0.1 } },
+};
 
-function PageWrapper({ children }) {
+type PageWrapperProps = {
+  children: React.ReactNode;
+};
+
+function PageWrapper({ children }: PageWrapperProps) {
   return (
     <motion.div
       initial='initial'
@@ -25,11 +37,11 @@ function PageWrapper({ children }) {
       {children}
       <Analytics />
     </motion.div>
-  )
+  );
 }
 
 function AnimatedRoutes() {
-  const location = useLocation()
+  const location: Location = useLocation();
 
   return (
     <AnimatePresence mode='wait'>
@@ -40,7 +52,7 @@ function AnimatedRoutes() {
         <Route path='/perfil' element={<PageWrapper><Profile /></PageWrapper>} />
       </Routes>
     </AnimatePresence>
-  )
+  );
 }
 
 function App() {
@@ -48,7 +60,7 @@ function App() {
     <Router>
       <AnimatedRoutes />
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,9 +1,9 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
-import Nav from '@/components/Nav'
-import Footer from '@/components/Footer'
+import Nav from '@/components/Nav.tsx';
+import Footer from '@/components/Footer.tsx';
 
-import '@/css/home.css'
+import '@/css/home.css';
 
 const Home = () => {
   return (
@@ -38,7 +38,7 @@ const Home = () => {
 
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

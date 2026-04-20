@@ -1,7 +1,15 @@
-import Loader from '@/components/Loader'
-import { capitalize } from '@/utils/capitalize'
+import type { Player } from '@/utils/types';
 
-const TeamCard = ({ index, players, loading }) => (
+import Loader from '@/components/Loader';
+import { capitalize } from '@/utils/string';
+
+type TeamCardProps = {
+  index: number;
+  players: Player[];
+  loading: boolean;
+};
+
+const TeamCard = ({ index, players, loading }: TeamCardProps) => (
   <div className='flex flex-col bg-white shadow-md rounded-xl p-6 w-48 text-center'>
     <h3 className='text-xl font-bold mb-2'>Equipo {index + 1}</h3>
 
@@ -13,8 +21,8 @@ const TeamCard = ({ index, players, loading }) => (
       <ul className='py-1 max-h-full overflow-y-auto'>
         {players.length > 0 ? (
           players
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((player, i) => (
+            .sort((a: Player, b: Player) => a.name.localeCompare(b.name))
+            .map((player: Player, i: number): React.JSX.Element => (
               <li key={i} className='py-1 truncate'>
                 {capitalize(player.name)}
               </li>
@@ -25,6 +33,6 @@ const TeamCard = ({ index, players, loading }) => (
       </ul>
     )}
   </div>
-)
+);
 
-export default TeamCard
+export default TeamCard;
