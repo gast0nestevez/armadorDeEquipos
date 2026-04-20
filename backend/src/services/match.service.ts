@@ -9,7 +9,7 @@ const ALLOWED_UPDATE_FIELDS: string[] = ['players', 'goals1', 'goals2', 'result'
 
 const sanitize = (body: object, allowed: string[]): Record<string, unknown> =>
   Object.fromEntries(
-    Object.entries(body).filter(([key]: [string, unknown]) => allowed.includes(key))
+    Object.entries(body).filter(([key]: [string, unknown]): boolean => allowed.includes(key))
   );
 
 class MatchService {
@@ -19,7 +19,7 @@ class MatchService {
       goals1: number,
       goals2: number,
       result: string,
-      date: string
+      date: string,
     } = data;
 
     if (!userId) {
@@ -39,11 +39,7 @@ class MatchService {
     }
 
     const validPlayers: Player[] = players.filter(
-      (player: Player) =>
-        player &&
-        player.name &&
-        player.team &&
-        player.name.trim() !== ''
+      (player: Player): boolean => undefined !== player?.name && undefined !== player?.team && player.name.trim() !== ''
     );
 
     return matchRepo.create({

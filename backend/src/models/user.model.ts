@@ -3,6 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 type Provider = 'local' | 'google';
 
 interface IUser extends Document {
+  id: string;
   email: string;
   name?: string;
   passwordHash?: string;

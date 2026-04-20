@@ -7,7 +7,7 @@ interface IPlayer {
 }
 
 interface IMatch extends Document {
-  userId: string;
+  userId: Schema.Types.ObjectId;
   players: IPlayer[];
   goals1: number;
   goals2: number;
@@ -22,7 +22,10 @@ const PlayerSchema: Schema<IPlayer> = new Schema<IPlayer>({
 });
 
 const MatchSchema: Schema<IMatch> = new Schema<IMatch>({
-  userId: { type: String, required: true },
+  userId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+  },
   players: { type: [PlayerSchema], required: true },
   goals1: { type: Number },
   goals2: { type: Number },

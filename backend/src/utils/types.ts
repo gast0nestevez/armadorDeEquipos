@@ -1,6 +1,6 @@
 type Player = {
   name: string;
-  team: string;
+  team: number;
 };
 
 type MatchData = {

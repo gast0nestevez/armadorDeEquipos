@@ -45,16 +45,13 @@ class AuthService {
     );
   };
 
-  async generateAuthUserResponse(user: IUser): Promise<AuthUserResponse> {
-    const plainUser = user.toObject();
-
+  generateAuthUserResponse(user: IUser): AuthUserResponse {
     const authenticatedUser = {
-      userId: plainUser.id,
-      name: plainUser.name,
-      email: plainUser.email,
+      userId: user.id ?? '',
+      name: user.name ?? '',
+      email: user.email,
     };
     const appToken: string = this.signToken(authenticatedUser);
-
     return { appToken, authenticatedUser };
   };
 
@@ -168,10 +165,13 @@ class AuthService {
     const user = await userModel.findOneAndUpdate(
       { email: payload.email },
       {
-        email: payload.email,
-        name: payload.name,
-        googleId: payload.sub,
-        provider: GOOGLE_PROVIDER,
+        $set: {
+          name: payload.name,
+          googleId: payload.sub,
+        },
+        $setOnInsert: {
+          provider: GOOGLE_PROVIDER,
+        },
       },
       { upsert: true, new: true },
     );
