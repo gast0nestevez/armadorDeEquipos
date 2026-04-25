@@ -51,7 +51,7 @@ const Profile = () => {
 
   if (!user) {
     return (
-      <div className='flex flex-col items-center justify-center min-h-screen bg-gray-100'>
+      <div className='flex flex-col items-center justify-center min-h-screen'>
         <p className='text-gray-600 text-lg animate-pulse'>Cargando perfil.</p>
       </div>
     );
@@ -61,7 +61,7 @@ const Profile = () => {
     <div className='flex flex-col min-h-screen'>
       <Nav />
 
-      <main className='flex flex-col items-center flex-1 w-full px-4 py-8 bg-gray-100'>
+      <main className='flex flex-col items-center flex-1 w-full px-4 py-8'>
         <div className='bg-white rounded-xl shadow-lg p-6 w-full max-w-2xl mb-8'>
           <MatchesList
             matches={matches}

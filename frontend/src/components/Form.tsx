@@ -33,7 +33,7 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers }: FormProps)
               placeholder='Nombre'
               maxLength={25}
               id={String(index)}
-              className='border rounded px-3 py-2'
+              className='border rounded px-3 py-2 bg-white'
               value={player.name}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(index, 'name', e.target.value)}
             />
@@ -41,7 +41,7 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers }: FormProps)
               type='text'
               inputMode='numeric'
               placeholder='Puntaje'
-              className='border rounded px-3 py-2 w-24'
+              className='border rounded px-3 py-2 w-24 bg-white'
               value={player.skill}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(index, 'skill', e.target.value)}
             />
