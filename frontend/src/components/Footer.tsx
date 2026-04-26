@@ -20,7 +20,7 @@ const Footer = () => {
         className='block w-fit px-4 py-3 text-gray-300 hover:text-white transition-colors'
       >
         <div className='flex justify-center items-center gap-2 mx-auto max-w-7xl'>
-          <span>Politica de privacidad</span>
+          <span>Política de privacidad</span>
         </div>
       </a>
     </footer>
