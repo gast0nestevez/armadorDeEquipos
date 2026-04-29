@@ -10,6 +10,9 @@ import { UserProvider } from '@/context/userContext';
 
 import '@/css/index.css';
 
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/700.css';
+
 const CLIENT_ID = Env.getString('VITE_CLIENT_ID');
 
 createRoot(document.getElementById('root') as Container).render(

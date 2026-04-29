@@ -16,7 +16,7 @@ type PageVariants = {
 };
 
 const pageVariants: PageVariants = {
-  initial: { opacity: 0.01, x: -20 },
+  initial: { opacity: 0.01, x: 0 },
   animate: { opacity: 1, x: 0, transition: { duration: 0.1 } },
   exit: { opacity: 0, x: 20, transition: { duration: 0.1 } },
 };
