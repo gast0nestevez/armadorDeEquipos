@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import type { JwtPayload } from 'jsonwebtoken';
 
 import jwt from 'jsonwebtoken';
@@ -8,9 +8,13 @@ import { getEnv } from '../utils/env';
 interface AuthenticatedRequest extends Request {
   userId: string;
   userEmail: string;
-};
+}
 
-const authMiddleware: (req: Request, res: Response, next: NextFunction) => void = (req: Request, res: Response, next: NextFunction): void => {
+const authMiddleware: (req: Request, res: Response, next: NextFunction) => void = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   const authHeader: string | undefined = req.headers.authorization;
   if (!authHeader) {
     res.status(401).json({ error: 'Authorization header missing' });
@@ -24,10 +28,7 @@ const authMiddleware: (req: Request, res: Response, next: NextFunction) => void 
   }
 
   try {
-    const decoded: JwtPayload = jwt.verify(
-      token,
-      getEnv('JWT_SECRET'),
-    ) as JwtPayload;
+    const decoded: JwtPayload = jwt.verify(token, getEnv('JWT_SECRET')) as JwtPayload;
 
     if (!decoded.userId) {
       res.status(403).json({ error: 'Invalid token payload' });
@@ -39,9 +40,10 @@ const authMiddleware: (req: Request, res: Response, next: NextFunction) => void 
     authReq.userEmail = decoded.email;
 
     next();
-  } catch (err) {
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  } catch (e) {
     res.status(403).json({ error: 'Invalid or expired token' });
   }
-}
+};
 
 export { AuthenticatedRequest, authMiddleware };

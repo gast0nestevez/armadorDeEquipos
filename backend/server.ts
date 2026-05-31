@@ -1,15 +1,15 @@
 import type { Application, Request, Response } from 'express';
 import type { RateLimitRequestHandler } from 'express-rate-limit';
 
-import express from 'express';
 import cors from 'cors';
-import helmet from 'helmet';
 import dotenv from 'dotenv';
+import express from 'express';
 import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
 
+import { connectDB } from './src/config/db';
 import authRouter from './src/routes/auth.route';
 import matchRouter from './src/routes/match.route';
-import { connectDB } from './src/config/db';
 import { getEnv } from './src/utils/env';
 
 dotenv.config();

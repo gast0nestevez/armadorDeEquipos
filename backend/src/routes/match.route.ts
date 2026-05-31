@@ -2,8 +2,8 @@ import type { Router } from 'express';
 
 import express from 'express';
 
-import { authMiddleware } from '../middleware/auth.middleware'
 import { MatchController } from '../controllers/match.controller';
+import { authMiddleware } from '../middleware/auth.middleware';
 
 const matchRouter: Router = express.Router();
 const matchController: MatchController = new MatchController();

@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction } from 'express';
+import type { Request, Response } from 'express';
 
 import { AppError } from '../error/app.error';
 import { ErrorCode } from '../error/errorCodes';
@@ -11,7 +11,11 @@ import { ErrorCode } from '../error/errorCodes';
  *
  * Express takes the error raised and pass it as the first argument
  */
-const errorHandler: (err: Error, _req: Request, res: Response, _next: NextFunction) => void = (err: Error, _req: Request, res: Response, _next: NextFunction): void => {
+const errorHandler: (err: Error, _req: Request, res: Response) => void = (
+  err: Error,
+  _req: Request,
+  res: Response
+): void => {
   if (err instanceof AppError) {
     res.status(err.statusCode).json({
       success: false,
@@ -22,7 +26,7 @@ const errorHandler: (err: Error, _req: Request, res: Response, _next: NextFuncti
       },
     });
     return;
-  };
+  }
 
   console.error(err);
 

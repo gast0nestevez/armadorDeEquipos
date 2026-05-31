@@ -1,12 +1,12 @@
 import type { LoginTicket, TokenPayload } from 'google-auth-library';
 
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import { OAuth2Client } from 'google-auth-library';
+import jwt from 'jsonwebtoken';
 
-import userModel, { IUser } from '../models/user.model';
 import { AppError } from '../error/app.error';
 import { ErrorCode } from '../error/errorCodes';
+import userModel, { IUser } from '../models/user.model';
 import { getEnv } from '../utils/env';
 
 const client: OAuth2Client = new OAuth2Client();
@@ -38,12 +38,8 @@ type AuthenticatedUser = {
 
 class AuthService {
   signToken(user: User): string {
-    return jwt.sign(
-      user,
-      getEnv('JWT_SECRET'),
-      { expiresIn: EXP_DATE },
-    );
-  };
+    return jwt.sign(user, getEnv('JWT_SECRET'), { expiresIn: EXP_DATE });
+  }
 
   generateAuthUserResponse(user: IUser): AuthUserResponse {
     const authenticatedUser = {
@@ -53,52 +49,36 @@ class AuthService {
     };
     const appToken: string = this.signToken(authenticatedUser);
     return { appToken, authenticatedUser };
-  };
+  }
 
   async checkCredentials(email: string, password: string): Promise<AuthUserResponse> {
     if (!email || !password) {
-      throw new AppError(
-        ErrorCode.VALIDATION_ERROR,
-        400,
-        'Email and password are required'
-      );
+      throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Email and password are required');
     }
 
     const user: IUser | null = await userModel.findOne({ email });
-    if (!user)  {
-      throw new AppError(
-        ErrorCode.INVALID_CREDENTIALS,
-        401,
-        'Invalid credentials',
-      );
+    if (!user) {
+      throw new AppError(ErrorCode.INVALID_CREDENTIALS, 401, 'Invalid credentials');
     }
 
     const isValidPassword: boolean = await bcrypt.compare(password, user.passwordHash as string);
     if (!isValidPassword) {
-      throw new AppError(
-        ErrorCode.INVALID_CREDENTIALS,
-        401,
-        'Invalid credentials',
-      );
+      throw new AppError(ErrorCode.INVALID_CREDENTIALS, 401, 'Invalid credentials');
     }
 
     return this.generateAuthUserResponse(user);
-  };
+  }
 
   async createUser(email: string, password: string): Promise<AuthUserResponse> {
     if (!email || !password) {
-      throw new AppError(
-        ErrorCode.VALIDATION_ERROR,
-        400,
-        'Email and password are required',
-      );
+      throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Email and password are required');
     }
 
     if (password.length < 8) {
       throw new AppError(
         ErrorCode.VALIDATION_ERROR,
         400,
-        'Password must have at least 8 characters',
+        'Password must have at least 8 characters'
       );
     }
 
@@ -117,24 +97,16 @@ class AuthService {
       return this.generateAuthUserResponse(user);
     } catch (err: unknown) {
       if (err instanceof Error && 'code' in err && err.code === 11000) {
-        throw new AppError(
-          ErrorCode.EMAIL_ALREADY_EXISTS,
-          409,
-          'Email already registered',
-        );
+        throw new AppError(ErrorCode.EMAIL_ALREADY_EXISTS, 409, 'Email already registered');
       }
 
       throw err;
     }
-  };
+  }
 
   async validateGoogleToken(googleToken: string): Promise<AuthUserResponse> {
     if (!googleToken) {
-      throw new AppError(
-        ErrorCode.VALIDATION_ERROR,
-        400,
-        'Google token is required',
-      );
+      throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Google token is required');
     }
 
     let payload: TokenPayload | undefined = undefined;
@@ -147,19 +119,11 @@ class AuthService {
 
       payload = loginTicket.getPayload();
     } catch {
-      throw new AppError(
-        ErrorCode.INVALID_GOOGLE_TOKEN,
-        401,
-        'Invalid Google token',
-      );
+      throw new AppError(ErrorCode.INVALID_GOOGLE_TOKEN, 401, 'Invalid Google token');
     }
 
     if (!payload || !payload.email) {
-      throw new AppError(
-        ErrorCode.INVALID_GOOGLE_TOKEN,
-        401,
-        'Invalid Google token',
-      );
+      throw new AppError(ErrorCode.INVALID_GOOGLE_TOKEN, 401, 'Invalid Google token');
     }
 
     const user = await userModel.findOneAndUpdate(
@@ -173,7 +137,7 @@ class AuthService {
           provider: GOOGLE_PROVIDER,
         },
       },
-      { upsert: true, new: true },
+      { upsert: true, new: true }
     );
 
     return this.generateAuthUserResponse(user);

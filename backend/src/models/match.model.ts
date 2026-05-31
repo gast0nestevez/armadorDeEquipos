@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose'
+import mongoose, { Document, Schema } from 'mongoose';
 
 interface IPlayer {
   name: string;
@@ -21,23 +21,26 @@ const PlayerSchema: Schema<IPlayer> = new Schema<IPlayer>({
   team: { type: Number, required: true },
 });
 
-const MatchSchema: Schema<IMatch> = new Schema<IMatch>({
-  userId: {
-    type: Schema.Types.ObjectId,
-    required: true,
+const MatchSchema: Schema<IMatch> = new Schema<IMatch>(
+  {
+    userId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
+    players: { type: [PlayerSchema], required: true },
+    goals1: { type: Number },
+    goals2: { type: Number },
+    result: { type: String, enum: ['Lose', 'Draw', 'Win'] },
+    date: {
+      type: String,
+      match: /^\d{4}-\d{2}-\d{2}$/,
+      required: false,
+    },
   },
-  players: { type: [PlayerSchema], required: true },
-  goals1: { type: Number },
-  goals2: { type: Number },
-  result: { type: String, enum: ['Lose', 'Draw', 'Win'] },
-  date: {
-    type: String,
-    match: /^\d{4}\-\d{2}\-\d{2}$/,
-    required: false,
-  },
-}, {
-  timestamps: true,
-});
+  {
+    timestamps: true,
+  }
+);
 
 export { IMatch, IPlayer };
 

@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 
 type Provider = 'local' | 'google';
 
@@ -11,24 +11,27 @@ interface IUser extends Document {
   googleId?: string;
 }
 
-const userSchema: Schema = new Schema<IUser>({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
+const userSchema: Schema = new Schema<IUser>(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+    },
+    name: String,
+    passwordHash: String,
+    provider: {
+      type: String,
+      enum: ['local', 'google'],
+      required: true,
+    },
+    googleId: String,
   },
-  name: String,
-  passwordHash: String,
-  provider: {
-    type: String,
-    enum: ['local', 'google'],
-    required: true,
-  },
-  googleId: String,
-}, {
-  timestamps: true,
-});
+  {
+    timestamps: true,
+  }
+);
 
 export { IUser };
 

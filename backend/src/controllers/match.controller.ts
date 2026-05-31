@@ -1,8 +1,8 @@
 import type { Request, Response } from 'express';
 
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
-import { MatchService } from '../services/match.service';
 import { IMatch } from '../models/match.model';
+import { MatchService } from '../services/match.service';
 
 type MatchParams = {
   matchId: string;
