@@ -1,17 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { useEffect, useRef, useState } from 'react';
 
-import Form, { PlayerInput } from '@/components/Form';
+import Form from '@/components/Form';
 import Nav from '@/components/Nav';
 import TeamsDisplay from '@/components/TeamsDisplay';
+import { UsePlayersReturnType } from '@/hooks/types';
 import usePlayers from '@/hooks/usePlayers';
 import TeamsMaker from '@/utils/teamsMaker';
-
-type Team = {
-  players: PlayerInput[];
-  skill: number;
-};
+import { Player, Team } from '@/utils/types';
 
 const initialTeams: Team[] = [
   { players: [], skill: 0 },
@@ -19,7 +14,9 @@ const initialTeams: Team[] = [
 ];
 
 const MakeTeams = () => {
-  const { players, handleChange, deletePlayer } = usePlayers([{ name: '', skill: '' }]);
+  const { players, handleChange, deletePlayer }: UsePlayersReturnType = usePlayers([
+    { name: '', skill: '' },
+  ]);
   const [teams, setTeams] = useState<Team[]>(initialTeams);
   const [loading, setLoading] = useState<boolean>(false);
   const teamsRef = useRef<HTMLDivElement>(null);
@@ -34,13 +31,13 @@ const MakeTeams = () => {
   const submitPlayers = (): void => {
     setLoading(true);
 
-    const validPlayers: PlayerInput[] = players
+    const validPlayers: Player[] = players
       .filter(
         (player: { name: string; skill: string }): boolean =>
           player.name.trim() !== '' && player.skill.trim() !== ''
       )
       .map(
-        (player: { name: string; skill: string }): PlayerInput => ({
+        (player: { name: string; skill: string }): Player => ({
           name: player.name,
           skill: Number.parseInt(player.skill),
         })
@@ -49,7 +46,7 @@ const MakeTeams = () => {
     const teamsMaker: TeamsMaker = new TeamsMaker();
 
     setTimeout((): void => {
-      const result: any = teamsMaker.makeTeams(validPlayers);
+      const result: Team[] = teamsMaker.makeTeams(validPlayers);
       setTeams(result);
       setLoading(false);
     }, 10);
@@ -60,12 +57,12 @@ const MakeTeams = () => {
       <Nav />
       <div className='flex flex-col md:flex-row flex-1 h-full overflow-hidden'>
         <Form
-          players={players as any}
+          players={players}
           handleChange={handleChange}
           deletePlayer={deletePlayer}
           submitPlayers={submitPlayers}
         />
-        <TeamsDisplay teams={teams as any} loading={loading} teamsRef={teamsRef as any} />
+        <TeamsDisplay teams={teams} loading={loading} teamsRef={teamsRef} />
       </div>
     </div>
   );

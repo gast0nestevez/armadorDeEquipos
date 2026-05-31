@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import type { Player } from '@/utils/types';
+import type { Player, Team } from '@/utils/types';
 
 import TeamCard from '@/components/TeamCard';
 import { UserContext } from '@/context/userContext';
@@ -9,11 +9,6 @@ import { Env } from '@/utils/env';
 import { capitalize } from '@/utils/string';
 
 const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
-
-type Team = {
-  players: Player[];
-  skill: number;
-};
 
 type MappedPlayer = {
   name: string;
@@ -24,7 +19,7 @@ type MappedPlayer = {
 type TeamsDisplayProps = {
   teams: Team[];
   loading: boolean;
-  teamsRef: React.RefObject<HTMLDivElement>;
+  teamsRef: React.RefObject<HTMLDivElement | null>;
 };
 
 const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {

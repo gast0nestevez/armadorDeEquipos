@@ -1,13 +1,8 @@
 import { useState } from 'react';
 
+import { Field, PlayerInput } from './types';
+
 const MAX_INPUTS: number = 40;
-
-type PlayerInput = {
-  name: string;
-  skill: string;
-};
-
-type Field = keyof PlayerInput;
 
 const initialDefault: PlayerInput[] = [{ name: '', skill: '' }];
 

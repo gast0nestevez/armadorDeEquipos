@@ -1,11 +1,7 @@
 import { Trash2 } from 'lucide-react';
 
 import HelpMessage from '@/components/HelpMessage';
-
-type PlayerInput = {
-  name: string;
-  skill: number;
-};
+import { PlayerInput } from '@/hooks/types';
 
 type FormProps = {
   players: PlayerInput[];
@@ -26,7 +22,7 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers }: FormProps)
         {players.map((player: PlayerInput, index: number) => (
           <div key={index} className='flex justify-center items-center gap-2 mt-2 mb-2'>
             <label
-              htmlFor={String(index)}
+              htmlFor={index.toString(10)}
               className='min-w-[5%] mr-[10px] text-base font-bold text-center'
             >
               {index + 1}
@@ -35,7 +31,7 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers }: FormProps)
               type='text'
               placeholder='Nombre'
               maxLength={25}
-              id={String(index)}
+              id={index.toString(10)}
               className='border rounded px-3 py-2 bg-white'
               value={player.name}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -69,6 +65,6 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers }: FormProps)
   );
 };
 
-export type { PlayerInput, FormProps };
+export type { FormProps };
 
 export default Form;

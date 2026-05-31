@@ -1,8 +1,13 @@
 type Player = {
-  _id: string;
+  _id?: string;
   name: string;
   skill: number;
-  team: 1 | 2;
+  team?: 1 | 2;
+};
+
+type Team = {
+  players: Player[];
+  skill: number;
 };
 
 type Result = 'Win' | 'Draw' | 'Lose' | '';
@@ -16,4 +21,4 @@ type Match = {
   date: string;
 };
 
-export type { Player, Result, Match };
+export type { Player, Result, Match, Team };

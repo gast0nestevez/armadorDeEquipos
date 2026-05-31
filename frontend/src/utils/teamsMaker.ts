@@ -1,12 +1,4 @@
-type Player = {
-  skill: number;
-  [key: string]: unknown;
-};
-
-type Team = {
-  players: Player[];
-  skill: number;
-};
+import { Player, Team } from './types';
 
 type Memo = Map<number, Set<number>>[];
 
