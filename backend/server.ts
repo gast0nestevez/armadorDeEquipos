@@ -18,7 +18,7 @@ const app: Application = express();
 
 const limiter: RateLimitRequestHandler = rateLimit({
   windowMs: 5 * 60 * 1000,
-  max: 300,
+  max: 30,
   standardHeaders: true,
   legacyHeaders: false,
 });
