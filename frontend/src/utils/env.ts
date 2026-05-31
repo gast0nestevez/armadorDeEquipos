@@ -28,7 +28,7 @@ class Env {
   }
 
   static getOptionalNumber(key: string, defaultValue: number): number {
-    const value: string | undefined = import.meta.env[key]
+    const value: string | undefined = import.meta.env[key];
     if (!value) {
       return defaultValue;
     }

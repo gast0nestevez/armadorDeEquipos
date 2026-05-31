@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useEffect, useRef, useState } from 'react';
 
-import TeamsMaker from '@/utils/teamsMaker';
-import usePlayers from '@/hooks/usePlayers';
-import Nav from '@/components/Nav';
 import Form, { PlayerInput } from '@/components/Form';
+import Nav from '@/components/Nav';
 import TeamsDisplay from '@/components/TeamsDisplay';
+import usePlayers from '@/hooks/usePlayers';
+import TeamsMaker from '@/utils/teamsMaker';
 
 type Team = {
   players: PlayerInput[];

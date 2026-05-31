@@ -1,13 +1,13 @@
-import type { Match } from '@/utils/types';
-
-import { useState, useEffect, useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Env } from '@/utils/env';
+import type { Match } from '@/utils/types';
+
+import MatchesList from '@/components/MatchesList';
+import Nav from '@/components/Nav';
 import { UserContext } from '@/context/userContext';
 import { handleGoogleLogout } from '@/utils/auth';
-import Nav from '@/components/Nav';
-import MatchesList from '@/components/MatchesList';
+import { Env } from '@/utils/env';
 
 const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
 
@@ -35,7 +35,9 @@ const Profile = () => {
 
       try {
         const response: Response = await fetch(url, options);
-        if (!response.ok) throw new Error('Error fetching matches');
+        if (!response.ok) {
+          throw new Error('Error fetching matches');
+        }
         const { data: matches }: { data: Match[] } = await response.json();
 
         setMatches(matches);

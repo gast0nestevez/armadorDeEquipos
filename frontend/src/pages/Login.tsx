@@ -1,18 +1,18 @@
 import type { CredentialResponse } from '@react-oauth/google';
 
+import { GoogleLogin } from '@react-oauth/google';
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GoogleLogin } from '@react-oauth/google';
 
-import Nav from '@/components/Nav';
-import Loader from '@/components/Loader';
 import Footer from '@/components/Footer';
+import Loader from '@/components/Loader';
+import Nav from '@/components/Nav';
 import { UserContext } from '@/context/userContext';
 import {
   handleEmailLogin,
   handleEmailRegister,
-  handleGoogleLogin,
   handleGoogleError,
+  handleGoogleLogin,
 } from '@/utils/auth';
 
 type AuthMode = 'login' | 'register';
@@ -104,7 +104,7 @@ const Auth = () => {
     setIsLoading(true);
 
     try {
-      mode === 'login'
+      return mode === 'login'
         ? await handleEmailLogin(form.email, form.password, setUser)
         : await handleEmailRegister(form.email, form.password, setUser);
     } catch (err) {

@@ -1,9 +1,9 @@
-import type { Match as MatchType, Result } from '@/utils/types';
-
 import { useState } from 'react';
 
-import Match from '@/components/Match';
+import type { Match as MatchType, Result } from '@/utils/types';
+
 import Loader from '@/components/Loader';
+import Match from '@/components/Match';
 import NewMatchForm from '@/components/NewMatchForm';
 
 type MatchesStats = Record<Result, number>;

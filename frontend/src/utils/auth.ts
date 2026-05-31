@@ -1,4 +1,4 @@
-import { googleLogout, CredentialResponse } from '@react-oauth/google';
+import { CredentialResponse,googleLogout } from '@react-oauth/google';
 
 import { Env } from '@/utils/env';
 

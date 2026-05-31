@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { CircleQuestionMark } from 'lucide-react';
+import { useState } from 'react';
 
 const HelpMessage = () => {
   const [showHelpMessage, setShowHelpMessage] = useState<boolean>(false);

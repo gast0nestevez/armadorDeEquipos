@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
-import Nav from '@/components/Nav.tsx';
 import Footer from '@/components/Footer.tsx';
+import Nav from '@/components/Nav.tsx';
 
 import '@/css/home.css';
 
