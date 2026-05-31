@@ -80,27 +80,21 @@ const MatchesList = ({ matches, setMatches, loadingMatches }: MatchesListProps) 
         </div>
       </div>
 
-      {newMatchForm && (
-        <NewMatchForm
-          setMatches={setMatches}
-          formSubmited={formSubmited}
-        />
-      )}
+      {newMatchForm && <NewMatchForm setMatches={setMatches} formSubmited={formSubmited} />}
       {matches.length === 0 ? (
         <p className='text-gray-600'>Todavía no guardaste ningún partido</p>
       ) : (
         <ul className='space-y-4'>
-          {matches.map((match: MatchType): React.JSX.Element => (
-            <li
-              key={match._id}
-              className={`flex flex-col gap-[15px] border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition ${matchBorderColor(match.result)}`}
-            >
-              <Match
-                match={match}
-                setMatches={setMatches}
-              />
-            </li>
-          ))}
+          {matches.map(
+            (match: MatchType): React.JSX.Element => (
+              <li
+                key={match._id}
+                className={`flex flex-col gap-[15px] border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition ${matchBorderColor(match.result)}`}
+              >
+                <Match match={match} setMatches={setMatches} />
+              </li>
+            )
+          )}
         </ul>
       )}
     </div>

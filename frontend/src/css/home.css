@@ -1,10 +1,16 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-h1, p, .modos *, .form *, .teams *, .black-text {
+h1,
+p,
+.modos *,
+.form *,
+.teams *,
+.black-text {
   color: #333;
 }
 
-.form button, .teams button {
+.form button,
+.teams button {
   color: #f9f9fb;
 }
 
@@ -44,8 +50,8 @@ nav {
 }
 
 /* Remove number input arrows (Chrome, Edge, Safari) */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }

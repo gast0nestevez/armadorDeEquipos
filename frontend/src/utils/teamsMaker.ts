@@ -1,12 +1,12 @@
 type Player = {
   skill: number;
   [key: string]: unknown;
-}
+};
 
 type Team = {
   players: Player[];
   skill: number;
-}
+};
 
 type Memo = Map<number, Set<number>>[];
 
@@ -36,7 +36,7 @@ class TeamsMaker {
     this.fillMemoTable(memo);
 
     const bestSum: number = this.findClosestSumToOptimal(memo);
-    const { team1, team2 }: { team1: Player[], team2: Player[]} = this.buildTeams(memo, bestSum);
+    const { team1, team2 }: { team1: Player[]; team2: Player[] } = this.buildTeams(memo, bestSum);
 
     return [
       { players: team1, skill: team1.reduce((sum, player) => sum + player.skill, 0) },
@@ -73,7 +73,7 @@ class TeamsMaker {
   }
 
   newBestSum(sum: number, bestSum: number): boolean {
-    return (this.totalSkill - sum) < (this.totalSkill - bestSum);
+    return this.totalSkill - sum < this.totalSkill - bestSum;
   }
 
   buildTeams(memo: Memo, bestSum: number): { team1: Player[]; team2: Player[] } {

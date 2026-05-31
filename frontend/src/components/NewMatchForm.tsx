@@ -29,7 +29,8 @@ const NewMatchForm = ({ setMatches, formSubmited }: NewMatchProps) => {
 
   const resultButtonClasses = (type: Result, currentResult: Result | null): string => {
     const isActive: boolean = currentResult === type;
-    const base: string = 'l-2 px-2 py-1 rounded-md transition flex items-center justify-center border cursor-pointer';
+    const base: string =
+      'l-2 px-2 py-1 rounded-md transition flex items-center justify-center border cursor-pointer';
 
     const styles: Record<string, string> = {
       Win: isActive
@@ -101,13 +102,17 @@ const NewMatchForm = ({ setMatches, formSubmited }: NewMatchProps) => {
         <select
           className='w-16 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
           value={playerCount}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setPlayerCount(Number.parseInt(e.target.value))}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+            setPlayerCount(Number.parseInt(e.target.value))
+          }
         >
-          {[...Array(15)].map((_: undefined, i: number): React.JSX.Element => (
-            <option key={i} value={2 * i + 2}>
-              {2 * i + 2}
-            </option>
-          ))}
+          {[...Array(15)].map(
+            (_: undefined, i: number): React.JSX.Element => (
+              <option key={i} value={2 * i + 2}>
+                {2 * i + 2}
+              </option>
+            )
+          )}
         </select>
       </div>
 
@@ -115,16 +120,20 @@ const NewMatchForm = ({ setMatches, formSubmited }: NewMatchProps) => {
         <div className='flex-1'>
           <h3 className='font-semibold mb-3 text-gray-800 text-center md:text-left'>Equipo 1</h3>
           <ul className='space-y-2'>
-            {[...Array(playerCount / 2)].map((_: undefined, index: number): React.JSX.Element => (
-              <input
-                type='text'
-                key={index}
-                placeholder='Nombre'
-                maxLength={25}
-                className='w-full text-center bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(index, e.target.value, 1)}
-              />
-            ))}
+            {[...Array(playerCount / 2)].map(
+              (_: undefined, index: number): React.JSX.Element => (
+                <input
+                  type='text'
+                  key={index}
+                  placeholder='Nombre'
+                  maxLength={25}
+                  className='w-full text-center bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    handleChange(index, e.target.value, 1)
+                  }
+                />
+              )
+            )}
           </ul>
         </div>
 
@@ -135,7 +144,9 @@ const NewMatchForm = ({ setMatches, formSubmited }: NewMatchProps) => {
               min='0'
               value={goals1 ?? ''}
               className='w-12 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setGoals1(Number.parseInt(e.target.value))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setGoals1(Number.parseInt(e.target.value))
+              }
             />
             <span className='font-bold text-gray-600'>-</span>
             <input
@@ -143,7 +154,9 @@ const NewMatchForm = ({ setMatches, formSubmited }: NewMatchProps) => {
               min='0'
               value={goals2 ?? ''}
               className='w-12 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setGoals2(Number.parseInt(e.target.value))}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setGoals2(Number.parseInt(e.target.value))
+              }
             />
           </div>
         </div>
@@ -151,16 +164,20 @@ const NewMatchForm = ({ setMatches, formSubmited }: NewMatchProps) => {
         <div className='flex-1'>
           <h3 className='font-semibold mb-3 text-gray-800 text-center md:text-right'>Equipo 2</h3>
           <ul className='space-y-2'>
-            {[...Array(playerCount / 2)].map((_: undefined, index: number): React.JSX.Element => (
-              <input
-                type='text'
-                key={index}
-                placeholder='Nombre'
-                maxLength={25}
-                className='w-full text-center bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(index + playerCount / 2, e.target.value, 2)}
-              />
-            ))}
+            {[...Array(playerCount / 2)].map(
+              (_: undefined, index: number): React.JSX.Element => (
+                <input
+                  type='text'
+                  key={index}
+                  placeholder='Nombre'
+                  maxLength={25}
+                  className='w-full text-center bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    handleChange(index + playerCount / 2, e.target.value, 2)
+                  }
+                />
+              )
+            )}
           </ul>
         </div>
       </div>

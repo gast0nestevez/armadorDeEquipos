@@ -17,7 +17,9 @@ const HelpMessage = () => {
 
       {showHelpMessage && (
         <div className='help-message top-16 ml-2 w-64 p-2 bg-white border border-blue-300 rounded shadow text-sm absolute z-10'>
-          Ingresá los nombres y puntajes de los jugadores, cuando empieces a escribir el nombre de un jugador se habilitará el cuadro del siguiente. Luego hacé clic en 'Armar equipos' para generar. Listo!
+          Ingresá los nombres y puntajes de los jugadores, cuando empieces a escribir el nombre de
+          un jugador se habilitará el cuadro del siguiente. Luego hacé clic en 'Armar equipos' para
+          generar. Listo!
         </div>
       )}
     </div>

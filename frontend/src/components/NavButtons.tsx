@@ -32,21 +32,13 @@ const NavButtons = ({ setIsOpen, variant = 'desktop' }: NavButtonsProps) => {
       <ul className={ulClass}>
         {!user ? (
           <li>
-            <Link
-              to='/login'
-              className={linkClass}
-              onClick={() => setIsOpen(false)}
-            >
+            <Link to='/login' className={linkClass} onClick={() => setIsOpen(false)}>
               Ingresar
             </Link>
           </li>
         ) : (
           <li>
-            <Link
-              to='/perfil'
-              className={linkClass}
-              onClick={() => setIsOpen(false)}
-            >
+            <Link to='/perfil' className={linkClass} onClick={() => setIsOpen(false)}>
               Mis Partidos
             </Link>
           </li>

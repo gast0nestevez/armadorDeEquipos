@@ -21,5 +21,5 @@ createRoot(document.getElementById('root') as Container).render(
         <App />
       </UserProvider>
     </GoogleOAuthProvider>
-  </StrictMode>,
+  </StrictMode>
 );

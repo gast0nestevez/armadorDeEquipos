@@ -109,7 +109,8 @@ const Auth = () => {
         : await handleEmailRegister(form.email, form.password, setUser);
     } catch (err) {
       console.error(err);
-      const errorMessage: string = err instanceof Error ? err.message : 'Ocurrió un error. Intenta nuevamente.';
+      const errorMessage: string =
+        err instanceof Error ? err.message : 'Ocurrió un error. Intenta nuevamente.';
       setGeneralError(errorMessage);
       return;
     } finally {
@@ -155,9 +156,7 @@ const Auth = () => {
                   errors.email ? 'border-red-500 bg-red-50' : 'border-gray-300'
                 }`}
               />
-              {errors.email && (
-                <p className='text-red-600 text-xs mt-1'>{errors.email}</p>
-              )}
+              {errors.email && <p className='text-red-600 text-xs mt-1'>{errors.email}</p>}
             </div>
 
             <div>
@@ -171,9 +170,7 @@ const Auth = () => {
                   errors.password ? 'border-red-500 bg-red-50' : 'border-gray-300'
                 }`}
               />
-              {errors.password && (
-                <p className='text-red-600 text-xs mt-1'>{errors.password}</p>
-              )}
+              {errors.password && <p className='text-red-600 text-xs mt-1'>{errors.password}</p>}
             </div>
 
             {mode === 'register' && (
@@ -202,9 +199,7 @@ const Auth = () => {
             </button>
           </form>
 
-          <div className='my-4 text-center text-sm text-gray-500'>
-            o continuar con
-          </div>
+          <div className='my-4 text-center text-sm text-gray-500'>o continuar con</div>
 
           <div className='flex justify-center'>
             <GoogleLogin
@@ -224,9 +219,7 @@ const Auth = () => {
               setGeneralError('');
             }}
           >
-            {mode === 'login'
-              ? 'No tenés cuenta? Registrate'
-              : 'Ya tenés cuenta? Iniciá sesión'}
+            {mode === 'login' ? 'No tenés cuenta? Registrate' : 'Ya tenés cuenta? Iniciá sesión'}
           </button>
         </div>
       </div>

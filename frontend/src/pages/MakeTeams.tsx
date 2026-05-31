@@ -35,8 +35,16 @@ const MakeTeams = () => {
     setLoading(true);
 
     const validPlayers: PlayerInput[] = players
-      .filter((player: { name: string, skill: string }): boolean => player.name.trim() !== '' && player.skill.trim() !== '')
-      .map((player: { name: string, skill: string }): PlayerInput => ({ name: player.name, skill: Number.parseInt(player.skill) }));
+      .filter(
+        (player: { name: string; skill: string }): boolean =>
+          player.name.trim() !== '' && player.skill.trim() !== ''
+      )
+      .map(
+        (player: { name: string; skill: string }): PlayerInput => ({
+          name: player.name,
+          skill: Number.parseInt(player.skill),
+        })
+      );
 
     const teamsMaker: TeamsMaker = new TeamsMaker();
 
@@ -57,11 +65,7 @@ const MakeTeams = () => {
           deletePlayer={deletePlayer}
           submitPlayers={submitPlayers}
         />
-        <TeamsDisplay
-          teams={teams as any}
-          loading={loading}
-          teamsRef={teamsRef as any}
-        />
+        <TeamsDisplay teams={teams as any} loading={loading} teamsRef={teamsRef as any} />
       </div>
     </div>
   );

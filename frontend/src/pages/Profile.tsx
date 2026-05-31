@@ -65,11 +65,7 @@ const Profile = () => {
 
       <main className='flex flex-col items-center flex-1 w-full px-4 py-8'>
         <div className='bg-white rounded-xl shadow-lg p-6 w-full max-w-2xl mb-8'>
-          <MatchesList
-            matches={matches}
-            setMatches={setMatches}
-            loadingMatches={loadingMatches}
-          />
+          <MatchesList matches={matches} setMatches={setMatches} loadingMatches={loadingMatches} />
         </div>
 
         <button

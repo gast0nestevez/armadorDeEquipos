@@ -10,7 +10,9 @@ type UserContextType = {
   clearContext: () => void;
 };
 
-const UserContext: React.Context<UserContextType> = createContext<UserContextType>({} as UserContextType);
+const UserContext: React.Context<UserContextType> = createContext<UserContextType>(
+  {} as UserContextType
+);
 
 type UserProviderProps = {
   children: React.ReactNode;
@@ -29,9 +31,7 @@ const UserProvider = ({ children }: UserProviderProps) => {
   };
 
   return (
-    <UserContext.Provider value={{ user, setUser, clearContext }}>
-      {children}
-    </UserContext.Provider>
+    <UserContext.Provider value={{ user, setUser, clearContext }}>{children}</UserContext.Provider>
   );
 };
 

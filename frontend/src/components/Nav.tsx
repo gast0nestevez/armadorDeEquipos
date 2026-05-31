@@ -24,18 +24,11 @@ const Nav = () => {
         </button>
 
         {/* desktop buttons */}
-        <NavButtons
-          setIsOpen={setIsOpen}
-        />
+        <NavButtons setIsOpen={setIsOpen} />
       </div>
 
       {/* mobile menu */}
-      {isOpen && (
-        <NavButtons
-          variant='mobile'
-          setIsOpen={setIsOpen}
-        />
-      )}
+      {isOpen && <NavButtons variant='mobile' setIsOpen={setIsOpen} />}
     </nav>
   );
 };

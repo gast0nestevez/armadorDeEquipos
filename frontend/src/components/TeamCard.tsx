@@ -22,11 +22,13 @@ const TeamCard = ({ index, players, loading }: TeamCardProps) => (
         {players.length > 0 ? (
           players
             .sort((a: Player, b: Player) => a.name.localeCompare(b.name))
-            .map((player: Player, i: number): React.JSX.Element => (
-              <li key={i} className='py-1 truncate'>
-                {capitalize(player.name)}
-              </li>
-            ))
+            .map(
+              (player: Player, i: number): React.JSX.Element => (
+                <li key={i} className='py-1 truncate'>
+                  {capitalize(player.name)}
+                </li>
+              )
+            )
         ) : (
           <li>Sin jugadores</li>
         )}

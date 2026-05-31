@@ -3,8 +3,8 @@ import { Trash2 } from 'lucide-react';
 import HelpMessage from '@/components/HelpMessage';
 
 type PlayerInput = {
-  name: string,
-  skill: number,
+  name: string;
+  skill: number;
 };
 
 type FormProps = {
@@ -25,7 +25,10 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers }: FormProps)
       <div className='m-[15px] p-[8px] overflow-y-scroll'>
         {players.map((player: PlayerInput, index: number) => (
           <div key={index} className='flex justify-center items-center gap-2 mt-2 mb-2'>
-            <label htmlFor={String(index)} className='min-w-[5%] mr-[10px] text-base font-bold text-center'>
+            <label
+              htmlFor={String(index)}
+              className='min-w-[5%] mr-[10px] text-base font-bold text-center'
+            >
               {index + 1}
             </label>
             <input
@@ -35,7 +38,9 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers }: FormProps)
               id={String(index)}
               className='border rounded px-3 py-2 bg-white'
               value={player.name}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(index, 'name', e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleChange(index, 'name', e.target.value)
+              }
             />
             <input
               type='text'
@@ -43,13 +48,11 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers }: FormProps)
               placeholder='Puntaje'
               className='border rounded px-3 py-2 w-24 bg-white'
               value={player.skill}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(index, 'skill', e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                handleChange(index, 'skill', e.target.value)
+              }
             />
-            <button
-              className='cursor-pointer'
-              onClick={() => deletePlayer(index)}
-              tabIndex={-1}
-            >
+            <button className='cursor-pointer' onClick={() => deletePlayer(index)} tabIndex={-1}>
               <Trash2 />
             </button>
           </div>

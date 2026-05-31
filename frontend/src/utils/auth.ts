@@ -1,4 +1,4 @@
-import { CredentialResponse,googleLogout } from '@react-oauth/google';
+import { CredentialResponse, googleLogout } from '@react-oauth/google';
 
 import { Env } from '@/utils/env';
 
@@ -17,7 +17,7 @@ type SetUser = (user: User) => void;
 
 const handleGoogleLogin = async (
   credentialResponse: CredentialResponse,
-  setUser: SetUser,
+  setUser: SetUser
 ): Promise<void> => {
   const googleToken: string | undefined = credentialResponse.credential;
 
@@ -55,7 +55,7 @@ const handleGoogleLogout = (clearContext: () => void): void => {
 const handleEmailLogin = async (
   email: string,
   password: string,
-  setUser: SetUser,
+  setUser: SetUser
 ): Promise<void> => {
   const url: string = `${API_BASE_URL}/auth/login`;
   const options: RequestInit = {
@@ -83,7 +83,7 @@ const handleEmailLogin = async (
 const handleEmailRegister = async (
   email: string,
   password: string,
-  setUser: SetUser,
+  setUser: SetUser
 ): Promise<void> => {
   const url: string = `${API_BASE_URL}/auth/register`;
   const options: RequestInit = {
@@ -113,5 +113,5 @@ export {
   handleGoogleError,
   handleGoogleLogout,
   handleEmailLogin,
-  handleEmailRegister
+  handleEmailRegister,
 };

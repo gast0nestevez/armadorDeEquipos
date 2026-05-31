@@ -1,7 +1,7 @@
 type Player = {
   _id: string;
   name: string;
-  skill: number,
+  skill: number;
   team: 1 | 2;
 };
 

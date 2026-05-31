@@ -35,15 +35,18 @@ const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
   const playersNotEmpty: boolean = teams[0].players.length > 0 || teams[1].players.length > 0;
 
   const teamsToString = (): string => {
-    return teams.map((team: Team, index: number): string =>
-      `Equipo ${index + 1}:\n` +
-      (team.players.length === 0
-        ? 'Sin jugadores\n'
-        : team.players
-            .sort()
-            .map((player: Player): string => `  - ${capitalize(player.name)}`)
-            .join('\n'))
-    ).join('\n\n');
+    return teams
+      .map(
+        (team: Team, index: number): string =>
+          `Equipo ${index + 1}:\n` +
+          (team.players.length === 0
+            ? 'Sin jugadores\n'
+            : team.players
+                .sort()
+                .map((player: Player): string => `  - ${capitalize(player.name)}`)
+                .join('\n'))
+      )
+      .join('\n\n');
   };
 
   const copyToClipboard = (): void => {
@@ -53,11 +56,13 @@ const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
 
   const mapTeamsToPlayers = (teams: Team[]): MappedPlayer[] =>
     teams.flatMap((team: Team, index: number) =>
-      team.players.map((p: Player): MappedPlayer => ({
-        name: capitalize(p.name),
-        skill: p.skill,
-        team: index + 1,
-      }))
+      team.players.map(
+        (p: Player): MappedPlayer => ({
+          name: capitalize(p.name),
+          skill: p.skill,
+          team: index + 1,
+        })
+      )
     );
 
   const saveMatch = async (): Promise<void> => {
@@ -88,14 +93,11 @@ const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
     <div className='teams flex flex-col justify-between p-6 bg-blue-100/60 min-h-full w-full'>
       <h1 className='text-3xl font-bold mb-4 text-center'>Equipos</h1>
       <div className='flex justify-center gap-6 overflow-hidden'>
-        {teams.map((team: Team, index: number): React.JSX.Element => (
-          <TeamCard
-            key={index}
-            index={index}
-            players={team.players}
-            loading={loading}
-          />
-        ))}
+        {teams.map(
+          (team: Team, index: number): React.JSX.Element => (
+            <TeamCard key={index} index={index} players={team.players} loading={loading} />
+          )
+        )}
       </div>
 
       <div className='flex justify-around mt-6 text-center' ref={teamsRef}>

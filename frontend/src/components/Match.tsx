@@ -26,7 +26,8 @@ const Match = ({ match, setMatches }: MatchProps) => {
 
   const resultButtonClasses = (type: Result, currentResult: Result): string => {
     const isActive: boolean = currentResult === type;
-    const base: string = 'flex justify-center items-center l-2 px-2 py-1 rounded-md transition border cursor-pointer';
+    const base: string =
+      'flex justify-center items-center l-2 px-2 py-1 rounded-md transition border cursor-pointer';
 
     const styles: Record<string, string> = {
       Win: isActive
@@ -163,11 +164,13 @@ const Match = ({ match, setMatches }: MatchProps) => {
                 <ul className='space-y-1'>
                   {match.players
                     .filter((p: Player): boolean => p.team === 1)
-                    .map((p: Player): React.JSX.Element => (
-                      <li key={p._id} className='text-gray-700 truncate'>
-                        {capitalize(p.name)}
-                      </li>
-                    ))}
+                    .map(
+                      (p: Player): React.JSX.Element => (
+                        <li key={p._id} className='text-gray-700 truncate'>
+                          {capitalize(p.name)}
+                        </li>
+                      )
+                    )}
                 </ul>
               </motion.div>
             )}
@@ -184,14 +187,18 @@ const Match = ({ match, setMatches }: MatchProps) => {
               <input
                 type='number'
                 value={goals1}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setGoals1(Number.parseInt(e.target.value))}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setGoals1(Number.parseInt(e.target.value))
+                }
                 className='w-8 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
               />
               <span>-</span>
               <input
                 type='number'
                 value={goals2}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setGoals2(Number.parseInt(e.target.value))}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setGoals2(Number.parseInt(e.target.value))
+                }
                 className='w-8 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
               />
             </div>
@@ -208,15 +215,19 @@ const Match = ({ match, setMatches }: MatchProps) => {
                 transition={{ duration: 0.3 }}
                 className='overflow-hidden'
               >
-                <h3 className='font-semibold text-gray-800 mb-2 text-right text-nowrap'>Equipo 2</h3>
+                <h3 className='font-semibold text-gray-800 mb-2 text-right text-nowrap'>
+                  Equipo 2
+                </h3>
                 <ul className='space-y-1'>
                   {match.players
                     .filter((p: Player): boolean => p.team === 2)
-                    .map((p: Player): React.JSX.Element => (
-                      <li key={p._id} className='text-gray-700 text-right truncate'>
-                        {capitalize(p.name)}
-                      </li>
-                    ))}
+                    .map(
+                      (p: Player): React.JSX.Element => (
+                        <li key={p._id} className='text-gray-700 text-right truncate'>
+                          {capitalize(p.name)}
+                        </li>
+                      )
+                    )}
                 </ul>
               </motion.div>
             )}
@@ -224,16 +235,24 @@ const Match = ({ match, setMatches }: MatchProps) => {
         </div>
       </div>
 
-      <div className={`flex flex-1 flex-col sm:flex-row ${showActions ? 'justify-between' : 'justify-center'} items-center gap-3`}>
+      <div
+        className={`flex flex-1 flex-col sm:flex-row ${showActions ? 'justify-between' : 'justify-center'} items-center gap-3`}
+      >
         {showActions && (
           <div className='flex justify-center items-center gap-[10px]'>
             <button className={resultButtonClasses('Win', result)} onClick={() => setResult('Win')}>
               <Trophy />
             </button>
-            <button className={resultButtonClasses('Draw', result)} onClick={() => setResult('Draw')}>
+            <button
+              className={resultButtonClasses('Draw', result)}
+              onClick={() => setResult('Draw')}
+            >
               <Minus />
             </button>
-            <button className={resultButtonClasses('Lose', result)} onClick={() => setResult('Lose')}>
+            <button
+              className={resultButtonClasses('Lose', result)}
+              onClick={() => setResult('Lose')}
+            >
               <X />
             </button>
           </div>
