@@ -11,4 +11,4 @@ type MatchData = {
   date: string;
 };
 
-export { Player, MatchData };
+export type { Player, MatchData };

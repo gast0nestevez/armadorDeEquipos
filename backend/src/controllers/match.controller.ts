@@ -1,7 +1,9 @@
 import type { Request, Response } from 'express';
 
-import { AuthenticatedRequest } from '../middleware/auth.middleware';
-import { IMatch } from '../models/match.model';
+import type { AuthenticatedRequest } from '../middleware/auth.middleware';
+import type { IMatch } from '../models/match.model';
+import type { MatchData } from '../utils/types';
+
 import { MatchService } from '../services/match.service';
 
 type MatchParams = {
@@ -14,7 +16,7 @@ class MatchController {
   async createMatch(req: Request, res: Response): Promise<void> {
     const { userId }: { userId: string } = req as AuthenticatedRequest;
 
-    const match: IMatch = await matchService.createMatch(userId, req.body);
+    const match: IMatch = await matchService.createMatch(userId, req.body as MatchData);
 
     res.status(201).json({
       success: true,
@@ -36,7 +38,10 @@ class MatchController {
   async updateMatch(req: Request<MatchParams>, res: Response): Promise<void> {
     const { matchId }: { matchId: string } = req.params;
 
-    const updatedMatch: IMatch | null = await matchService.updateMatch(matchId, req.body);
+    const updatedMatch: IMatch | null = await matchService.updateMatch(
+      matchId,
+      req.body as MatchData
+    );
 
     res.status(200).json({
       success: true,

@@ -1,8 +1,6 @@
 import { createContext, useState } from 'react';
 
-type User = {
-  [key: string]: unknown;
-};
+type User = Record<string, unknown>;
 
 type UserContextType = {
   user: User | null;

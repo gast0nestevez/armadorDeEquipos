@@ -8,19 +8,45 @@ import tseslint from 'typescript-eslint';
 
 export default defineConfig([
   {
-    files: ['**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    plugins: { js, 'simple-import-sort': simpleImportSort },
-    extends: ['js/recommended'],
-    languageOptions: { globals: globals.browser },
+    ignores: ['eslint.config.js', 'vite.config.ts', 'prettier.config.mjs', 'dist/**'],
   },
-  tseslint.configs.recommended,
-  //pluginReact.configs.flat.recommended,
+  ...tseslint.configs.recommendedTypeChecked,
   {
+    files: ['**/*.{ts,tsx,mts,cts}'],
+    languageOptions: {
+      globals: globals.browser,
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    plugins: {
+      'simple-import-sort': simpleImportSort,
+    },
     rules: {
       eqeqeq: 'error',
-      curly: 'error',
-      semi: 'error',
-      quotes: ['error', 'single'],
+      curly: ['error', 'all'],
+      '@typescript-eslint/no-unnecessary-type-constraint': 'error',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'error',
+      '@typescript-eslint/no-unnecessary-type-conversion': 'error',
+      '@typescript-eslint/no-unused-vars': 'error',
+      '@typescript-eslint/no-use-before-define': 'error',
+      '@typescript-eslint/no-useless-default-assignment': 'error',
+      '@typescript-eslint/no-useless-empty-export': 'error',
+      '@typescript-eslint/prefer-as-const': 'error',
+      '@typescript-eslint/typedef': 'error',
+      '@typescript-eslint/no-unsafe-return': 'error',
+      '@typescript-eslint/no-unsafe-assignment': 'error',
+      '@typescript-eslint/no-unsafe-argument': 'error',
+      '@typescript-eslint/no-redeclare': 'error',
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/member-ordering': 'error',
+      '@typescript-eslint/consistent-type-exports': 'error',
+      '@typescript-eslint/consistent-type-imports': 'error',
+      '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+      '@typescript-eslint/consistent-indexed-object-style': 'error',
+      '@typescript-eslint/no-misused-promises': 'off',
+      '@typescript-eslint/no-floating-promises': 'off',
       'simple-import-sort/imports': [
         'warn',
         {
@@ -40,5 +66,4 @@ export default defineConfig([
       ],
     },
   },
-  eslintConfigPrettier,
 ]);

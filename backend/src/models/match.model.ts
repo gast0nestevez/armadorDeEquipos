@@ -1,19 +1,21 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import type { Document } from 'mongoose';
 
-interface IPlayer {
+import mongoose, { Schema } from 'mongoose';
+
+type IPlayer = {
   name: string;
   skill: number;
   team: number;
-}
+};
 
-interface IMatch extends Document {
+type IMatch = {
   userId: Schema.Types.ObjectId;
   players: IPlayer[];
   goals1: number;
   goals2: number;
   result: string;
   date: string;
-}
+} & Document;
 
 const PlayerSchema: Schema<IPlayer> = new Schema<IPlayer>({
   name: { type: String, required: true },
@@ -30,7 +32,7 @@ const MatchSchema: Schema<IMatch> = new Schema<IMatch>(
     players: { type: [PlayerSchema], required: true },
     goals1: { type: Number },
     goals2: { type: Number },
-    result: { type: String, enum: ['Lose', 'Draw', 'Win'] },
+    result: { type: String, enum: ['Lose', 'Draw', 'Win', ''] },
     date: {
       type: String,
       match: /^\d{4}-\d{2}-\d{2}$/,
@@ -42,6 +44,6 @@ const MatchSchema: Schema<IMatch> = new Schema<IMatch>(
   }
 );
 
-export { IMatch, IPlayer };
+export type { IMatch, IPlayer };
 
 export default mongoose.model<IMatch>('Match', MatchSchema);

@@ -1,4 +1,4 @@
-import { Player, Team } from './types';
+import type { Player, Team } from './types';
 
 type Memo = Map<number, Set<number>>[];
 
@@ -24,7 +24,10 @@ class TeamsMaker {
   makeTeams(players: Player[]): Team[] {
     this.resetAttributes(players);
 
-    const memo: Memo = Array.from({ length: this.halfPlayersLength + 1 }, () => new Map());
+    const memo: Memo = Array.from(
+      { length: this.halfPlayersLength + 1 },
+      () => new Map<number, Set<number>>()
+    );
     this.fillMemoTable(memo);
 
     const bestSum: number = this.findClosestSumToOptimal(memo);

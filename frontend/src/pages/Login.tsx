@@ -82,7 +82,7 @@ const Auth = () => {
 
     try {
       await handleGoogleLogin(credentialResponse, setUser);
-      navigate('/');
+      await navigate('/');
     } catch (error) {
       console.error(error);
       setGeneralError('Error al iniciar sesión con Google. Intenta nuevamente.');
@@ -115,9 +115,8 @@ const Auth = () => {
       return;
     } finally {
       setIsLoading(false);
+      await navigate('/');
     }
-
-    navigate('/');
   };
 
   if (isLoading) {
@@ -206,7 +205,7 @@ const Auth = () => {
               theme='outline'
               size='large'
               shape='rectangular'
-              onSuccess={onSuccessGoogle}
+              onSuccess={() => onSuccessGoogle}
               onError={handleGoogleError}
             />
           </div>

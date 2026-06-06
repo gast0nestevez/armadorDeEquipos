@@ -1,12 +1,12 @@
-import { CredentialResponse, googleLogout } from '@react-oauth/google';
+import type { CredentialResponse } from '@react-oauth/google';
+
+import { googleLogout } from '@react-oauth/google';
 
 import { Env } from '@/utils/env';
 
 const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
 
-type User = {
-  [key: string]: unknown;
-};
+type User = Record<string, unknown>;
 
 type AuthResponseData = {
   user: User;
@@ -34,7 +34,9 @@ const handleGoogleLogin = async (
       throw new Error('Something went wrong during fetch');
     }
 
-    const { data }: { data: AuthResponseData } = await response.json();
+    const { data }: { data: AuthResponseData } = (await response.json()) as {
+      data: AuthResponseData;
+    };
     localStorage.setItem('user', JSON.stringify(data.user));
     localStorage.setItem('token', data.token);
     setUser(data.user);
@@ -70,7 +72,9 @@ const handleEmailLogin = async (
       throw new Error('Something went wrong during login');
     }
 
-    const { data }: { data: AuthResponseData } = await response.json();
+    const { data }: { data: AuthResponseData } = (await response.json()) as {
+      data: AuthResponseData;
+    };
     localStorage.setItem('user', JSON.stringify(data.user));
     localStorage.setItem('token', data.token);
     setUser(data.user);
@@ -98,7 +102,9 @@ const handleEmailRegister = async (
       throw new Error('Something went wrong during register');
     }
 
-    const { data }: { data: AuthResponseData } = await response.json();
+    const { data }: { data: AuthResponseData } = (await response.json()) as {
+      data: AuthResponseData;
+    };
     localStorage.setItem('user', JSON.stringify(data.user));
     localStorage.setItem('token', data.token);
     setUser(data.user);

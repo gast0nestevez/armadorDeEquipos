@@ -8,7 +8,10 @@ const authService: AuthService = new AuthService();
 
 class AuthController {
   async login(req: Request, res: Response): Promise<void> {
-    const { email, password }: { email: string; password: string } = req.body;
+    const { email, password }: { email: string; password: string } = req.body as {
+      email: string;
+      password: string;
+    };
 
     const {
       appToken,
@@ -26,7 +29,10 @@ class AuthController {
   }
 
   async register(req: Request, res: Response): Promise<void> {
-    const { email, password }: { email: string; password: string } = req.body;
+    const { email, password }: { email: string; password: string } = req.body as {
+      email: string;
+      password: string;
+    };
 
     const {
       appToken,
@@ -46,7 +52,7 @@ class AuthController {
   }
 
   async googleLogin(req: Request, res: Response): Promise<void> {
-    const { googleToken }: { googleToken: string } = req.body;
+    const { googleToken }: { googleToken: string } = req.body as { googleToken: string };
 
     const {
       appToken,

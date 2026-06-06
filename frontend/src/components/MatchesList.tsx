@@ -1,25 +1,25 @@
 import { useState } from 'react';
 
-import type { Match as MatchType, Result } from '@/utils/types';
+import type { Match, Result } from '@/utils/types';
 
 import Loader from '@/components/Loader';
-import Match from '@/components/Match';
+import MatchCard from '@/components/Match';
 import NewMatchForm from '@/components/NewMatchForm';
 
 type MatchesStats = Record<Result, number>;
 
 type MatchesListProps = {
-  matches: MatchType[];
-  setMatches: React.Dispatch<React.SetStateAction<MatchType[]>>;
+  matches: Match[];
+  setMatches: React.Dispatch<React.SetStateAction<Match[]>>;
   loadingMatches: boolean;
 };
 
 const MatchesList = ({ matches, setMatches, loadingMatches }: MatchesListProps) => {
   const [newMatchForm, setNewMatchForm] = useState<boolean>(false);
 
-  const matchesStats = (matches: MatchType[]): MatchesStats => {
+  const matchesStats = (matches: Match[]): MatchesStats => {
     const stats: MatchesStats = { Win: 0, Draw: 0, Lose: 0, '': 0 };
-    matches.forEach((m: MatchType) => {
+    matches.forEach((m: Match) => {
       if (m.result) {
         stats[m.result] = stats[m.result] + 1;
       }
@@ -86,12 +86,12 @@ const MatchesList = ({ matches, setMatches, loadingMatches }: MatchesListProps) 
       ) : (
         <ul className='space-y-4'>
           {matches.map(
-            (match: MatchType): React.JSX.Element => (
+            (match: Match): React.JSX.Element => (
               <li
                 key={match._id}
                 className={`flex flex-col gap-[15px] border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition ${matchBorderColor(match.result)}`}
               >
-                <Match match={match} setMatches={setMatches} />
+                <MatchCard match={match} setMatches={setMatches} />
               </li>
             )
           )}

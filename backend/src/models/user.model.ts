@@ -1,15 +1,17 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import type { Document } from 'mongoose';
+
+import mongoose, { Schema } from 'mongoose';
 
 type Provider = 'local' | 'google';
 
-interface IUser extends Document {
+type IUser = {
   id: string;
   email: string;
   name?: string;
   passwordHash?: string;
   provider: Provider;
   googleId?: string;
-}
+} & Document;
 
 const userSchema: Schema = new Schema<IUser>(
   {
@@ -33,6 +35,6 @@ const userSchema: Schema = new Schema<IUser>(
   }
 );
 
-export { IUser };
+export type { IUser };
 
 export default mongoose.model<IUser>('User', userSchema);

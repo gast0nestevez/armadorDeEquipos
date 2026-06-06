@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Field, PlayerInput } from './types';
+import type { Field, PlayerInput } from './types';
 
 const MAX_INPUTS: number = 40;
 

@@ -1,8 +1,9 @@
 import type { FilterQuery } from 'mongoose';
 
+import type { IMatch } from '../models/match.model';
 import type { MatchData } from '../utils/types';
 
-import Match, { IMatch } from '../models/match.model';
+import Match from '../models/match.model';
 
 type MatchCreateData = MatchData & {
   userId: string;

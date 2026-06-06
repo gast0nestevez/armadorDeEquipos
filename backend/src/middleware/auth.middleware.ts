@@ -5,10 +5,10 @@ import jwt from 'jsonwebtoken';
 
 import { getEnv } from '../utils/env';
 
-interface AuthenticatedRequest extends Request {
+type AuthenticatedRequest = {
   userId: string;
   userEmail: string;
-}
+} & Request;
 
 const authMiddleware: (req: Request, res: Response, next: NextFunction) => void = (
   req: Request,
@@ -36,8 +36,8 @@ const authMiddleware: (req: Request, res: Response, next: NextFunction) => void 
     }
 
     const authReq: AuthenticatedRequest = req as AuthenticatedRequest;
-    authReq.userId = decoded.userId;
-    authReq.userEmail = decoded.email;
+    authReq.userId = decoded.userId as string;
+    authReq.userEmail = decoded.email as string;
 
     next();
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
@@ -46,4 +46,5 @@ const authMiddleware: (req: Request, res: Response, next: NextFunction) => void 
   }
 };
 
-export { AuthenticatedRequest, authMiddleware };
+export type { AuthenticatedRequest };
+export { authMiddleware };

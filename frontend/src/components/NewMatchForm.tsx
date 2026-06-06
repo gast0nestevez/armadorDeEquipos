@@ -72,7 +72,7 @@ const NewMatchForm = ({ setMatches, formSubmited }: NewMatchProps) => {
         throw new Error('Error while saving match');
       }
 
-      const { data: match }: { data: Match } = await response.json();
+      const { data: match }: { data: Match } = (await response.json()) as { data: Match };
       setMatches((prev: Match[]) => [match, ...prev]);
 
       setPlayers([]);
@@ -106,7 +106,7 @@ const NewMatchForm = ({ setMatches, formSubmited }: NewMatchProps) => {
             setPlayerCount(Number.parseInt(e.target.value))
           }
         >
-          {[...Array(15)].map(
+          {[...(Array(15) as undefined[])].map(
             (_: undefined, i: number): React.JSX.Element => (
               <option key={i} value={2 * i + 2}>
                 {2 * i + 2}
@@ -120,7 +120,7 @@ const NewMatchForm = ({ setMatches, formSubmited }: NewMatchProps) => {
         <div className='flex-1'>
           <h3 className='font-semibold mb-3 text-gray-800 text-center md:text-left'>Equipo 1</h3>
           <ul className='space-y-2'>
-            {[...Array(playerCount / 2)].map(
+            {[...(Array(playerCount / 2) as undefined[])].map(
               (_: undefined, index: number): React.JSX.Element => (
                 <input
                   type='text'
@@ -164,7 +164,7 @@ const NewMatchForm = ({ setMatches, formSubmited }: NewMatchProps) => {
         <div className='flex-1'>
           <h3 className='font-semibold mb-3 text-gray-800 text-center md:text-right'>Equipo 2</h3>
           <ul className='space-y-2'>
-            {[...Array(playerCount / 2)].map(
+            {[...(Array(playerCount / 2) as undefined[])].map(
               (_: undefined, index: number): React.JSX.Element => (
                 <input
                   type='text'

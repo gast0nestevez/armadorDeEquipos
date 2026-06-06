@@ -38,7 +38,7 @@ const Profile = () => {
         if (!response.ok) {
           throw new Error('Error fetching matches');
         }
-        const { data: matches }: { data: Match[] } = await response.json();
+        const { data: matches }: { data: Match[] } = (await response.json()) as { data: Match[] };
 
         setMatches(matches);
       } catch (err) {

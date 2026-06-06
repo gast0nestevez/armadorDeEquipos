@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 
+import type { UsePlayersReturnType } from '@/hooks/types';
+import type { Player, Team } from '@/utils/types';
+
 import Form from '@/components/Form';
 import Nav from '@/components/Nav';
 import TeamsDisplay from '@/components/TeamsDisplay';
-import { UsePlayersReturnType } from '@/hooks/types';
 import usePlayers from '@/hooks/usePlayers';
 import TeamsMaker from '@/utils/teamsMaker';
-import { Player, Team } from '@/utils/types';
 
 const initialTeams: Team[] = [
   { players: [], skill: 0 },

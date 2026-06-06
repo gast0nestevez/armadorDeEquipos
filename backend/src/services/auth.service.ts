@@ -4,9 +4,11 @@ import bcrypt from 'bcrypt';
 import { OAuth2Client } from 'google-auth-library';
 import jwt from 'jsonwebtoken';
 
+import type { IUser } from '../models/user.model';
+
 import { AppError } from '../error/app.error';
 import { ErrorCode } from '../error/errorCodes';
-import userModel, { IUser } from '../models/user.model';
+import userModel from '../models/user.model';
 import { getEnv } from '../utils/env';
 
 const client: OAuth2Client = new OAuth2Client();
@@ -42,9 +44,9 @@ class AuthService {
   }
 
   generateAuthUserResponse(user: IUser): AuthUserResponse {
-    const authenticatedUser = {
-      userId: user.id ?? '',
-      name: user.name ?? '',
+    const authenticatedUser: AuthenticatedUser = {
+      userId: user.id as string,
+      name: user.name as string,
       email: user.email,
     };
     const appToken: string = this.signToken(authenticatedUser);
@@ -144,4 +146,5 @@ class AuthService {
   }
 }
 
-export { AuthService, AuthenticatedUser };
+export type { AuthenticatedUser };
+export { AuthService };

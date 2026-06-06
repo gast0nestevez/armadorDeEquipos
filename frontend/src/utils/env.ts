@@ -1,6 +1,6 @@
 class Env {
   static getString(key: string): string {
-    const value: string | undefined = import.meta.env[key];
+    const value: string | undefined = import.meta.env[key] as string | undefined;
     if (!value) {
       throw new Error(`Missing environment variable: ${key}`);
     }
@@ -9,7 +9,7 @@ class Env {
   }
 
   static getNumber(key: string): number {
-    const value: string | undefined = import.meta.env[key];
+    const value: string | undefined = import.meta.env[key] as string | undefined;
     if (!value) {
       throw new Error(`Missing environment variable: ${key}`);
     }
@@ -23,12 +23,12 @@ class Env {
   }
 
   static getOptionalString(key: string, defaultValue: string): string {
-    const value: string | undefined = import.meta.env[key];
+    const value: string | undefined = import.meta.env[key] as string | undefined;
     return value ?? defaultValue;
   }
 
   static getOptionalNumber(key: string, defaultValue: number): number {
-    const value: string | undefined = import.meta.env[key];
+    const value: string | undefined = import.meta.env[key] as string | undefined;
     if (!value) {
       return defaultValue;
     }

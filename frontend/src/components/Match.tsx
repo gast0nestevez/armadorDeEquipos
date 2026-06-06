@@ -15,7 +15,7 @@ type MatchProps = {
   setMatches: React.Dispatch<React.SetStateAction<Match[]>>;
 };
 
-const Match = ({ match, setMatches }: MatchProps) => {
+const MatchCard = ({ match, setMatches }: MatchProps) => {
   const [showDetails, setShowDetails] = useState<boolean>(false);
   const [showActions, setShowActions] = useState<boolean>(false);
   const [goals1, setGoals1] = useState<number>(match.goals1 ?? 0);
@@ -78,7 +78,7 @@ const Match = ({ match, setMatches }: MatchProps) => {
       if (!response.ok) {
         throw new Error('Something went wrong during update');
       }
-      const { data: updatedMatch }: { data: Match } = await response.json();
+      const { data: updatedMatch }: { data: Match } = (await response.json()) as { data: Match };
 
       setMatches((prevMatches: Match[]) =>
         prevMatches.map((m: Match) => (m._id === match._id ? updatedMatch : m))
@@ -283,4 +283,4 @@ const Match = ({ match, setMatches }: MatchProps) => {
   );
 };
 
-export default Match;
+export default MatchCard;
