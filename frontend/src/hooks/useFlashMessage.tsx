@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const useFlashMessage = (duration: number = 2000) => {
+const useFlashMessage = (duration: number = 1500) => {
   const [visible, setVisible] = useState<boolean>(false);
 
   const trigger = (): void => {
