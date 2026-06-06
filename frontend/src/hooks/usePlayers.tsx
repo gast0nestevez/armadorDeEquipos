@@ -1,13 +1,25 @@
 import { useState } from 'react';
 
+import type { Player, Team } from '@/utils/types';
+
+import TeamsMaker from '@/utils/teamsMaker';
+
 import type { Field, PlayerInput } from './types';
 
 const MAX_INPUTS: number = 40;
 
 const initialDefault: PlayerInput[] = [{ name: '', skill: '' }];
 
+const initialTeams: Team[] = [
+  { players: [], skill: 0 },
+  { players: [], skill: 0 },
+];
+
 function usePlayers(initialPlayers: PlayerInput[] = initialDefault) {
   const [players, setPlayers] = useState<PlayerInput[]>(initialPlayers);
+  const [submitted, setSubmitted] = useState<boolean>(false);
+  const [teams, setTeams] = useState<Team[]>(initialTeams);
+  const [loading, setLoading] = useState<boolean>(false);
 
   function limitSkillInputLength(value: string): string {
     return value.replace(/[^0-9]/g, '').slice(0, 3);
@@ -23,20 +35,19 @@ function usePlayers(initialPlayers: PlayerInput[] = initialDefault) {
     return input.replace(regex, '');
   }
 
-  function validateValue(value: string, field: Field): string {
+  function sanitizeValue(value: string, field: Field): string {
     if (field === 'skill') {
-      value = limitSkillInputLength(value);
+      return limitSkillInputLength(value);
     } else {
-      value = removeUnsafeCharacters(value);
+      return removeUnsafeCharacters(value);
     }
-    return value;
   }
 
   const handleChange = (index: number, field: Field, value: string): void => {
-    value = validateValue(value, field);
+    setSubmitted(false);
 
     const newPlayers: PlayerInput[] = [...players];
-    newPlayers[index][field] = value;
+    newPlayers[index][field] = sanitizeValue(value, field);
     setPlayers(newPlayers);
 
     if (
@@ -52,7 +63,41 @@ function usePlayers(initialPlayers: PlayerInput[] = initialDefault) {
     setPlayers(players.filter((_: PlayerInput, i: number) => i !== index));
   };
 
-  return { players, setPlayers, handleChange, deletePlayer };
+  const submitPlayers = (): void => {
+    setLoading(true);
+    setSubmitted(true);
+
+    const validPlayers: Player[] = players
+      .filter(
+        (player: { name: string; skill: string }): boolean =>
+          player.name.trim() !== '' && player.skill.trim() !== ''
+      )
+      .map(
+        (player: { name: string; skill: string }): Player => ({
+          name: player.name,
+          skill: Number.parseInt(player.skill),
+        })
+      );
+
+    const teamsMaker: TeamsMaker = new TeamsMaker();
+
+    setTimeout((): void => {
+      const result: Team[] = teamsMaker.makeTeams(validPlayers);
+      setTeams(result);
+      setLoading(false);
+    }, 10);
+  };
+
+  return {
+    players,
+    setPlayers,
+    handleChange,
+    deletePlayer,
+    submitPlayers,
+    submitted,
+    teams,
+    loading,
+  };
 }
 
 export default usePlayers;

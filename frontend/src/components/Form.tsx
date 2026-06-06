@@ -9,9 +9,10 @@ type FormProps = {
   handleChange: (index: number, field: keyof PlayerInput, value: string) => void;
   deletePlayer: (index: number) => void;
   submitPlayers: () => void;
+  submitted: boolean;
 };
 
-const Form = ({ players, handleChange, deletePlayer, submitPlayers }: FormProps) => {
+const Form = ({ players, handleChange, deletePlayer, submitPlayers, submitted }: FormProps) => {
   return (
     <div className='form flex flex-col justify-between max-[600px]:flex-1 p-6 w-full relative'>
       <div className='flex items-center justify-center gap-4 mb-4'>
@@ -33,7 +34,7 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers }: FormProps)
               placeholder='Nombre'
               maxLength={25}
               id={index.toString(10)}
-              className='border rounded px-3 py-2 bg-white'
+              className={`border rounded px-3 py-2 bg-white ${submitted && player.name.trim() === '' ? 'border-red-500 ring-1 ring-red-400' : ''}`}
               value={player.name}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 handleChange(index, 'name', e.target.value)
@@ -43,7 +44,7 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers }: FormProps)
               type='text'
               inputMode='numeric'
               placeholder='Puntaje'
-              className='border rounded px-3 py-2 w-24 bg-white'
+              className={`border rounded px-3 py-2 w-24 bg-white ${submitted && player.skill.trim() === '' ? 'border-red-500 ring-1 ring-red-400' : ''}`}
               value={player.skill}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 handleChange(index, 'skill', e.target.value)

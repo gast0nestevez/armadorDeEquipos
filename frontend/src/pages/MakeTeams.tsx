@@ -1,25 +1,22 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
-import type { UsePlayersReturnType } from '@/hooks/types';
-import type { Player, Team } from '@/utils/types';
+import type { UsePlayersReturn } from '@/hooks/types';
 
 import Form from '@/components/Form';
 import Nav from '@/components/Nav';
 import TeamsDisplay from '@/components/TeamsDisplay';
 import usePlayers from '@/hooks/usePlayers';
-import TeamsMaker from '@/utils/teamsMaker';
-
-const initialTeams: Team[] = [
-  { players: [], skill: 0 },
-  { players: [], skill: 0 },
-];
 
 const MakeTeams = () => {
-  const { players, handleChange, deletePlayer }: UsePlayersReturnType = usePlayers([
-    { name: '', skill: '' },
-  ]);
-  const [teams, setTeams] = useState<Team[]>(initialTeams);
-  const [loading, setLoading] = useState<boolean>(false);
+  const {
+    players,
+    handleChange,
+    deletePlayer,
+    submitPlayers,
+    submitted,
+    teams,
+    loading,
+  }: UsePlayersReturn = usePlayers([{ name: '', skill: '' }]);
   const teamsRef = useRef<HTMLDivElement>(null);
 
   useEffect((): void => {
@@ -28,30 +25,6 @@ const MakeTeams = () => {
       teamsSection.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
   }, [teams]);
-
-  const submitPlayers = (): void => {
-    setLoading(true);
-
-    const validPlayers: Player[] = players
-      .filter(
-        (player: { name: string; skill: string }): boolean =>
-          player.name.trim() !== '' && player.skill.trim() !== ''
-      )
-      .map(
-        (player: { name: string; skill: string }): Player => ({
-          name: player.name,
-          skill: Number.parseInt(player.skill),
-        })
-      );
-
-    const teamsMaker: TeamsMaker = new TeamsMaker();
-
-    setTimeout((): void => {
-      const result: Team[] = teamsMaker.makeTeams(validPlayers);
-      setTeams(result);
-      setLoading(false);
-    }, 10);
-  };
 
   return (
     <div className='main-container flex flex-col h-full'>
@@ -62,6 +35,7 @@ const MakeTeams = () => {
           handleChange={handleChange}
           deletePlayer={deletePlayer}
           submitPlayers={submitPlayers}
+          submitted={submitted}
         />
         <TeamsDisplay teams={teams} loading={loading} teamsRef={teamsRef} />
       </div>
