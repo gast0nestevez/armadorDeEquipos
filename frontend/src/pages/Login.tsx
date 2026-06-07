@@ -205,7 +205,7 @@ const Auth = () => {
               theme='outline'
               size='large'
               shape='rectangular'
-              onSuccess={() => onSuccessGoogle}
+              onSuccess={onSuccessGoogle}
               onError={handleGoogleError}
             />
           </div>
