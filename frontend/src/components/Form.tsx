@@ -20,7 +20,7 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers, submitted }:
         <HelpMessage />
       </div>
 
-      <div className='m-[15px] p-[8px] overflow-y-scroll'>
+      <div className='m-[15px] p-[8px] overflow-y-auto [scrollbar-gutter:stable] [scrollbar-color:theme(colors.gray.400/0.6)_transparent]'>
         {players.map((player: PlayerInput, index: number) => (
           <div key={index} className='flex justify-center items-center gap-2 mt-2 mb-2'>
             <label
