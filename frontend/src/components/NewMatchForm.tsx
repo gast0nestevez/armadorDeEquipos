@@ -15,10 +15,10 @@ type MatchPlayer = {
 
 type NewMatchProps = {
   setMatches: React.Dispatch<React.SetStateAction<Match[]>>;
-  formSubmited: () => void;
+  setNewMatchModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const NewMatchForm = ({ setMatches, formSubmited }: NewMatchProps) => {
+const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
   const [playerCount, setPlayerCount] = useState<number>(10);
   const [players, setPlayers] = useState<MatchPlayer[]>([]);
   const [goals1, setGoals1] = useState<number | null>(null);
@@ -79,7 +79,7 @@ const NewMatchForm = ({ setMatches, formSubmited }: NewMatchProps) => {
       setGoals1(null);
       setGoals2(null);
       setResult(null);
-      formSubmited();
+      setNewMatchModal(false);
     } catch (err) {
       console.error(err);
     } finally {

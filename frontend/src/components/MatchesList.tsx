@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from 'framer-motion';
 import { Plus, SquareCheckBig } from 'lucide-react';
 import { useState } from 'react';
 
@@ -25,7 +26,7 @@ const MatchesList = ({
   loadingMatches,
   setLoadingMatches,
 }: MatchesListProps) => {
-  const [newMatchForm, setNewMatchForm] = useState<boolean>(false);
+  const [newMatchModal, setNewMatchModal] = useState<boolean>(false);
   const [selectMode, setSelectMode] = useState<boolean>(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set<string>());
 
@@ -100,10 +101,6 @@ const MatchesList = ({
 
   const stats: MatchesStats = matchesStats(matches);
 
-  const formSubmited = (): void => {
-    setNewMatchForm(false);
-  };
-
   if (loadingMatches) {
     return (
       <div className='flex justify-center items-center'>
@@ -146,10 +143,9 @@ const MatchesList = ({
           <div>
             <button
               className='flex items-center gap-1 px-3 py-1 rounded-md bg-blue-600 white-text border border-blue-600 hover:bg-blue-700 transition cursor-pointer'
-              onClick={() => setNewMatchForm(!newMatchForm)}
+              onClick={() => setNewMatchModal(true)}
             >
-              {!newMatchForm && <Plus size={16} />}
-              {newMatchForm ? 'Cancelar' : 'Agregar partido'}
+              {<Plus size={16} />}Agregar partido
             </button>
           </div>
         </div>
@@ -170,7 +166,34 @@ const MatchesList = ({
         </div>
       )}
 
-      {newMatchForm && <NewMatchForm setMatches={setMatches} formSubmited={formSubmited} />}
+      <AnimatePresence>
+        {newMatchModal && (
+          <motion.div
+            className='fixed inset-0 flex items-center justify-center z-50'
+            style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => setNewMatchModal(false)}
+          >
+            <motion.div
+              className='bg-white rounded-xl shadow-xl p-6 w-full max-w-2xl mx-4 overflow-y-auto max-h-[90vh]'
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 className='text-lg font-semibold text-gray-800 text-center mb-2'>
+                Agregar partido
+              </h3>
+              <NewMatchForm setMatches={setMatches} setNewMatchModal={setNewMatchModal} />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {matches.length === 0 ? (
         <p className='text-gray-600'>Todavía no guardaste ningún partido</p>
       ) : (
