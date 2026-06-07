@@ -206,7 +206,7 @@ const NewMatchForm = ({ setMatches, formSubmited }: NewMatchProps) => {
         </div>
 
         <button
-          className='w-full md:w-auto px-6 py-3 rounded-lg bg-blue-500 text-white font-semibold transition cursor-pointer hover:bg-blue-600'
+          className='w-full md:w-auto px-6 py-3 rounded-lg bg-blue-500 white-text font-semibold transition cursor-pointer hover:bg-blue-600'
           onClick={addMatch}
         >
           Guardar

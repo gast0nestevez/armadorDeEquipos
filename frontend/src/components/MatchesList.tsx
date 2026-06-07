@@ -132,8 +132,11 @@ const MatchesList = ({
           {matches.length > 0 && (
             <div>
               <button
-                className='flex items-center gap-1 px-3 py-1 rounded-md bg-gray-300 text-gray-800 border border-gray-300 hover:bg-gray-400 transition cursor-pointer'
-                onClick={() => setSelectMode(!selectMode)}
+                className='flex items-center gap-1 px-3 py-1 rounded-md bg-gray-300 black-text border border-gray-300 hover:bg-gray-400 transition cursor-pointer'
+                onClick={() => {
+                  setSelectedIds(new Set<string>());
+                  setSelectMode(!selectMode);
+                }}
               >
                 {!selectMode && <SquareCheckBig size={16} />}
                 {selectMode ? 'Cancelar' : 'Seleccionar'}
@@ -159,7 +162,7 @@ const MatchesList = ({
             {selectedIds.size === 1 ? 'partido seleccionado' : 'partidos seleccionados'}
           </span>
           <button
-            className='flex items-center gap-2 px-3 py-1 rounded-md bg-red-500 text-white hover:bg-red-600 transition cursor-pointer'
+            className='flex items-center gap-2 px-3 py-1 rounded-md bg-red-500 white-text hover:bg-red-600 transition cursor-pointer'
             onClick={deleteSelected}
           >
             Eliminar

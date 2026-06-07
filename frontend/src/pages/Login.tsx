@@ -192,7 +192,7 @@ const Auth = () => {
 
             <button
               type='submit'
-              className='w-full bg-black text-white py-2 rounded hover:opacity-90 cursor-pointer'
+              className='w-full bg-black white-text py-2 rounded hover:opacity-90 cursor-pointer'
             >
               {mode === 'login' ? 'Entrar' : 'Registrarse'}
             </button>

@@ -99,7 +99,7 @@ const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
         {playersNotEmpty && (
           <button
             onClick={copyToClipboard}
-            className='bg-blue-900 text-white px-6 py-2 rounded white-text hover:bg-blue-800 cursor-pointer'
+            className='bg-blue-900 white-text px-6 py-2 rounded white-text hover:bg-blue-800 cursor-pointer'
           >
             Copiar
           </button>
@@ -111,7 +111,7 @@ const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
           <button
             onClick={saveMatch}
             disabled={saveMessage.visible}
-            className='bg-blue-900 text-white px-6 py-2 rounded white-text hover:bg-blue-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-900'
+            className='bg-blue-900 white-text px-6 py-2 rounded white-text hover:bg-blue-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-900'
           >
             Guardar partido
           </button>
