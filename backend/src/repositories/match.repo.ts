@@ -15,7 +15,8 @@ export default {
   findByUser: (userId: string): Promise<IMatch[]> =>
     Match.find({ userId } as FilterQuery<MatchData>).sort({ createdAt: -1 }),
 
-  delete: (matchId: string): Promise<IMatch | null> => Match.findByIdAndDelete(matchId),
+  delete: (ids: string[]): Promise<{ deletedCount: number }> =>
+    Match.deleteMany({ _id: { $in: ids } }),
 
   update: (matchId: string, data: Record<string, unknown>): Promise<IMatch | null> =>
     Match.findByIdAndUpdate(matchId, data, {

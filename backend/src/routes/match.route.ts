@@ -11,6 +11,6 @@ const matchController: MatchController = new MatchController();
 matchRouter.get('/', authMiddleware, matchController.getUserMatches);
 matchRouter.post('/', authMiddleware, matchController.createMatch);
 matchRouter.put('/:matchId', authMiddleware, matchController.updateMatch);
-matchRouter.delete('/:matchId', authMiddleware, matchController.deleteMatch);
+matchRouter.delete('/', authMiddleware, matchController.deleteMatch);
 
 export default matchRouter;

@@ -13,9 +13,12 @@ const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
 type MatchProps = {
   match: Match;
   setMatches: React.Dispatch<React.SetStateAction<Match[]>>;
+  selectMode: boolean;
+  selected: boolean;
+  onToggleSelect: (id: string) => void;
 };
 
-const MatchCard = ({ match, setMatches }: MatchProps) => {
+const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: MatchProps) => {
   const [showDetails, setShowDetails] = useState<boolean>(false);
   const [showActions, setShowActions] = useState<boolean>(false);
   const [goals1, setGoals1] = useState<number>(match.goals1 ?? 0);
@@ -91,35 +94,6 @@ const MatchCard = ({ match, setMatches }: MatchProps) => {
     }
   };
 
-  const deleteMatch = async (matchId: string): Promise<void> => {
-    const userChoice: boolean = confirm('¿Seguro que querés eliminar este partido?');
-    if (!userChoice) {
-      return;
-    }
-
-    setLoading(true);
-    const url: string = `${API_BASE_URL}/match/${matchId}`;
-    const options: RequestInit = {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    };
-
-    try {
-      const response: Response = await fetch(url, options);
-      if (!response.ok) {
-        throw new Error('Something went wrong during fetch');
-      }
-      setMatches((prevMatches: Match[]) => prevMatches.filter((m: Match) => m._id !== matchId));
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   if (loading) {
     return (
       <div className='flex justify-center items-center'>
@@ -131,153 +105,166 @@ const MatchCard = ({ match, setMatches }: MatchProps) => {
   return (
     <div
       className={`flex flex-col justify-center p-4 cursor-pointer ${showDetails ? 'gap-[15px]' : ''}`}
-      onClick={expandMatch}
+      onClick={selectMode ? () => onToggleSelect(match._id) : expandMatch}
     >
-      {!showActions && (
-        <div className='text-center text-gray-600 text-sm mb-2'>
-          {match.date ? formatDate(match.date) : 'Sin fecha'}
-        </div>
-      )}
-      {showActions && (
-        <div className='flex justify-center items-center'>
-          <input
-            type='date'
-            value={date}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDate(e.target.value)}
-            className='bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 text-center'
-          />
+      {selectMode && (
+        <div
+          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${selected ? 'bg-blue-600 border-blue-600' : 'border-gray-400'}`}
+        >
+          {selected && <span className='white-text text-xs'>✓</span>}
         </div>
       )}
 
-      <div className='flex justify-between gap-1'>
-        <div className='grow max-w-1/3'>
-          <AnimatePresence>
-            {showDetails && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className='overflow-hidden'
-              >
-                <h3 className='font-semibold text-gray-800 mb-2 text-nowrap'>Equipo 1</h3>
-                <ul className='space-y-1'>
-                  {match.players
-                    .filter((p: Player): boolean => p.team === 1)
-                    .map(
-                      (p: Player): React.JSX.Element => (
-                        <li key={p._id} className='text-gray-700 truncate'>
-                          {capitalize(p.name)}
-                        </li>
-                      )
-                    )}
-                </ul>
-              </motion.div>
+      <div className='flex flex-col flex-1'>
+        {!showActions && (
+          <div className='text-center text-gray-600 text-sm mb-2'>
+            {match.date ? formatDate(match.date) : 'Sin fecha'}
+          </div>
+        )}
+        {showActions && (
+          <div className='flex justify-center items-center'>
+            <input
+              type='date'
+              value={date}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDate(e.target.value)}
+              className='bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 text-center'
+            />
+          </div>
+        )}
+
+        <div className='flex justify-between gap-1'>
+          <div className='grow max-w-1/3'>
+            <AnimatePresence>
+              {showDetails && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className='overflow-hidden'
+                >
+                  <h3 className='font-semibold text-gray-800 mb-2 text-nowrap'>Equipo 1</h3>
+                  <ul className='space-y-1'>
+                    {match.players
+                      .filter((p: Player): boolean => p.team === 1)
+                      .map(
+                        (p: Player): React.JSX.Element => (
+                          <li key={p._id} className='text-gray-700 truncate'>
+                            {capitalize(p.name)}
+                          </li>
+                        )
+                      )}
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <div className='flex justify-center items-center font-semibold text-2xl text-nowrap'>
+            {!showActions ? (
+              <span>
+                {match.goals1} - {match.goals2}
+              </span>
+            ) : (
+              <div className='flex items-center gap-1'>
+                <input
+                  type='number'
+                  value={goals1}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setGoals1(Number.parseInt(e.target.value))
+                  }
+                  className='w-8 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
+                />
+                <span>-</span>
+                <input
+                  type='number'
+                  value={goals2}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setGoals2(Number.parseInt(e.target.value))
+                  }
+                  className='w-8 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
+                />
+              </div>
             )}
-          </AnimatePresence>
+          </div>
+
+          <div className='grow max-w-1/3'>
+            <AnimatePresence>
+              {showDetails && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className='overflow-hidden'
+                >
+                  <h3 className='font-semibold text-gray-800 mb-2 text-right text-nowrap'>
+                    Equipo 2
+                  </h3>
+                  <ul className='space-y-1'>
+                    {match.players
+                      .filter((p: Player): boolean => p.team === 2)
+                      .map(
+                        (p: Player): React.JSX.Element => (
+                          <li key={p._id} className='text-gray-700 text-right truncate'>
+                            {capitalize(p.name)}
+                          </li>
+                        )
+                      )}
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
-        <div className='flex justify-center items-center font-semibold text-2xl text-nowrap'>
-          {!showActions ? (
-            <span>
-              {match.goals1} - {match.goals2}
-            </span>
-          ) : (
-            <div className='flex items-center gap-1'>
-              <input
-                type='number'
-                value={goals1}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setGoals1(Number.parseInt(e.target.value))
-                }
-                className='w-8 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
-              />
-              <span>-</span>
-              <input
-                type='number'
-                value={goals2}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setGoals2(Number.parseInt(e.target.value))
-                }
-                className='w-8 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
-              />
+        <div
+          className={`flex flex-1 flex-col sm:flex-row ${showActions ? 'justify-between' : 'justify-center'} items-center gap-3`}
+        >
+          {showActions && (
+            <div className='flex justify-center items-center gap-[10px]'>
+              <button
+                className={resultButtonClasses('Win', result)}
+                onClick={() => setResult('Win')}
+              >
+                <Trophy />
+              </button>
+              <button
+                className={resultButtonClasses('Draw', result)}
+                onClick={() => setResult('Draw')}
+              >
+                <Minus />
+              </button>
+              <button
+                className={resultButtonClasses('Lose', result)}
+                onClick={() => setResult('Lose')}
+              >
+                <X />
+              </button>
             </div>
           )}
-        </div>
 
-        <div className='grow max-w-1/3'>
-          <AnimatePresence>
-            {showDetails && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className='overflow-hidden'
+          {showDetails && (
+            <button
+              className='px-3 py-2 rounded-lg bg-blue-500 text-white font-semibold shadow-sm border border-gray-200 text-gray-700 text-center transition cursor-pointer hover:shadow-md hover:bg-blue-600'
+              onClick={showActions ? saveChanges : () => setShowActions(true)}
+            >
+              {showActions ? 'Listo' : 'Editar'}
+            </button>
+          )}
+
+          {/*showActions && (
+            <div>
+              <button
+                className='cursor-pointer bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors w-fit'
+                onClick={() => deleteMatch(match._id)}
+                tabIndex={-1}
               >
-                <h3 className='font-semibold text-gray-800 mb-2 text-right text-nowrap'>
-                  Equipo 2
-                </h3>
-                <ul className='space-y-1'>
-                  {match.players
-                    .filter((p: Player): boolean => p.team === 2)
-                    .map(
-                      (p: Player): React.JSX.Element => (
-                        <li key={p._id} className='text-gray-700 text-right truncate'>
-                          {capitalize(p.name)}
-                        </li>
-                      )
-                    )}
-                </ul>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                Borrar partido
+              </button>
+            </div>
+          )*/}
         </div>
-      </div>
-
-      <div
-        className={`flex flex-1 flex-col sm:flex-row ${showActions ? 'justify-between' : 'justify-center'} items-center gap-3`}
-      >
-        {showActions && (
-          <div className='flex justify-center items-center gap-[10px]'>
-            <button className={resultButtonClasses('Win', result)} onClick={() => setResult('Win')}>
-              <Trophy />
-            </button>
-            <button
-              className={resultButtonClasses('Draw', result)}
-              onClick={() => setResult('Draw')}
-            >
-              <Minus />
-            </button>
-            <button
-              className={resultButtonClasses('Lose', result)}
-              onClick={() => setResult('Lose')}
-            >
-              <X />
-            </button>
-          </div>
-        )}
-
-        {showDetails && (
-          <button
-            className='px-3 py-2 rounded-lg bg-blue-500 text-white font-semibold shadow-sm border border-gray-200 text-gray-700 text-center transition cursor-pointer hover:shadow-md hover:bg-blue-600'
-            onClick={showActions ? saveChanges : () => setShowActions(true)}
-          >
-            {showActions ? 'Listo' : 'Editar'}
-          </button>
-        )}
-
-        {showActions && (
-          <div>
-            <button
-              className='cursor-pointer bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors w-fit'
-              onClick={() => deleteMatch(match._id)}
-              tabIndex={-1}
-            >
-              Borrar partido
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );

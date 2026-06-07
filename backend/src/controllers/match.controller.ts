@@ -50,13 +50,13 @@ class MatchController {
   }
 
   async deleteMatch(req: Request<MatchParams>, res: Response): Promise<void> {
-    const { matchId }: { matchId: string } = req.params;
+    const { ids }: { ids: string[] } = req.body as { ids: string[] };
 
-    const deletedMatch: IMatch | null = await matchService.deleteMatch(matchId);
+    const result: { deletedCount?: number } = await matchService.deleteMatch(ids);
 
     res.status(200).json({
       success: true,
-      deleted: deletedMatch,
+      deleted: result.deletedCount,
     });
   }
 }

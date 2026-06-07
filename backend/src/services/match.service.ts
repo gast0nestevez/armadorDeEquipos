@@ -75,18 +75,18 @@ class MatchService {
     return updated;
   }
 
-  async deleteMatch(matchId: string): Promise<IMatch | null> {
-    if (!matchId) {
-      throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Match id is required');
+  async deleteMatch(ids: string[]): Promise<{ deletedCount?: number }> {
+    if (ids?.length === 0) {
+      throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Ids are required');
     }
 
-    const deleted: IMatch | null = await matchRepo.delete(matchId);
+    const result: { deletedCount: number | undefined } = await matchRepo.delete(ids);
 
-    if (!deleted) {
+    if (!result.deletedCount) {
       throw new AppError(ErrorCode.MATCH_NOT_FOUND, 404, 'Match not found');
     }
 
-    return deleted;
+    return result;
   }
 }
 
