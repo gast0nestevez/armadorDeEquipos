@@ -16,14 +16,13 @@ jugadores, cargar resultados y visualizar estadísticas básicas.
 
 ## Tecnologías principales
 ### Frontend
-- React
+- React.js
 - Vite
 - Tailwind CSS
 
 ### Backend
-- Node.js (Typescript) / Express
+- Node.js
 - MongoDB
-- JWT Authentication
 
 ## Funcionalidades
 - Creación de equipos balanceados por habilidad
@@ -68,11 +67,7 @@ Este proyecto está en desarrollo activo y cualquier ayuda para mejorarlo es alt
 
 Trabajá siempre sobre una rama descriptiva:
 ```bash
-git checkout -b feature/nueva-funcionalidad
-```
-o
-```bash
-git checkout -b fix/descripcion-del-fix
+git switch -c nueva-funcionalidad
 ```
 
 3. Implementá tus cambios
@@ -83,11 +78,10 @@ Explicá qué problema resuelve o qué funcionalidad agrega tu PR.
 ### Qué se puede contribuir
 
 - Nuevas funcionalidades (ver sección Futuras mejoras)
-- Optimización de rendimiento
-- Tests
 - Mejoras de UI/UX
 - Corrección de bugs
 - Documentación (README, comentarios, ejemplos de uso)
+- Lo que sea viene bien
 
 ## Futuras mejoras
 
