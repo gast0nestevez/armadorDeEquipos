@@ -4,10 +4,10 @@ import { Analytics } from '@vercel/analytics/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 
-import Home from '@/pages/Home';
-import Login from '@/pages/Login';
-import MakeTeams from '@/pages/MakeTeams';
-import Profile from '@/pages/Profile';
+import Home from '../pages/Home';
+import Login from '../pages/Login';
+import MakeTeams from '../pages/MakeTeams';
+import Profile from '../pages/Profile';
 
 type PageVariants = {
   initial: { opacity: number; x: number };

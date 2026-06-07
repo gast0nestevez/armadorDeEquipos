@@ -1,7 +1,7 @@
-import type { Player } from '@/utils/types';
+import type { Player } from '../utils/types';
 
-import Loader from '@/components/Loader';
-import { capitalize } from '@/utils/string';
+import { capitalize } from '../utils/string';
+import Loader from './Loader';
 
 type TeamCardProps = {
   index: number;

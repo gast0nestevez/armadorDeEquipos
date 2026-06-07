@@ -1,10 +1,9 @@
 import { useState } from 'react';
 
-import type { Player, Team } from '@/utils/types';
-
-import TeamsMaker from '@/utils/teamsMaker';
-
+import type { Player, Team } from '../utils/types';
 import type { Field, PlayerInput } from './types';
+
+import TeamsMaker from '../utils/teamsMaker';
 
 const MAX_INPUTS: number = 40;
 

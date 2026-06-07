@@ -1,4 +1,4 @@
-import type { Team } from '@/utils/types';
+import type { Team } from '../utils/types';
 
 type PlayerInput = {
   name: string;

@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 
-import Footer from '@/components/Footer.tsx';
-import Nav from '@/components/Nav.tsx';
+import Footer from '../components/Footer';
+import Nav from '../components/Nav';
 
-import '@/css/home.css';
+import '../css/home.css';
 
 const Home = () => {
   return (

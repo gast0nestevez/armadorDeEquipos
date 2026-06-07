@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
-import type { Match, Result } from '@/utils/types';
+import type { Match, Result } from '../utils/types';
 
-import Loader from '@/components/Loader';
-import MatchCard from '@/components/Match';
-import NewMatchForm from '@/components/NewMatchForm';
+import Loader from './Loader';
+import MatchCard from './Match';
+import NewMatchForm from './NewMatchForm';
 
 type MatchesStats = Record<Result, number>;
 

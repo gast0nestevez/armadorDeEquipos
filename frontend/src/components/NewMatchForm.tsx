@@ -1,10 +1,10 @@
 import { Minus, Trophy, X } from 'lucide-react';
 import { useState } from 'react';
 
-import type { Match, Result } from '@/utils/types';
+import type { Match, Result } from '../utils/types';
 
-import Loader from '@/components/Loader';
-import { Env } from '@/utils/env';
+import { Env } from '../utils/env';
+import Loader from './Loader';
 
 const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
 

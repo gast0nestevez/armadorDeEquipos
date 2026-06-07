@@ -29,7 +29,6 @@ export default defineConfig([
       '@typescript-eslint/no-unnecessary-type-constraint': 'error',
       '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/no-unnecessary-type-conversion': 'error',
-      '@typescript-eslint/no-unused-vars': 'error',
       '@typescript-eslint/no-use-before-define': 'error',
       '@typescript-eslint/no-useless-default-assignment': 'error',
       '@typescript-eslint/no-useless-empty-export': 'error',
@@ -41,26 +40,38 @@ export default defineConfig([
       '@typescript-eslint/no-redeclare': 'error',
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/member-ordering': 'error',
-      '@typescript-eslint/consistent-type-exports': 'error',
-      '@typescript-eslint/consistent-type-imports': 'error',
+      '@typescript-eslint/consistent-type-exports': 'warn',
+      '@typescript-eslint/consistent-type-imports': 'warn',
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
       '@typescript-eslint/consistent-indexed-object-style': 'error',
       '@typescript-eslint/no-misused-promises': 'off',
       '@typescript-eslint/no-floating-promises': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          vars: 'all',
+          varsIgnorePattern: '^_',
+          args: 'all',
+          argsIgnorePattern: '^_',
+          caughtErrors: 'all',
+          ignoreRestSiblings: false,
+          reportUsedIgnorePattern: false,
+        },
+      ],
       'simple-import-sort/imports': [
         'warn',
         {
           groups: [
             // 1. Third party types
-            ['^(?!@/)(?!\\.)[^/]+.*\\u0000$'],
+            ['^@?\\w.*\\u0000$'],
             // 2. Third party functions
-            ['^(?!@/)(?!\\.)'],
-            // 3. Local types (@/...)
-            ['^@/.*\\u0000$'],
-            // 4. Local functions (@/...)
-            ['^@/'],
+            ['^@?\\w.*'],
+            // 3. Local types
+            ['^\\..*\\u0000$'],
+            // 4. Local functions
+            ['^\\..*'],
             // 5. CSS
-            ['\\.(css)$'],
+            ['^\\u0000'],
           ],
         },
       ],

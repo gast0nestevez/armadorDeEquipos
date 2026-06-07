@@ -1,8 +1,8 @@
 import { Trash2 } from 'lucide-react';
 
-import type { PlayerInput } from '@/hooks/types';
+import type { PlayerInput } from '../hooks/types';
 
-import HelpMessage from '@/components/HelpMessage';
+import HelpMessage from './HelpMessage';
 
 type FormProps = {
   players: PlayerInput[];
