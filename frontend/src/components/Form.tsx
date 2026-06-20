@@ -15,12 +15,12 @@ type FormProps = {
 const Form = ({ players, handleChange, deletePlayer, submitPlayers, submitted }: FormProps) => {
   return (
     <div className='form flex flex-col justify-between max-[600px]:flex-1 p-6 w-full relative'>
-      <div className='flex items-center justify-center gap-4 mb-4'>
+      <div className='flex flex-col items-center mb-4 gap-3'>
         <h1 className='text-3xl font-bold text-center'>Jugadores</h1>
         <HelpMessage />
       </div>
 
-      <div className='m-[15px] p-[8px] overflow-y-auto [scrollbar-gutter:stable] [scrollbar-color:theme(colors.gray.400/0.6)_transparent]'>
+      <div className='m-[10px] p-[8px] overflow-y-auto [scrollbar-gutter:stable] [scrollbar-color:theme(colors.gray.400/0.6)_transparent]'>
         {players.map((player: PlayerInput, index: number) => (
           <div key={index} className='flex justify-center items-center gap-2 mt-2 mb-2'>
             <label
