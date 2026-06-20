@@ -26,7 +26,7 @@ const Home = () => {
             <li>
               <Link
                 to='/armar'
-                className='block bg-white rounded-xl shadow hover:bg-blue-100 px-6 py-3 font-extrabold text-center font-medium transition'
+                className='block bg-blue-900 rounded-xl shadow hover:bg-blue-800 px-6 py-3 text-center transition white-text'
               >
                 Armar
               </Link>
