@@ -7,5 +7,5 @@ export default {
   printWidth: 100,
   tabWidth: 2,
   arrowParens: 'always',
-  endOfLine: 'crlf',
+  endOfLine: 'lf',
 };
