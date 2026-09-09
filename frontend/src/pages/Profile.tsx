@@ -25,6 +25,7 @@ const Profile = () => {
 
     const fetchMatches = async (): Promise<void> => {
       setLoadingMatches(true);
+
       const url: string = `${API_BASE_URL}/match`;
       const options: RequestInit = {
         headers: {
@@ -35,6 +36,7 @@ const Profile = () => {
 
       try {
         const response: Response = await fetch(url, options);
+
         if (!response.ok) {
           throw new Error('Error fetching matches');
         }
@@ -64,7 +66,7 @@ const Profile = () => {
       <Nav />
 
       <main className='flex flex-col items-center flex-1 w-full px-4 py-8'>
-        <div className='bg-white rounded-xl shadow-lg p-6 w-full max-w-2xl mb-8'>
+        <div className='bg-white rounded-xl shadow-lg p-6 w-full max-w-6xl mb-8'>
           <MatchesList
             matches={matches}
             setMatches={setMatches}

@@ -8,6 +8,7 @@ import { Env } from '../utils/env';
 import { Loader } from './Loader';
 import { MatchCard } from './Match';
 import { NewMatchForm } from './NewMatchForm';
+import { PerformanceChart } from './PerformanceChart';
 
 type MatchesStats = Record<Result, number>;
 
@@ -33,22 +34,26 @@ const MatchesList = ({
   const toggleSelect = (id: string): void => {
     setSelectedIds((prev: Set<string>) => {
       const next: Set<string> = new Set<string>(prev);
+
       if (next.has(id)) {
         next.delete(id);
       } else {
         next.add(id);
       }
+
       return next;
     });
   };
 
   const deleteSelected = async (): Promise<void> => {
     const userChoice: boolean = confirm('¿Seguro que querés eliminar este partido?');
+
     if (!userChoice) {
       return;
     }
 
     setLoadingMatches(true);
+
     const url: string = `${API_BASE_URL}/match/`;
     const options: RequestInit = {
       method: 'DELETE',
@@ -61,12 +66,15 @@ const MatchesList = ({
 
     try {
       const response: Response = await fetch(url, options);
+
       if (!response.ok) {
         throw new Error('Something went wrong during delete');
       }
+
       setMatches((prevMatches: Match[]) =>
         prevMatches.filter((m: Match) => !selectedIds.has(m._id))
       );
+
       setSelectedIds(new Set<string>());
       setSelectMode(false);
     } catch (err) {
@@ -110,112 +118,136 @@ const MatchesList = ({
   }
 
   return (
-    <div>
-      <h2 className='text-xl font-semibold mb-4'>Tus partidos</h2>
-      <div className='flex flex-col sm:flex-row gap-3 justify-between items-center mb-4'>
-        <div className='flex justify-center items-center gap-4 text-sm'>
-          <div className='flex items-center gap-2 px-3 py-1 rounded-md bg-green-100 text-green-800 border border-green-300'>
-            G {stats.Win}
-          </div>
-          <div className='flex items-center gap-2 px-3 py-1 rounded-md bg-yellow-100 text-yellow-800 border border-gray-300'>
-            E {stats.Draw}
-          </div>
-          <div className='flex items-center gap-2 px-3 py-1 rounded-md bg-red-100 text-red-800 border border-red-300'>
-            P {stats.Lose}
-          </div>
-        </div>
+    <div className='flex flex-col lg:flex-row gap-10 items-start'>
+      <div className='w-full lg:w-[600px]'>
+        <h2 className='text-xl font-semibold mb-4 text-center'>Historial</h2>
 
-        <div className='flex gap-2'>
-          {matches.length > 0 && (
+        <div className='flex flex-col sm:flex-row gap-3 justify-between items-center mb-4'>
+          <div className='flex justify-center items-center gap-4 text-sm'>
+            <div className='flex items-center gap-2 px-3 py-1 rounded-md bg-green-100 text-green-800 border border-green-300'>
+              G {stats.Win}
+            </div>
+
+            <div className='flex items-center gap-2 px-3 py-1 rounded-md bg-yellow-100 text-yellow-800 border border-gray-300'>
+              E {stats.Draw}
+            </div>
+
+            <div className='flex items-center gap-2 px-3 py-1 rounded-md bg-red-100 text-red-800 border border-red-300'>
+              P {stats.Lose}
+            </div>
+          </div>
+
+          <div className='flex gap-2'>
+            {matches.length > 0 && (
+              <div>
+                <button
+                  className='flex items-center gap-1 px-3 py-1 rounded-md bg-gray-300 black-text border border-gray-300 hover:bg-gray-400 transition cursor-pointer'
+                  onClick={() => {
+                    setSelectedIds(new Set<string>());
+                    setSelectMode(!selectMode);
+                  }}
+                >
+                  {!selectMode && <SquareCheckBig size={16} />}
+                  {selectMode ? 'Cancelar' : 'Seleccionar'}
+                </button>
+              </div>
+            )}
+
             <div>
               <button
-                className='flex items-center gap-1 px-3 py-1 rounded-md bg-gray-300 black-text border border-gray-300 hover:bg-gray-400 transition cursor-pointer'
-                onClick={() => {
-                  setSelectedIds(new Set<string>());
-                  setSelectMode(!selectMode);
-                }}
+                className='flex items-center gap-1 px-3 py-1 rounded-md bg-blue-600 white-text border border-blue-600 hover:bg-blue-700 transition cursor-pointer'
+                onClick={() => setNewMatchModal(true)}
               >
-                {!selectMode && <SquareCheckBig size={16} />}
-                {selectMode ? 'Cancelar' : 'Seleccionar'}
+                <Plus size={16} />
+                Agregar partido
               </button>
             </div>
-          )}
-          <div>
-            <button
-              className='flex items-center gap-1 px-3 py-1 rounded-md bg-blue-600 white-text border border-blue-600 hover:bg-blue-700 transition cursor-pointer'
-              onClick={() => setNewMatchModal(true)}
-            >
-              {<Plus size={16} />}Agregar partido
-            </button>
           </div>
         </div>
+
+        {selectMode && selectedIds.size > 0 && (
+          <div className='flex items-center justify-between bg-gray-100 border border-gray-300 rounded-md px-4 py-2 mb-4 text-sm'>
+            <span className='text-gray-700'>
+              {selectedIds.size}{' '}
+              {selectedIds.size === 1 ? 'partido seleccionado' : 'partidos seleccionados'}
+            </span>
+
+            <button
+              className='flex items-center gap-2 px-3 py-1 rounded-md bg-red-500 white-text hover:bg-red-600 transition cursor-pointer'
+              onClick={deleteSelected}
+            >
+              Eliminar
+            </button>
+          </div>
+        )}
+
+        <AnimatePresence>
+          {newMatchModal && (
+            <motion.div
+              className='fixed inset-0 flex items-center justify-center z-50'
+              style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setNewMatchModal(false)}
+            >
+              <motion.div
+                className='bg-white rounded-xl shadow-xl p-6 w-full max-w-2xl mx-4 overflow-y-auto max-h-[90vh]'
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <h3 className='text-lg font-semibold text-gray-800 text-center mb-2'>
+                  Agregar partido
+                </h3>
+
+                <NewMatchForm setMatches={setMatches} setNewMatchModal={setNewMatchModal} />
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {matches.length === 0 ? (
+          <p className='text-gray-600'>Todavía no guardaste ningún partido</p>
+        ) : (
+          <ul className='space-y-4'>
+            {[...matches]
+              .toSorted(({ date: dateA }: Match, { date: dateB }: Match): number => {
+                if (!dateA && !dateB) {
+                  return 0;
+                }
+                if (!dateA) {
+                  return -1;
+                }
+                if (!dateB) {
+                  return 1;
+                }
+                return new Date(dateB).getTime() - new Date(dateA).getTime();
+              })
+              .map(
+                (match: Match): React.JSX.Element => (
+                  <li
+                    key={match._id}
+                    className={`flex flex-col gap-[15px] border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition ${matchBorderColor(match.result)}`}
+                  >
+                    <MatchCard
+                      match={match}
+                      setMatches={setMatches}
+                      selectMode={selectMode}
+                      selected={selectedIds.has(match._id)}
+                      onToggleSelect={toggleSelect}
+                    />
+                  </li>
+                )
+              )}
+          </ul>
+        )}
       </div>
 
-      {selectMode && selectedIds.size > 0 && (
-        <div className='flex items-center justify-between bg-gray-100 border border-gray-300 rounded-md px-4 py-2 mb-4 text-sm'>
-          <span className='text-gray-700'>
-            {selectedIds.size}{' '}
-            {selectedIds.size === 1 ? 'partido seleccionado' : 'partidos seleccionados'}
-          </span>
-          <button
-            className='flex items-center gap-2 px-3 py-1 rounded-md bg-red-500 white-text hover:bg-red-600 transition cursor-pointer'
-            onClick={deleteSelected}
-          >
-            Eliminar
-          </button>
-        </div>
-      )}
-
-      <AnimatePresence>
-        {newMatchModal && (
-          <motion.div
-            className='fixed inset-0 flex items-center justify-center z-50'
-            style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={() => setNewMatchModal(false)}
-          >
-            <motion.div
-              className='bg-white rounded-xl shadow-xl p-6 w-full max-w-2xl mx-4 overflow-y-auto max-h-[90vh]'
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <h3 className='text-lg font-semibold text-gray-800 text-center mb-2'>
-                Agregar partido
-              </h3>
-              <NewMatchForm setMatches={setMatches} setNewMatchModal={setNewMatchModal} />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {matches.length === 0 ? (
-        <p className='text-gray-600'>Todavía no guardaste ningún partido</p>
-      ) : (
-        <ul className='space-y-4'>
-          {matches.map(
-            (match: Match): React.JSX.Element => (
-              <li
-                key={match._id}
-                className={`flex flex-col gap-[15px] border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition ${matchBorderColor(match.result)}`}
-              >
-                <MatchCard
-                  match={match}
-                  setMatches={setMatches}
-                  selectMode={selectMode}
-                  selected={selectedIds.has(match._id)}
-                  onToggleSelect={toggleSelect}
-                />
-              </li>
-            )
-          )}
-        </ul>
-      )}
+      <PerformanceChart matches={matches} />
     </div>
   );
 };
