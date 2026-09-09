@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 import type { Match } from '../utils/types';
 
-import MatchesList from '../components/MatchesList';
-import Nav from '../components/Nav';
+import { MatchesList } from '../components/MatchesList';
+import { Nav } from '../components/Nav';
 import { UserContext } from '../context/userContext';
 import { handleGoogleLogout } from '../utils/auth';
 import { Env } from '../utils/env';
@@ -84,4 +84,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export { Profile };

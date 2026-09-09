@@ -4,7 +4,7 @@ import { useState } from 'react';
 import type { Match, Result } from '../utils/types';
 
 import { Env } from '../utils/env';
-import Loader from './Loader';
+import { Loader } from './Loader';
 
 const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
 
@@ -216,4 +216,4 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
   );
 };
 
-export default NewMatchForm;
+export { NewMatchForm };

@@ -3,10 +3,10 @@ import { useContext } from 'react';
 import type { Player, Team } from '../utils/types';
 
 import { UserContext } from '../context/userContext';
-import useFlashMessage from '../hooks/useFlashMessage';
+import { useFlashMessage } from '../hooks/useFlashMessage';
 import { Env } from '../utils/env';
 import { capitalize } from '../utils/string';
-import TeamCard from './TeamCard';
+import { TeamCard } from './TeamCard';
 
 const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
 
@@ -123,4 +123,4 @@ const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
   );
 };
 
-export default TeamsDisplay;
+export { TeamsDisplay };

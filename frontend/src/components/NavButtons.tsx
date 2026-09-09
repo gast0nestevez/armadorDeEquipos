@@ -48,4 +48,4 @@ const NavButtons = ({ setIsOpen, variant = 'desktop' }: NavButtonsProps) => {
   );
 };
 
-export default NavButtons;
+export { NavButtons };

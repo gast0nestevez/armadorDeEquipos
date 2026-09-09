@@ -2,10 +2,10 @@ import { useEffect, useRef } from 'react';
 
 import type { UsePlayersReturn } from '../hooks/types';
 
-import Form from '../components/Form';
-import Nav from '../components/Nav';
-import TeamsDisplay from '../components/TeamsDisplay';
-import usePlayers from '../hooks/usePlayers';
+import { Form } from '../components/Form';
+import { Nav } from '../components/Nav';
+import { TeamsDisplay } from '../components/TeamsDisplay';
+import { usePlayers } from '../hooks/usePlayers';
 
 const MakeTeams = () => {
   const {
@@ -43,4 +43,4 @@ const MakeTeams = () => {
   );
 };
 
-export default MakeTeams;
+export { MakeTeams };

@@ -1,7 +1,7 @@
 import type { Player } from '../utils/types';
 
 import { capitalize } from '../utils/string';
-import Loader from './Loader';
+import { Loader } from './Loader';
 
 type TeamCardProps = {
   index: number;
@@ -37,4 +37,4 @@ const TeamCard = ({ index, players, loading }: TeamCardProps) => (
   </div>
 );
 
-export default TeamCard;
+export { TeamCard };

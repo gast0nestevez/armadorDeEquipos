@@ -6,7 +6,7 @@ import type { Match, Player, Result } from '../utils/types';
 
 import { Env } from '../utils/env';
 import { capitalize } from '../utils/string';
-import Loader from './Loader';
+import { Loader } from './Loader';
 
 const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
 
@@ -271,4 +271,4 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
   );
 };
 
-export default MatchCard;
+export { MatchCard };

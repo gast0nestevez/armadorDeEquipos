@@ -5,9 +5,9 @@ import { useState } from 'react';
 import type { Match, Result } from '../utils/types';
 
 import { Env } from '../utils/env';
-import Loader from './Loader';
-import MatchCard from './Match';
-import NewMatchForm from './NewMatchForm';
+import { Loader } from './Loader';
+import { MatchCard } from './Match';
+import { NewMatchForm } from './NewMatchForm';
 
 type MatchesStats = Record<Result, number>;
 
@@ -220,4 +220,4 @@ const MatchesList = ({
   );
 };
 
-export default MatchesList;
+export { MatchesList };

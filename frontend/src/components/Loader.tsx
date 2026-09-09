@@ -4,4 +4,4 @@ const Loader = () => {
   );
 };
 
-export default Loader;
+export { Loader };

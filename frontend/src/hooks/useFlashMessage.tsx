@@ -11,4 +11,4 @@ const useFlashMessage = (duration: number = 1500) => {
   return { visible, trigger };
 };
 
-export default useFlashMessage;
+export { useFlashMessage };

@@ -11,4 +11,4 @@ authRouter.post('/login', authController.login);
 authRouter.post('/register', authController.register);
 authRouter.post('/googleLogin', authController.googleLogin);
 
-export default authRouter;
+export { authRouter };

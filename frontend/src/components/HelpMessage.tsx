@@ -35,4 +35,4 @@ const HelpMessage = () => {
   );
 };
 
-export default HelpMessage;
+export { HelpMessage };

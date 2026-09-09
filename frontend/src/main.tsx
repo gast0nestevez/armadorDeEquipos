@@ -5,7 +5,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { UserProvider } from './context/userContext';
-import App from './routes/App';
+import { App } from './routes/App';
 import { Env } from './utils/env';
 
 import './css/index.css';

@@ -8,8 +8,8 @@ import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 
 import { connectDB } from './src/config/db';
-import authRouter from './src/routes/auth.route';
-import matchRouter from './src/routes/match.route';
+import { authRouter } from './src/routes/auth.route';
+import { matchRouter } from './src/routes/match.route';
 import { getEnv } from './src/utils/env';
 
 dotenv.config();

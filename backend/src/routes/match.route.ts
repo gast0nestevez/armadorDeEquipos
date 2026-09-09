@@ -13,4 +13,4 @@ matchRouter.post('/', authMiddleware, matchController.createMatch);
 matchRouter.put('/:matchId', authMiddleware, matchController.updateMatch);
 matchRouter.delete('/', authMiddleware, matchController.deleteMatch);
 
-export default matchRouter;
+export { matchRouter };

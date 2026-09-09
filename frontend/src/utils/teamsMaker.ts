@@ -87,4 +87,4 @@ class TeamsMaker {
   }
 }
 
-export default TeamsMaker;
+export { TeamsMaker };

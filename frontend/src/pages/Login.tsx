@@ -4,9 +4,9 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import Footer from '../components/Footer';
-import Loader from '../components/Loader';
-import Nav from '../components/Nav';
+import { Footer } from '../components/Footer';
+import { Loader } from '../components/Loader';
+import { Nav } from '../components/Nav';
 import { UserContext } from '../context/userContext';
 import {
   handleEmailLogin,
@@ -228,4 +228,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export { Auth };

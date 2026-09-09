@@ -2,7 +2,7 @@ import { Trash2 } from 'lucide-react';
 
 import type { PlayerInput } from '../hooks/types';
 
-import HelpMessage from './HelpMessage';
+import { HelpMessage } from './HelpMessage';
 
 type FormProps = {
   players: PlayerInput[];
@@ -69,4 +69,4 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers, submitted }:
 
 export type { FormProps };
 
-export default Form;
+export { Form };
