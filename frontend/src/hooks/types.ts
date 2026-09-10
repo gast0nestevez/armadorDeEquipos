@@ -18,4 +18,4 @@ type UsePlayersReturn = {
   loading: boolean;
 };
 
-export type { Field, UsePlayersReturn, PlayerInput };
+export type { Field, PlayerInput, UsePlayersReturn };

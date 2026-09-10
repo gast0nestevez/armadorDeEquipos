@@ -59,7 +59,7 @@ const MatchesList = ({
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${localStorage.getItem('token') ?? ''}`,
       },
       body: JSON.stringify({ ids: [...selectedIds] }),
     };
@@ -156,7 +156,9 @@ const MatchesList = ({
             <div>
               <button
                 className='flex items-center gap-1 px-3 py-1 rounded-md bg-blue-600 white-text border border-blue-600 hover:bg-blue-700 transition cursor-pointer'
-                onClick={() => setNewMatchModal(true)}
+                onClick={() => {
+                  setNewMatchModal(true);
+                }}
               >
                 <Plus size={16} />
                 Agregar partido
@@ -174,7 +176,7 @@ const MatchesList = ({
 
             <button
               className='flex items-center gap-2 px-3 py-1 rounded-md bg-red-500 white-text hover:bg-red-600 transition cursor-pointer'
-              onClick={deleteSelected}
+              onClick={() => void deleteSelected()}
             >
               Eliminar
             </button>
@@ -190,7 +192,9 @@ const MatchesList = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              onClick={() => setNewMatchModal(false)}
+              onClick={() => {
+                setNewMatchModal(false);
+              }}
             >
               <motion.div
                 className='bg-white rounded-xl shadow-xl p-6 w-full max-w-2xl mx-4 overflow-y-auto max-h-[90vh]'
@@ -198,7 +202,9 @@ const MatchesList = ({
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
               >
                 <h3 className='text-lg font-semibold text-gray-800 text-center mb-2'>
                   Agregar partido

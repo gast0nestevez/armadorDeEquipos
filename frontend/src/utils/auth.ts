@@ -115,9 +115,9 @@ const handleEmailRegister = async (
 };
 
 export {
-  handleGoogleLogin,
-  handleGoogleError,
-  handleGoogleLogout,
   handleEmailLogin,
   handleEmailRegister,
+  handleGoogleError,
+  handleGoogleLogin,
+  handleGoogleLogout,
 };

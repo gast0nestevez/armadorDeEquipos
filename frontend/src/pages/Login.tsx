@@ -104,9 +104,12 @@ const Auth = () => {
     setIsLoading(true);
 
     try {
-      return mode === 'login'
-        ? await handleEmailLogin(form.email, form.password, setUser)
-        : await handleEmailRegister(form.email, form.password, setUser);
+      if (mode === 'login') {
+        await handleEmailLogin(form.email, form.password, setUser);
+      } else {
+        await handleEmailRegister(form.email, form.password, setUser);
+      }
+      await navigate('/');
     } catch (err) {
       console.error(err);
       const errorMessage: string =
@@ -143,7 +146,7 @@ const Auth = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className='space-y-3'>
+          <form onSubmit={(e) => void handleSubmit(e)} className='space-y-3'>
             <div>
               <input
                 type='email'
@@ -205,7 +208,7 @@ const Auth = () => {
               theme='outline'
               size='large'
               shape='rectangular'
-              onSuccess={onSuccessGoogle}
+              onSuccess={(e) => void onSuccessGoogle(e)}
               onError={handleGoogleError}
             />
           </div>

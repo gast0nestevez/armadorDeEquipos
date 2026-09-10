@@ -29,11 +29,11 @@ const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
 
   const playersNotEmpty: boolean = teams[0].players.length > 0 || teams[1].players.length > 0;
 
-  const teamsToString = (): string => {
-    return teams
+  const teamsToString = (): string =>
+    teams
       .map(
         (team: Team, index: number): string =>
-          `Equipo ${index + 1}:\n` +
+          `Equipo ${(index + 1).toString()}:\n` +
           (team.players.length === 0
             ? 'Sin jugadores\n'
             : team.players
@@ -42,7 +42,6 @@ const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
                 .join('\n'))
       )
       .join('\n\n');
-  };
 
   const copyToClipboard = async (): Promise<void> => {
     copyMessage.trigger();
@@ -69,7 +68,7 @@ const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${localStorage.getItem('token') ?? ''}`,
       },
       body: JSON.stringify({ players }),
     };
@@ -98,7 +97,7 @@ const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
       <div className='flex justify-around mt-6 text-center' ref={teamsRef}>
         {playersNotEmpty && (
           <button
-            onClick={copyToClipboard}
+            onClick={() => void copyToClipboard()}
             className='bg-blue-900 white-text px-6 py-2 rounded white-text hover:bg-blue-800 cursor-pointer'
           >
             Copiar
@@ -109,7 +108,7 @@ const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
 
         {user && playersNotEmpty && (
           <button
-            onClick={saveMatch}
+            onClick={() => void saveMatch()}
             disabled={saveMessage.visible}
             className='bg-blue-900 white-text px-6 py-2 rounded white-text hover:bg-blue-800 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-900'
           >

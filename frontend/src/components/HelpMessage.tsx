@@ -8,7 +8,9 @@ const HelpMessage = () => {
     <>
       <button
         className='mt-1 text-sm text-gray-500 hover:text-gray-700 underline underline-offset-2 cursor-pointer transition'
-        onClick={() => setShowHelpMessage(true)}
+        onClick={() => {
+          setShowHelpMessage(true);
+        }}
       >
         ¿Cómo funciona?
       </button>
@@ -18,7 +20,9 @@ const HelpMessage = () => {
           <div className='relative bg-white rounded-xl shadow-lg p-6 max-w-sm w-full mx-4'>
             <button
               className='absolute top-3 right-3 cursor-pointer text-gray-400 hover:text-gray-700 transition'
-              onClick={() => setShowHelpMessage(false)}
+              onClick={() => {
+                setShowHelpMessage(false);
+              }}
             >
               <X size={20} />
             </button>

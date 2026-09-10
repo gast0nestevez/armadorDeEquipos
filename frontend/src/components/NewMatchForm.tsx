@@ -61,7 +61,7 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${localStorage.getItem('token') ?? ''}`,
       },
       body: JSON.stringify({ players, goals1, goals2, result, date }),
     };
@@ -102,9 +102,9 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
         <select
           className='w-16 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
           value={playerCount}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-            setPlayerCount(Number.parseInt(e.target.value))
-          }
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+            setPlayerCount(Number.parseInt(e.target.value));
+          }}
         >
           {[...(Array(15) as undefined[])].map(
             (_: undefined, i: number): React.JSX.Element => (
@@ -128,9 +128,9 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
                   placeholder='Nombre'
                   maxLength={25}
                   className='w-full text-center bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    handleChange(index, e.target.value, 1)
-                  }
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    handleChange(index, e.target.value, 1);
+                  }}
                 />
               )
             )}
@@ -144,9 +144,9 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
               min='0'
               value={goals1 ?? ''}
               className='w-12 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setGoals1(Number.parseInt(e.target.value))
-              }
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setGoals1(Number.parseInt(e.target.value));
+              }}
             />
             <span className='font-bold text-gray-600'>-</span>
             <input
@@ -154,9 +154,9 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
               min='0'
               value={goals2 ?? ''}
               className='w-12 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setGoals2(Number.parseInt(e.target.value))
-              }
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setGoals2(Number.parseInt(e.target.value));
+              }}
             />
           </div>
         </div>
@@ -172,9 +172,9 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
                   placeholder='Nombre'
                   maxLength={25}
                   className='w-full text-center bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    handleChange(index + playerCount / 2, e.target.value, 2)
-                  }
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    handleChange(index + playerCount / 2, e.target.value, 2);
+                  }}
                 />
               )
             )}
@@ -184,13 +184,28 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
 
       <div className='flex flex-col justify-center items-center gap-4 mt-4'>
         <div className='flex justify-center items-center gap-3'>
-          <button className={resultButtonClasses('Win', result)} onClick={() => setResult('Win')}>
+          <button
+            className={resultButtonClasses('Win', result)}
+            onClick={() => {
+              setResult('Win');
+            }}
+          >
             <Trophy size={24} />
           </button>
-          <button className={resultButtonClasses('Draw', result)} onClick={() => setResult('Draw')}>
+          <button
+            className={resultButtonClasses('Draw', result)}
+            onClick={() => {
+              setResult('Draw');
+            }}
+          >
             <Minus size={24} />
           </button>
-          <button className={resultButtonClasses('Lose', result)} onClick={() => setResult('Lose')}>
+          <button
+            className={resultButtonClasses('Lose', result)}
+            onClick={() => {
+              setResult('Lose');
+            }}
+          >
             <X size={24} />
           </button>
         </div>
@@ -200,14 +215,16 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
             type='date'
             value={date}
             placeholder='Fecha'
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDate(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setDate(e.target.value);
+            }}
             className='bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 text-center'
           />
         </div>
 
         <button
           className='w-full md:w-auto px-6 py-3 rounded-lg bg-blue-500 white-text font-semibold transition cursor-pointer hover:bg-blue-600'
-          onClick={addMatch}
+          onClick={() => void addMatch()}
         >
           Guardar
         </button>

@@ -19,7 +19,7 @@ const Profile = () => {
 
   useEffect((): void => {
     if (!user) {
-      navigate('/');
+      void navigate('/');
       return;
     }
 
@@ -30,7 +30,7 @@ const Profile = () => {
       const options: RequestInit = {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem('token') ?? ''}`,
         },
       };
 
@@ -50,7 +50,7 @@ const Profile = () => {
       }
     };
 
-    fetchMatches();
+    void fetchMatches();
   }, [user, navigate]);
 
   if (!user) {
@@ -77,7 +77,9 @@ const Profile = () => {
 
         <button
           className='bg-gray-300 text-gray-800 py-2.5 px-6 rounded-lg font-bold hover:bg-gray-400 transition cursor-pointer'
-          onClick={() => handleGoogleLogout(clearContext)}
+          onClick={() => {
+            handleGoogleLogout(clearContext);
+          }}
         >
           Cerrar sesión
         </button>

@@ -5,7 +5,9 @@ const useFlashMessage = (duration: number = 1500) => {
 
   const trigger = (): void => {
     setVisible(true);
-    setTimeout(() => setVisible(false), duration);
+    setTimeout(() => {
+      setVisible(false);
+    }, duration);
   };
 
   return { visible, trigger };

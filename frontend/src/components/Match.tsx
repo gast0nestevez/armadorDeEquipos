@@ -21,10 +21,10 @@ type MatchProps = {
 const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: MatchProps) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showDetails, setShowDetails] = useState<boolean>(false);
-  const [goals1, setGoals1] = useState<number>(match.goals1 ?? 0);
-  const [goals2, setGoals2] = useState<number>(match.goals2 ?? 0);
-  const [result, setResult] = useState<Result>(match.result ?? '');
-  const [date, setDate] = useState<string>(match.date ?? '');
+  const [goals1, setGoals1] = useState<number>(match.goals1);
+  const [goals2, setGoals2] = useState<number>(match.goals2);
+  const [result, setResult] = useState<Result>(match.result);
+  const [date, setDate] = useState<string>(match.date);
   const [loading, setLoading] = useState<boolean>(false);
 
   const resultButtonClasses = (type: Result, currentResult: Result): string => {
@@ -71,7 +71,7 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${localStorage.getItem('token') ?? ''}`,
       },
       body: JSON.stringify(body),
     };
@@ -105,7 +105,13 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
   return (
     <div
       className={`flex flex-col justify-center p-4 cursor-pointer ${showDetails ? 'gap-[15px]' : ''}`}
-      onClick={selectMode ? () => onToggleSelect(match._id) : expandMatch}
+      onClick={
+        selectMode
+          ? () => {
+              onToggleSelect(match._id);
+            }
+          : expandMatch
+      }
     >
       <div className='flex items-center w-full gap-4'>
         {selectMode && (
@@ -204,11 +210,15 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
         <div
           className='fixed inset-0 flex items-center justify-center z-50'
           style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}
-          onClick={() => setShowModal(false)}
+          onClick={() => {
+            setShowModal(false);
+          }}
         >
           <div
             className='bg-white rounded-xl shadow-xl p-6 w-full max-w-sm mx-4 flex flex-col gap-4'
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
           >
             <h3 className='text-lg font-semibold black-text text-center'>Editar partido</h3>
 
@@ -216,7 +226,9 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
               <input
                 type='date'
                 value={date}
-                onChange={(e) => setDate(e.target.value)}
+                onChange={(e) => {
+                  setDate(e.target.value);
+                }}
                 className='bg-white shadow-sm border border-gray-200 rounded-lg p-2 black-text focus:outline-none focus:ring-2 focus:ring-blue-400 text-center'
               />
             </div>
@@ -225,14 +237,18 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
               <input
                 type='number'
                 value={goals1}
-                onChange={(e) => setGoals1(Number.parseInt(e.target.value))}
+                onChange={(e) => {
+                  setGoals1(Number.parseInt(e.target.value));
+                }}
                 className='w-10 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 black-text focus:outline-none focus:ring-2 focus:ring-blue-400'
               />
               <span>-</span>
               <input
                 type='number'
                 value={goals2}
-                onChange={(e) => setGoals2(Number.parseInt(e.target.value))}
+                onChange={(e) => {
+                  setGoals2(Number.parseInt(e.target.value));
+                }}
                 className='w-10 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 black-text focus:outline-none focus:ring-2 focus:ring-blue-400'
               />
             </div>
@@ -240,19 +256,25 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
             <div className='flex justify-center gap-2'>
               <button
                 className={resultButtonClasses('Win', result)}
-                onClick={() => setResult('Win')}
+                onClick={() => {
+                  setResult('Win');
+                }}
               >
                 <Trophy />
               </button>
               <button
                 className={resultButtonClasses('Draw', result)}
-                onClick={() => setResult('Draw')}
+                onClick={() => {
+                  setResult('Draw');
+                }}
               >
                 <Minus />
               </button>
               <button
                 className={resultButtonClasses('Lose', result)}
-                onClick={() => setResult('Lose')}
+                onClick={() => {
+                  setResult('Lose');
+                }}
               >
                 <X />
               </button>
@@ -260,7 +282,7 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
 
             <button
               className='px-3 py-2 rounded-lg bg-blue-500 text-white font-semibold text-center transition cursor-pointer hover:bg-blue-600'
-              onClick={saveChanges}
+              onClick={() => void saveChanges()}
             >
               Listo
             </button>

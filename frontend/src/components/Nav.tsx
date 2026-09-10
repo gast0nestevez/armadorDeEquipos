@@ -16,7 +16,9 @@ const Nav = () => {
 
         {/* menu icon for mobile */}
         <button
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => {
+            setIsOpen(!isOpen);
+          }}
           className='md:hidden focus:outline-none cursor-pointer'
           aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
         >

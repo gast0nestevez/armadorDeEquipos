@@ -21,4 +21,4 @@ type Match = {
   date: string;
 };
 
-export type { Player, Result, Match, Team };
+export type { Match, Player, Result, Team };
