@@ -41,19 +41,19 @@ const PerformanceChart = ({ matches }: PerformanceChartProps) => {
     .map(({ goals1, goals2, result }: Match, index: number): ChartMatch | undefined => {
       if (result === 'Win') {
         return {
-          match: `Partido ${index.toString()}`,
+          match: `Partido ${(index + 1).toString()}`,
           goalsFor: Math.max(goals1, goals2),
           goalsAgainst: Math.min(goals1, goals2),
         };
       } else if (result === 'Lose') {
         return {
-          match: `Partido ${index.toString()}`,
+          match: `Partido ${(index + 1).toString()}`,
           goalsFor: Math.min(goals1, goals2),
           goalsAgainst: Math.max(goals1, goals2),
         };
       } else if (result === 'Draw') {
         return {
-          match: `Partido ${index.toString()}`,
+          match: `Partido ${(index + 1).toString()}`,
           goalsFor: goals1,
           goalsAgainst: goals2,
         };
