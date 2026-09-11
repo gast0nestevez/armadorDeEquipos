@@ -11,6 +11,9 @@ import {
 
 import type { Match } from '../utils/types';
 
+import { lastTenMatches } from '../utils/matches';
+import { MatchStats } from './MatchesStats';
+
 type PerformanceChartProps = {
   matches: Match[];
 };
@@ -22,22 +25,7 @@ type ChartMatch = {
 };
 
 const PerformanceChart = ({ matches }: PerformanceChartProps) => {
-  const chartData: ChartMatch[] = [...matches]
-    .toSorted(({ date: dateA }: Match, { date: dateB }: Match): number => {
-      if (!dateA && !dateB) {
-        return 0;
-      }
-
-      if (!dateA) {
-        return 1;
-      }
-      if (!dateB) {
-        return -1;
-      }
-
-      return new Date(dateA).getTime() - new Date(dateB).getTime();
-    })
-    .slice(-10)
+  const chartData: ChartMatch[] = lastTenMatches(matches)
     .map(({ goals1, goals2, result }: Match, index: number): ChartMatch | undefined => {
       if (result === 'Win') {
         return {
@@ -90,9 +78,9 @@ const PerformanceChart = ({ matches }: PerformanceChartProps) => {
 
             <Line
               type='monotone'
-              dataKey='goalsFor'
-              name='A favor'
-              stroke='#22c55e'
+              dataKey='goalsAgainst'
+              name='Goles en contra'
+              stroke='#ef4444'
               strokeWidth={2}
               dot={{ r: 4 }}
               activeDot={{ r: 6 }}
@@ -100,9 +88,9 @@ const PerformanceChart = ({ matches }: PerformanceChartProps) => {
 
             <Line
               type='monotone'
-              dataKey='goalsAgainst'
-              name='En contra'
-              stroke='#ef4444'
+              dataKey='goalsFor'
+              name='Goles a favor'
+              stroke='#22c55e'
               strokeWidth={2}
               dot={{ r: 4 }}
               activeDot={{ r: 6 }}
@@ -110,8 +98,12 @@ const PerformanceChart = ({ matches }: PerformanceChartProps) => {
           </LineChart>
         </ResponsiveContainer>
       </div>
+
+      <MatchStats chartData={chartData} matches={matches} />
     </div>
   );
 };
+
+export type { ChartMatch };
 
 export { PerformanceChart };
