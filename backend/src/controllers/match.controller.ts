@@ -36,9 +36,11 @@ class MatchController {
   }
 
   async updateMatch(req: Request<MatchParams>, res: Response): Promise<void> {
+    const { userId }: { userId: string } = req as unknown as AuthenticatedRequest;
     const { matchId }: { matchId: string } = req.params;
 
     const updatedMatch: IMatch | null = await matchService.updateMatch(
+      userId,
       matchId,
       req.body as MatchData
     );
@@ -50,9 +52,10 @@ class MatchController {
   }
 
   async deleteMatch(req: Request<MatchParams>, res: Response): Promise<void> {
+    const { userId }: { userId: string } = req as unknown as AuthenticatedRequest;
     const { ids }: { ids: string[] } = req.body as { ids: string[] };
 
-    const result: { deletedCount?: number } = await matchService.deleteMatch(ids);
+    const result: { deletedCount?: number } = await matchService.deleteMatch(userId, ids);
 
     res.status(200).json({
       success: true,

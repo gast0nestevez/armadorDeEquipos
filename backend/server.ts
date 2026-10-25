@@ -8,6 +8,7 @@ import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 
 import { connectDB } from './src/config/db';
+import { errorHandler } from './src/middleware/errorHandler.middleware';
 import { authRouter } from './src/routes/auth.route';
 import { matchRouter } from './src/routes/match.route';
 import { getEnv } from './src/utils/env';
@@ -33,6 +34,8 @@ app.use('/match', matchRouter);
 app.get('/health', (_req: Request, res: Response): void => {
   res.status(200).json({ status: 'ok', timestamp: Date.now() });
 });
+
+app.use(errorHandler);
 
 connectDB();
 

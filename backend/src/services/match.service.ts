@@ -59,14 +59,14 @@ class MatchService {
     return matchRepo.findByUser(userId);
   }
 
-  async updateMatch(matchId: string, body: MatchData): Promise<IMatch | null> {
+  async updateMatch(userId: string, matchId: string, body: MatchData): Promise<IMatch | null> {
     if (!matchId) {
       throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Match id is required');
     }
 
     const filteredBody: Record<string, unknown> = sanitize(body, ALLOWED_UPDATE_FIELDS);
 
-    const updated: IMatch | null = await matchRepo.update(matchId, filteredBody);
+    const updated: IMatch | null = await matchRepo.update(userId, matchId, filteredBody);
 
     if (!updated) {
       throw new AppError(ErrorCode.MATCH_NOT_FOUND, 404, 'Match not found');
@@ -75,12 +75,12 @@ class MatchService {
     return updated;
   }
 
-  async deleteMatch(ids: string[]): Promise<{ deletedCount?: number }> {
-    if (ids?.length === 0) {
+  async deleteMatch(userId: string, ids: string[]): Promise<{ deletedCount?: number }> {
+    if (!Array.isArray(ids) || ids.length === 0) {
       throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Ids are required');
     }
 
-    const result: { deletedCount: number | undefined } = await matchRepo.delete(ids);
+    const result: { deletedCount: number | undefined } = await matchRepo.delete(userId, ids);
 
     if (!result.deletedCount) {
       throw new AppError(ErrorCode.MATCH_NOT_FOUND, 404, 'Match not found');

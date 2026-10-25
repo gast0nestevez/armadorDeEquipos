@@ -15,11 +15,15 @@ export default {
   findByUser: (userId: string): Promise<IMatch[]> =>
     Match.find({ userId } as FilterQuery<MatchData>).sort({ createdAt: -1 }),
 
-  delete: (ids: string[]): Promise<{ deletedCount: number }> =>
-    Match.deleteMany({ _id: { $in: ids } }),
+  delete: (userId: string, ids: string[]): Promise<{ deletedCount: number }> =>
+    Match.deleteMany({ _id: { $in: ids }, userId }),
 
-  update: (matchId: string, data: Record<string, unknown>): Promise<IMatch | null> =>
-    Match.findByIdAndUpdate(matchId, data, {
+  update: (
+    userId: string,
+    matchId: string,
+    data: Record<string, unknown>
+  ): Promise<IMatch | null> =>
+    Match.findOneAndUpdate({ _id: matchId, userId }, data, {
       new: true,
       runValidators: true,
     }),

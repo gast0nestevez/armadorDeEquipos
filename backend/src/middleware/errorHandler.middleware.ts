@@ -1,4 +1,4 @@
-import type { Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
 import { AppError } from '../error/app.error';
 import { ErrorCode } from '../error/errorCodes';
@@ -11,10 +11,13 @@ import { ErrorCode } from '../error/errorCodes';
  *
  * Express takes the error raised and pass it as the first argument
  */
-const errorHandler: (err: Error, _req: Request, res: Response) => void = (
+const errorHandler: (err: Error, _req: Request, res: Response, _next: NextFunction) => void = (
   err: Error,
   _req: Request,
-  res: Response
+  res: Response,
+  // Express identifies error middleware by its 4-argument signature
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  _next: NextFunction
 ): void => {
   if (err instanceof AppError) {
     res.status(err.statusCode).json({

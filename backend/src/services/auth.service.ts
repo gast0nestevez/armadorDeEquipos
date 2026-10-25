@@ -59,11 +59,11 @@ class AuthService {
     }
 
     const user: IUser | null = await userModel.findOne({ email });
-    if (!user) {
+    if (!user?.passwordHash) {
       throw new AppError(ErrorCode.INVALID_CREDENTIALS, 401, 'Invalid credentials');
     }
 
-    const isValidPassword: boolean = await bcrypt.compare(password, user.passwordHash as string);
+    const isValidPassword: boolean = await bcrypt.compare(password, user.passwordHash);
     if (!isValidPassword) {
       throw new AppError(ErrorCode.INVALID_CREDENTIALS, 401, 'Invalid credentials');
     }
