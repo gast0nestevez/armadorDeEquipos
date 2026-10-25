@@ -1,9 +1,9 @@
-import type { IMatch } from '../models/match.model';
-import type { MatchData, Player } from '../utils/types';
+import type { IMatch } from '#models/match.model.ts';
+import type { MatchData, Player } from '#utils/types.ts';
 
-import { AppError } from '../error/app.error';
-import { ErrorCode } from '../error/errorCodes';
-import matchRepo from '../repositories/match.repo';
+import { AppError } from '#error/app.error.ts';
+import { ErrorCode } from '#error/errorCodes.ts';
+import matchRepo from '#repositories/match.repo.ts';
 
 const ALLOWED_UPDATE_FIELDS: string[] = ['players', 'goals1', 'goals2', 'result', 'date'];
 

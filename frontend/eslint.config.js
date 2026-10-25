@@ -78,9 +78,9 @@ export default defineConfig(
             // 2. Third party functions
             ['^@?\\w.*'],
             // 3. Local types
-            ['^\\..*\\u0000$'],
+            ['^[.#].*\\u0000$'],
             // 4. Local functions
-            ['^\\..*'],
+            ['^[.#].*'],
             // 5. CSS
             ['^\\u0000'],
           ],

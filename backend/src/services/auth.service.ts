@@ -4,12 +4,12 @@ import bcrypt from 'bcrypt';
 import { OAuth2Client } from 'google-auth-library';
 import jwt from 'jsonwebtoken';
 
-import type { IUser } from '../models/user.model';
+import type { IUser } from '#models/user.model.ts';
 
-import { AppError } from '../error/app.error';
-import { ErrorCode } from '../error/errorCodes';
-import userModel from '../models/user.model';
-import { getEnv } from '../utils/env';
+import { AppError } from '#error/app.error.ts';
+import { ErrorCode } from '#error/errorCodes.ts';
+import userModel from '#models/user.model.ts';
+import { getEnv } from '#utils/env.ts';
 
 const client: OAuth2Client = new OAuth2Client();
 

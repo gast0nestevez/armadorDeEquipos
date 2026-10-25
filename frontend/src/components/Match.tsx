@@ -2,11 +2,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Minus, PencilLine, Trophy, X } from 'lucide-react';
 import { useState } from 'react';
 
-import type { Match, Player, Result } from '../utils/types';
+import type { Match, Player, Result } from '#utils/types.ts';
 
-import { Env } from '../utils/env';
-import { capitalize } from '../utils/string';
-import { Loader } from './Loader';
+import { Loader } from '#components/Loader.tsx';
+import { Env } from '#utils/env.ts';
+import { capitalize } from '#utils/string.ts';
 
 const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
 

@@ -1,4 +1,4 @@
-import type { Player, Team } from './types';
+import type { Player, Team } from '#utils/types.ts';
 
 type Memo = Map<number, Set<number>>[];
 

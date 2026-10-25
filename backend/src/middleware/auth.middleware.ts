@@ -3,7 +3,7 @@ import type { JwtPayload } from 'jsonwebtoken';
 
 import jwt from 'jsonwebtoken';
 
-import { getEnv } from '../utils/env';
+import { getEnv } from '#utils/env.ts';
 
 type AuthenticatedRequest = {
   userId: string;

@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 
-import type { Match } from '../utils/types';
-import type { ChartMatch } from './PerformanceChart';
+import type { ChartMatch } from '#components/PerformanceChart.tsx';
+import type { Match } from '#utils/types.ts';
 
-import { lastTenMatches } from '../utils/matches';
+import { lastTenMatches } from '#utils/matches.ts';
 
 type MatchStatsProps = {
   chartData: ChartMatch[];

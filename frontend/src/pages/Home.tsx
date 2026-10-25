@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 
-import { Footer } from '../components/Footer';
-import { Nav } from '../components/Nav';
+import { Footer } from '#components/Footer.tsx';
+import { Nav } from '#components/Nav.tsx';
 
-import '../css/home.css';
+import '#css/home.css';
 
 const Home = () => (
   <div className='flex flex-col min-h-screen'>

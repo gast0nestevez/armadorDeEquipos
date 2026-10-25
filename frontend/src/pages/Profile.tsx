@@ -1,13 +1,13 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import type { Match } from '../utils/types';
+import type { Match } from '#utils/types.ts';
 
-import { MatchesList } from '../components/MatchesList';
-import { Nav } from '../components/Nav';
-import { UserContext } from '../context/userContext';
-import { handleGoogleLogout } from '../utils/auth';
-import { Env } from '../utils/env';
+import { MatchesList } from '#components/MatchesList.tsx';
+import { Nav } from '#components/Nav.tsx';
+import { UserContext } from '#context/userContext.tsx';
+import { handleGoogleLogout } from '#utils/auth.ts';
+import { Env } from '#utils/env.ts';
 
 const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
 

@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
 
-import type { UsePlayersReturn } from '../hooks/types';
+import type { UsePlayersReturn } from '#hooks/types.ts';
 
-import { Form } from '../components/Form';
-import { Nav } from '../components/Nav';
-import { TeamsDisplay } from '../components/TeamsDisplay';
-import { usePlayers } from '../hooks/usePlayers';
+import { Form } from '#components/Form.tsx';
+import { Nav } from '#components/Nav.tsx';
+import { TeamsDisplay } from '#components/TeamsDisplay.tsx';
+import { usePlayers } from '#hooks/usePlayers.tsx';
 
 const MakeTeams = () => {
   const {
