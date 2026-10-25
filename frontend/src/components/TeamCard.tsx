@@ -1,3 +1,5 @@
+import { AnimatePresence, motion } from 'framer-motion';
+
 import type { Player } from '#utils/types.ts';
 
 import { Loader } from '#components/Loader.tsx';
@@ -28,12 +30,21 @@ const TeamCard = ({ index, players, loading, showScores }: TeamCardProps) => (
             .sort((a: Player, b: Player): number => a.name.localeCompare(b.name))
             .map(
               (player: Player, i: number): React.JSX.Element => (
-                <li
-                  key={i}
-                  className={`py-1 flex ${showScores ? 'justify-between' : 'justify-center'} gap-2`}
-                >
-                  <span className='truncate'>{capitalize(player.name)}</span>
-                  {showScores && <span className='text-gray-500'>{player.skill}</span>}
+                <li key={i} className='py-1 flex items-center'>
+                  <span className='flex-1 min-w-0 truncate'>{capitalize(player.name)}</span>
+                  <AnimatePresence initial={false}>
+                    {showScores && (
+                      <motion.span
+                        initial={{ width: 0, opacity: 0 }}
+                        animate={{ width: 'auto', opacity: 1 }}
+                        exit={{ width: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                        className='overflow-hidden text-gray-500 pl-2'
+                      >
+                        {player.skill}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
                 </li>
               )
             )
@@ -43,11 +54,21 @@ const TeamCard = ({ index, players, loading, showScores }: TeamCardProps) => (
       </ul>
     )}
 
-    {!loading && showScores && players.length > 0 && (
-      <div className='mt-2 pt-2 border-t border-gray-200 font-semibold'>
-        Total: {sumSkills(players)}
-      </div>
-    )}
+    <AnimatePresence initial={false}>
+      {!loading && showScores && (
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 'auto', opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          className='mt-auto overflow-hidden'
+        >
+          <div className='mt-2 pt-2 border-t border-gray-200 font-semibold'>
+            Total: {sumSkills(players)}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   </div>
 );
 
