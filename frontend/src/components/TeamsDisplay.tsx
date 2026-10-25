@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 
 import type { Player, Team } from '#utils/types.ts';
 
@@ -24,6 +24,7 @@ type TeamsDisplayProps = {
 
 const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
   const { user } = useContext(UserContext);
+  const [showScores, setShowScores] = useState<boolean>(false);
   const copyMessage = useFlashMessage();
   const saveMessage = useFlashMessage();
 
@@ -86,12 +87,34 @@ const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
   return (
     <div className='teams flex flex-col justify-between p-6 bg-blue-100/60 min-h-full w-full'>
       <h1 className='text-3xl font-bold mb-4 text-center'>Equipos</h1>
-      <div className='flex justify-center gap-6 overflow-hidden'>
-        {teams.map(
-          (team: Team, index: number): React.JSX.Element => (
-            <TeamCard key={index} index={index} players={team.players} loading={loading} />
-          )
-        )}
+
+      <div className='flex flex-col items-center gap-4'>
+        <div className='flex justify-center gap-6 overflow-hidden'>
+          {teams.map(
+            (team: Team, index: number): React.JSX.Element => (
+              <TeamCard
+                key={index}
+                index={index}
+                players={team.players}
+                loading={loading}
+                showScores={showScores}
+              />
+            )
+          )}
+        </div>
+        <label className='flex items-center justify-center gap-2 mb-4 cursor-pointer select-none'>
+          <input
+            type='checkbox'
+            role='switch'
+            checked={showScores}
+            onChange={(e) => {
+              setShowScores(e.target.checked);
+            }}
+            className='sr-only peer'
+          />
+          <span className='relative w-10 h-6 rounded-full bg-gray-300 transition-colors duration-200 ease-in-out peer-checked:bg-blue-600 peer-focus-visible:ring-2 peer-focus-visible:ring-blue-400 after:content-[""] after:absolute after:top-1 after:left-1 after:w-4 after:h-4 after:rounded-full after:bg-white after:transition-transform after:duration-200 after:ease-in-out peer-checked:after:translate-x-4' />
+          <span className='text-sm'>Mostrar puntajes</span>
+        </label>
       </div>
 
       <div className='flex justify-around mt-6 text-center' ref={teamsRef}>
