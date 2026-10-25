@@ -4,8 +4,23 @@ import type { MatchData, Player } from '../utils/types';
 import { AppError } from '../error/app.error';
 import { ErrorCode } from '../error/errorCodes';
 import matchRepo from '../repositories/match.repo';
+import { isValidDate, isValidGoal, isValidResult } from '../utils/validation';
 
 const ALLOWED_UPDATE_FIELDS: string[] = ['players', 'goals1', 'goals2', 'result', 'date'];
+
+const assertValidMatchFields = (body: Partial<MatchData>): void => {
+  if (!isValidGoal(body.goals1) || !isValidGoal(body.goals2)) {
+    throw new AppError(ErrorCode.VALIDATION_ERROR, 422, 'Goals must be non-negative integers');
+  }
+
+  if (!isValidResult(body.result)) {
+    throw new AppError(ErrorCode.VALIDATION_ERROR, 422, 'Result must be Lose, Draw, Win or empty');
+  }
+
+  if (!isValidDate(body.date)) {
+    throw new AppError(ErrorCode.VALIDATION_ERROR, 422, 'Date must have YYYY-MM-DD format');
+  }
+};
 
 const sanitize = (body: object, allowed: string[]): Record<string, unknown> =>
   Object.fromEntries(
@@ -36,6 +51,8 @@ class MatchService {
       throw new AppError(ErrorCode.VALIDATION_ERROR, 422, 'Players array is required');
     }
 
+    assertValidMatchFields(data);
+
     const validPlayers: Player[] = players.filter(
       (player: Player): boolean =>
         undefined !== player?.name && undefined !== player?.team && player.name.trim() !== ''
@@ -63,6 +80,8 @@ class MatchService {
     if (!matchId) {
       throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Match id is required');
     }
+
+    assertValidMatchFields(body);
 
     const filteredBody: Record<string, unknown> = sanitize(body, ALLOWED_UPDATE_FIELDS);
 

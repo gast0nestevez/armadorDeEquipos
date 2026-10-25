@@ -14,3 +14,5 @@ services:
         value: https://equipo-backend.onrender.com
       - key: MONGO_URI
         sync: false
+      - key: FRONTEND_URL
+        sync: false
