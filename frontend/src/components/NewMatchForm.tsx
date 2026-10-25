@@ -30,7 +30,7 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
   const resultButtonClasses = (type: Result, currentResult: Result | null): string => {
     const isActive: boolean = currentResult === type;
     const base: string =
-      'l-2 px-2 py-1 rounded-md transition flex items-center justify-center border cursor-pointer';
+      'l-2 px-2 py-1 rounded-md transition-colors duration-200 ease-in-out flex items-center justify-center border cursor-pointer';
 
     const styles: Record<string, string> = {
       Win: isActive
@@ -223,7 +223,7 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
         </div>
 
         <button
-          className='w-full md:w-auto px-6 py-3 rounded-lg bg-blue-500 white-text font-semibold transition cursor-pointer hover:bg-blue-600'
+          className='w-full md:w-auto px-6 py-3 rounded-lg bg-blue-500 white-text font-semibold transition-colors duration-200 ease-in-out cursor-pointer hover:bg-blue-600'
           onClick={() => void addMatch()}
         >
           Guardar

@@ -30,7 +30,7 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
   const resultButtonClasses = (type: Result, currentResult: Result): string => {
     const isActive: boolean = currentResult === type;
     const base: string =
-      'flex justify-center items-center l-2 px-2 py-1 rounded-md transition border cursor-pointer';
+      'flex justify-center items-center l-2 px-2 py-1 rounded-md transition-colors duration-200 ease-in-out border cursor-pointer';
 
     const styles: Record<string, string> = {
       Win: isActive
@@ -116,7 +116,7 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
       <div className='flex items-center w-full gap-4'>
         {selectMode && (
           <div
-            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${selected ? 'bg-blue-600 border-blue-600' : 'border-gray-400'}`}
+            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors duration-200 ease-in-out ${selected ? 'bg-blue-600 border-blue-600' : 'border-gray-400'}`}
           >
             {selected && <span className='white-text text-xs'>✓</span>}
           </div>
@@ -136,7 +136,7 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
                     className='overflow-hidden'
                   >
                     <h3 className='font-semibold black-text mb-2 text-nowrap'>Equipo 1</h3>
@@ -169,7 +169,7 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
                     className='overflow-hidden'
                   >
                     <h3 className='font-semibold black-text mb-2 text-right text-nowrap'>
@@ -195,7 +195,7 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
 
         <div className='flex justify-center'>
           <button
-            className='px-3 py-2 rounded-lg bg-gray-200 text-gray-600 transition cursor-pointer hover:bg-gray-300'
+            className='px-3 py-2 rounded-lg bg-gray-200 text-gray-600 transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-300'
             onClick={(e) => {
               e.stopPropagation();
               setShowModal(true);
@@ -206,89 +206,99 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
         </div>
       </div>
 
-      {showModal && (
-        <div
-          className='fixed inset-0 flex items-center justify-center z-50'
-          style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}
-          onClick={() => {
-            setShowModal(false);
-          }}
-        >
-          <div
-            className='bg-white rounded-xl shadow-xl p-6 w-full max-w-sm mx-4 flex flex-col gap-4'
-            onClick={(e) => {
-              e.stopPropagation();
+      <AnimatePresence>
+        {showModal && (
+          <motion.div
+            className='fixed inset-0 flex items-center justify-center z-50'
+            style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => {
+              setShowModal(false);
             }}
           >
-            <h3 className='text-lg font-semibold black-text text-center'>Editar partido</h3>
-
-            <div className='flex justify-center'>
-              <input
-                type='date'
-                value={date}
-                onChange={(e) => {
-                  setDate(e.target.value);
-                }}
-                className='bg-white shadow-sm border border-gray-200 rounded-lg p-2 black-text focus:outline-none focus:ring-2 focus:ring-blue-400 text-center'
-              />
-            </div>
-
-            <div className='flex justify-center items-center gap-2 font-semibold text-2xl'>
-              <input
-                type='number'
-                value={goals1}
-                onChange={(e) => {
-                  setGoals1(Number.parseInt(e.target.value));
-                }}
-                className='w-10 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 black-text focus:outline-none focus:ring-2 focus:ring-blue-400'
-              />
-              <span>-</span>
-              <input
-                type='number'
-                value={goals2}
-                onChange={(e) => {
-                  setGoals2(Number.parseInt(e.target.value));
-                }}
-                className='w-10 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 black-text focus:outline-none focus:ring-2 focus:ring-blue-400'
-              />
-            </div>
-
-            <div className='flex justify-center gap-2'>
-              <button
-                className={resultButtonClasses('Win', result)}
-                onClick={() => {
-                  setResult('Win');
-                }}
-              >
-                <Trophy />
-              </button>
-              <button
-                className={resultButtonClasses('Draw', result)}
-                onClick={() => {
-                  setResult('Draw');
-                }}
-              >
-                <Minus />
-              </button>
-              <button
-                className={resultButtonClasses('Lose', result)}
-                onClick={() => {
-                  setResult('Lose');
-                }}
-              >
-                <X />
-              </button>
-            </div>
-
-            <button
-              className='px-3 py-2 rounded-lg bg-blue-500 text-white font-semibold text-center transition cursor-pointer hover:bg-blue-600'
-              onClick={() => void saveChanges()}
+            <motion.div
+              className='bg-white rounded-xl shadow-xl p-6 w-full max-w-sm mx-4 flex flex-col gap-4'
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
             >
-              Listo
-            </button>
-          </div>
-        </div>
-      )}
+              <h3 className='text-lg font-semibold black-text text-center'>Editar partido</h3>
+
+              <div className='flex justify-center'>
+                <input
+                  type='date'
+                  value={date}
+                  onChange={(e) => {
+                    setDate(e.target.value);
+                  }}
+                  className='bg-white shadow-sm border border-gray-200 rounded-lg p-2 black-text focus:outline-none focus:ring-2 focus:ring-blue-400 text-center'
+                />
+              </div>
+
+              <div className='flex justify-center items-center gap-2 font-semibold text-2xl'>
+                <input
+                  type='number'
+                  value={goals1}
+                  onChange={(e) => {
+                    setGoals1(Number.parseInt(e.target.value));
+                  }}
+                  className='w-10 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 black-text focus:outline-none focus:ring-2 focus:ring-blue-400'
+                />
+                <span>-</span>
+                <input
+                  type='number'
+                  value={goals2}
+                  onChange={(e) => {
+                    setGoals2(Number.parseInt(e.target.value));
+                  }}
+                  className='w-10 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 black-text focus:outline-none focus:ring-2 focus:ring-blue-400'
+                />
+              </div>
+
+              <div className='flex justify-center gap-2'>
+                <button
+                  className={resultButtonClasses('Win', result)}
+                  onClick={() => {
+                    setResult('Win');
+                  }}
+                >
+                  <Trophy />
+                </button>
+                <button
+                  className={resultButtonClasses('Draw', result)}
+                  onClick={() => {
+                    setResult('Draw');
+                  }}
+                >
+                  <Minus />
+                </button>
+                <button
+                  className={resultButtonClasses('Lose', result)}
+                  onClick={() => {
+                    setResult('Lose');
+                  }}
+                >
+                  <X />
+                </button>
+              </div>
+
+              <button
+                className='px-3 py-2 rounded-lg bg-blue-500 text-white font-semibold text-center transition-colors duration-200 ease-in-out cursor-pointer hover:bg-blue-600'
+                onClick={() => void saveChanges()}
+              >
+                Listo
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

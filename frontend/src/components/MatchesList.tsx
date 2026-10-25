@@ -141,7 +141,7 @@ const MatchesList = ({
             {matches.length > 0 && (
               <div>
                 <button
-                  className='flex items-center gap-1 px-3 py-1 rounded-md bg-gray-300 black-text border border-gray-300 hover:bg-gray-400 transition cursor-pointer'
+                  className='flex items-center gap-1 px-3 py-1 rounded-md bg-gray-300 black-text border border-gray-300 hover:bg-gray-400 transition-colors duration-200 ease-in-out cursor-pointer'
                   onClick={() => {
                     setSelectedIds(new Set<string>());
                     setSelectMode(!selectMode);
@@ -155,7 +155,7 @@ const MatchesList = ({
 
             <div>
               <button
-                className='flex items-center gap-1 px-3 py-1 rounded-md bg-blue-600 white-text border border-blue-600 hover:bg-blue-700 transition cursor-pointer'
+                className='flex items-center gap-1 px-3 py-1 rounded-md bg-blue-600 white-text border border-blue-600 hover:bg-blue-700 transition-colors duration-200 ease-in-out cursor-pointer'
                 onClick={() => {
                   setNewMatchModal(true);
                 }}
@@ -175,7 +175,7 @@ const MatchesList = ({
             </span>
 
             <button
-              className='flex items-center gap-2 px-3 py-1 rounded-md bg-red-500 white-text hover:bg-red-600 transition cursor-pointer'
+              className='flex items-center gap-2 px-3 py-1 rounded-md bg-red-500 white-text hover:bg-red-600 transition-colors duration-200 ease-in-out cursor-pointer'
               onClick={() => void deleteSelected()}
             >
               Eliminar
@@ -237,7 +237,7 @@ const MatchesList = ({
                 (match: Match): React.JSX.Element => (
                   <li
                     key={match._id}
-                    className={`flex flex-col gap-[15px] border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition ${matchBorderColor(match.result)}`}
+                    className={`flex flex-col gap-[15px] border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 ease-in-out ${matchBorderColor(match.result)}`}
                   >
                     <MatchCard
                       match={match}

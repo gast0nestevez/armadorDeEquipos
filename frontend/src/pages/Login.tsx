@@ -195,7 +195,7 @@ const Auth = () => {
 
             <button
               type='submit'
-              className='w-full bg-black white-text py-2 rounded hover:opacity-90 cursor-pointer'
+              className='w-full bg-black white-text py-2 rounded hover:opacity-90 transition-opacity duration-200 ease-in-out cursor-pointer'
             >
               {mode === 'login' ? 'Entrar' : 'Registrarse'}
             </button>
@@ -214,7 +214,7 @@ const Auth = () => {
           </div>
 
           <button
-            className='mt-4 text-sm text-center w-full text-gray-600 hover:underline cursor-pointer'
+            className='mt-4 text-sm text-center w-full text-gray-600 hover:underline transition-colors duration-200 ease-in-out cursor-pointer'
             onClick={() => {
               setMode(mode === 'login' ? 'register' : 'login');
               setErrors({});

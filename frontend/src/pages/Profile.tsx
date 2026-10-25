@@ -76,7 +76,7 @@ const Profile = () => {
         </div>
 
         <button
-          className='bg-gray-300 text-gray-800 py-2.5 px-6 rounded-lg font-bold hover:bg-gray-400 transition cursor-pointer'
+          className='bg-gray-300 text-gray-800 py-2.5 px-6 rounded-lg font-bold hover:bg-gray-400 transition-colors duration-200 ease-in-out cursor-pointer'
           onClick={() => {
             handleGoogleLogout(clearContext);
           }}

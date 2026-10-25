@@ -64,7 +64,7 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers, submitted }:
 
     <button
       onClick={submitPlayers}
-      className='mt-4 bg-blue-900 px-6 py-2 rounded white-text hover:bg-blue-800 block mx-auto cursor-pointer'
+      className='mt-4 bg-blue-900 px-6 py-2 rounded white-text hover:bg-blue-800 transition-colors duration-200 ease-in-out block mx-auto cursor-pointer'
     >
       Armar equipos
     </button>

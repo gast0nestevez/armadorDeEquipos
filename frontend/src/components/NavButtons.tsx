@@ -25,7 +25,7 @@ const NavButtons = ({ setIsOpen, variant = 'desktop' }: NavButtonsProps) => {
 
   const linkClass: string = isMobile
     ? 'block py-3 font-bold text-center black-text'
-    : 'hover:text-blue-100';
+    : 'hover:text-blue-100 transition-colors duration-200 ease-in-out';
 
   return (
     <div className={containerClass}>
