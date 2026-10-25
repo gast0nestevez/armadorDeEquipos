@@ -4,7 +4,9 @@ import { useState } from 'react';
 
 import type { Match, Player, Result } from '#utils/types.ts';
 
+import { DateInput } from '#components/DateInput.tsx';
 import { Loader } from '#components/Loader.tsx';
+import { isoToDisplay } from '#utils/date.ts';
 import { Env } from '#utils/env.ts';
 import { capitalize } from '#utils/string.ts';
 
@@ -45,14 +47,6 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
     };
 
     return `${base} ${styles[type]}`;
-  };
-
-  const formatDate = (isoDate: string): string => {
-    if (!isoDate) {
-      return '';
-    }
-    const [year, month, day]: string[] = isoDate.split('-');
-    return `${day}/${month}/${year}`;
   };
 
   const expandMatch = (e: React.MouseEvent<HTMLDivElement>): void => {
@@ -124,7 +118,7 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
         <div className='flex flex-col flex-1'>
           {!showModal && (
             <div className='text-center text-gray-600 text-sm mb-2'>
-              {match.date ? formatDate(match.date) : 'Sin fecha'}
+              {match.date ? isoToDisplay(match.date) : 'Sin fecha'}
             </div>
           )}
 
@@ -241,13 +235,10 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
               <h3 className='text-lg font-semibold black-text text-center'>Editar partido</h3>
 
               <div className='flex justify-center'>
-                <input
-                  type='date'
+                <DateInput
                   value={date}
-                  onChange={(e) => {
-                    setDate(e.target.value);
-                  }}
-                  className='bg-white shadow-sm border border-gray-200 rounded-lg p-2 black-text focus:outline-none focus:ring-2 focus:ring-blue-400 text-center'
+                  onChange={setDate}
+                  className='w-40 bg-white shadow-sm border border-gray-200 rounded-lg p-2 black-text focus:outline-none focus:ring-2 focus:ring-blue-400 text-center'
                 />
               </div>
 

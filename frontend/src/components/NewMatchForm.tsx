@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import type { Match, Result } from '#utils/types.ts';
 
+import { DateInput } from '#components/DateInput.tsx';
 import { Loader } from '#components/Loader.tsx';
 import { Env } from '#utils/env.ts';
 
@@ -211,14 +212,10 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
         </div>
 
         <div className='flex justify-center items-center'>
-          <input
-            type='date'
+          <DateInput
             value={date}
-            placeholder='Fecha'
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDate(e.target.value);
-            }}
-            className='bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 text-center'
+            onChange={setDate}
+            className='w-40 bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 text-center'
           />
         </div>
 
