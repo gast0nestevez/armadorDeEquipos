@@ -10,6 +10,7 @@ import { AppError } from '../error/app.error';
 import { ErrorCode } from '../error/errorCodes';
 import userModel from '../models/user.model';
 import { getEnv } from '../utils/env';
+import { isValidEmail, isValidPasswordLength, MAX_PASSWORD_LENGTH } from '../utils/validation';
 
 const client: OAuth2Client = new OAuth2Client();
 
@@ -28,7 +29,7 @@ type AuthUserResponse = {
   };
 };
 
-const EXP_DATE: number = 60 * 60 * 24 * 365;
+const EXP_DATE: number = 60 * 60 * 24 * 30;
 const LOCAL_PROVIDER: string = 'local';
 const GOOGLE_PROVIDER: string = 'google';
 
@@ -54,16 +55,16 @@ class AuthService {
   }
 
   async checkCredentials(email: string, password: string): Promise<AuthUserResponse> {
-    if (!email || !password) {
+    if (typeof email !== 'string' || typeof password !== 'string' || !email || !password) {
       throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Email and password are required');
     }
 
-    const user: IUser | null = await userModel.findOne({ email });
-    if (!user) {
+    const user: IUser | null = await userModel.findOne({ email: email.toLowerCase() });
+    if (!user?.passwordHash) {
       throw new AppError(ErrorCode.INVALID_CREDENTIALS, 401, 'Invalid credentials');
     }
 
-    const isValidPassword: boolean = await bcrypt.compare(password, user.passwordHash as string);
+    const isValidPassword: boolean = await bcrypt.compare(password, user.passwordHash);
     if (!isValidPassword) {
       throw new AppError(ErrorCode.INVALID_CREDENTIALS, 401, 'Invalid credentials');
     }
@@ -72,15 +73,19 @@ class AuthService {
   }
 
   async createUser(email: string, password: string): Promise<AuthUserResponse> {
-    if (!email || !password) {
+    if (typeof email !== 'string' || typeof password !== 'string' || !email || !password) {
       throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Email and password are required');
     }
 
-    if (password.length < 8) {
+    if (!isValidEmail(email)) {
+      throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Email format is invalid');
+    }
+
+    if (!isValidPasswordLength(password)) {
       throw new AppError(
         ErrorCode.VALIDATION_ERROR,
         400,
-        'Password must have at least 8 characters'
+        `Password must have between 8 and ${MAX_PASSWORD_LENGTH} characters`
       );
     }
 
@@ -124,12 +129,12 @@ class AuthService {
       throw new AppError(ErrorCode.INVALID_GOOGLE_TOKEN, 401, 'Invalid Google token');
     }
 
-    if (!payload || !payload.email) {
+    if (!payload?.email || !payload.email_verified) {
       throw new AppError(ErrorCode.INVALID_GOOGLE_TOKEN, 401, 'Invalid Google token');
     }
 
     const user = await userModel.findOneAndUpdate(
-      { email: payload.email },
+      { email: payload.email.toLowerCase() },
       {
         $set: {
           name: payload.name,
