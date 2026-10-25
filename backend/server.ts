@@ -19,15 +19,16 @@ const app: Application = express();
 
 const DEV_FRONTEND_URL: string = 'http://localhost:5173';
 
-// Comma-separated list of allowed origins. Required in production.
-const getAllowedOrigins = (): string[] => {
-  const origins: string | undefined = process.env.FRONTEND_URL;
-  if (!origins) {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error('Missing environment variable: FRONTEND_URL');
-    }
+const getAllowedOrigins: () => string[] = (): string[] => {
+  if (process.env.NODE_ENV === 'development') {
     return [DEV_FRONTEND_URL];
   }
+
+  const origins: string | undefined = process.env.FRONTEND_URL;
+  if (!origins) {
+    throw new Error('Missing environment variable: FRONTEND_URL');
+  }
+
   return origins.split(',').map((origin: string): string => origin.trim());
 };
 
