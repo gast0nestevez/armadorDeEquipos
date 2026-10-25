@@ -1,10 +1,10 @@
 import type { Request, Response } from 'express';
 
-import type { AuthenticatedRequest } from '../middleware/auth.middleware';
-import type { IMatch } from '../models/match.model';
-import type { MatchData } from '../utils/types';
+import type { AuthenticatedRequest } from '#middleware/auth.middleware.ts';
+import type { IMatch } from '#models/match.model.ts';
+import type { MatchData } from '#utils/types.ts';
 
-import { MatchService } from '../services/match.service';
+import { MatchService } from '#services/match.service.ts';
 
 type MatchParams = {
   matchId: string;

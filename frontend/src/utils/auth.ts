@@ -2,7 +2,7 @@ import type { CredentialResponse } from '@react-oauth/google';
 
 import { googleLogout } from '@react-oauth/google';
 
-import { Env } from './env';
+import { Env } from '#utils/env.ts';
 
 const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
 

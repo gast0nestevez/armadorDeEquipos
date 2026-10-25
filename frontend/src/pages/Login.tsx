@@ -4,16 +4,16 @@ import { GoogleLogin } from '@react-oauth/google';
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Footer } from '../components/Footer';
-import { Loader } from '../components/Loader';
-import { Nav } from '../components/Nav';
-import { UserContext } from '../context/userContext';
+import { Footer } from '#components/Footer.tsx';
+import { Loader } from '#components/Loader.tsx';
+import { Nav } from '#components/Nav.tsx';
+import { UserContext } from '#context/userContext.tsx';
 import {
   handleEmailLogin,
   handleEmailRegister,
   handleGoogleError,
   handleGoogleLogin,
-} from '../utils/auth';
+} from '#utils/auth.ts';
 
 type AuthMode = 'login' | 'register';
 

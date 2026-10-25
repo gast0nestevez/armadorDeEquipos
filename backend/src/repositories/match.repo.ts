@@ -1,9 +1,9 @@
 import type { FilterQuery } from 'mongoose';
 
-import type { IMatch } from '../models/match.model';
-import type { MatchData } from '../utils/types';
+import type { IMatch } from '#models/match.model.ts';
+import type { MatchData } from '#utils/types.ts';
 
-import Match from '../models/match.model';
+import Match from '#models/match.model.ts';
 
 type MatchCreateData = MatchData & {
   userId: string;

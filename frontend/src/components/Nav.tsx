@@ -2,7 +2,7 @@ import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { NavButtons } from './NavButtons';
+import { NavButtons } from '#components/NavButtons.tsx';
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);

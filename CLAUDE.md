@@ -3,4 +3,5 @@
 - Antes de empezar una feature, crear una rama nueva: `feature/nombre-corto`.
 - Commitear en esa rama con mensajes claros.
 - No hacer merge a `main` ni pushear a `main`. El merge lo hace el usuario manualmente.
+- Evitar comentarios en el código y usar tipado extremadamente estricto.
 - Al terminar, correr `npm run all` para normalizar, pushear la rama y resumir qué cambió y qué quedó pendiente.

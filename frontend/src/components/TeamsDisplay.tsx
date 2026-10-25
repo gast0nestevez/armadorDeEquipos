@@ -1,12 +1,12 @@
 import { useContext } from 'react';
 
-import type { Player, Team } from '../utils/types';
+import type { Player, Team } from '#utils/types.ts';
 
-import { UserContext } from '../context/userContext';
-import { useFlashMessage } from '../hooks/useFlashMessage';
-import { Env } from '../utils/env';
-import { capitalize } from '../utils/string';
-import { TeamCard } from './TeamCard';
+import { TeamCard } from '#components/TeamCard.tsx';
+import { UserContext } from '#context/userContext.tsx';
+import { useFlashMessage } from '#hooks/useFlashMessage.tsx';
+import { Env } from '#utils/env.ts';
+import { capitalize } from '#utils/string.ts';
 
 const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
 

@@ -7,11 +7,11 @@ import express from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 
-import { connectDB } from './src/config/db';
-import { errorHandler } from './src/middleware/errorHandler.middleware';
-import { authRouter } from './src/routes/auth.route';
-import { matchRouter } from './src/routes/match.route';
-import { getEnv } from './src/utils/env';
+import { connectDB } from '#config/db.ts';
+import { errorHandler } from '#middleware/errorHandler.middleware.ts';
+import { authRouter } from '#routes/auth.route.ts';
+import { matchRouter } from '#routes/match.route.ts';
+import { getEnv } from '#utils/env.ts';
 
 dotenv.config();
 

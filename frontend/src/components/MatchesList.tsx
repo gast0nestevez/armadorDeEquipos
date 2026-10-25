@@ -2,13 +2,13 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Plus, SquareCheckBig } from 'lucide-react';
 import { useState } from 'react';
 
-import type { Match, Result } from '../utils/types';
+import type { Match, Result } from '#utils/types.ts';
 
-import { Env } from '../utils/env';
-import { Loader } from './Loader';
-import { MatchCard } from './Match';
-import { NewMatchForm } from './NewMatchForm';
-import { PerformanceChart } from './PerformanceChart';
+import { Loader } from '#components/Loader.tsx';
+import { MatchCard } from '#components/Match.tsx';
+import { NewMatchForm } from '#components/NewMatchForm.tsx';
+import { PerformanceChart } from '#components/PerformanceChart.tsx';
+import { Env } from '#utils/env.ts';
 
 type MatchesStats = Record<Result, number>;
 

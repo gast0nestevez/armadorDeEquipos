@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 
-import { AppError } from '../error/app.error';
-import { ErrorCode } from '../error/errorCodes';
+import { AppError } from '#error/app.error.ts';
+import { ErrorCode } from '#error/errorCodes.ts';
 
 /**
  * Error middleware.

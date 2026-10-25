@@ -3,13 +3,19 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "imports": {
+    "#*.ts": {
+      "development": "./src/*.ts",
+      "default": "./dist/src/*.js"
+    }
+  },
   "scripts": {
     "type-check": "tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier . --write",
     "all": "npm run format && npm run lint:fix",
-    "dev": "tsx watch server.ts",
+    "dev": "tsx watch --conditions=development server.ts",
     "dev:full": "npm run lint && npm run dev",
     "build": "tsc",
     "start": "node dist/server.js"

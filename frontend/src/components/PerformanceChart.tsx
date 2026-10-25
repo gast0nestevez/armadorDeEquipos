@@ -9,10 +9,10 @@ import {
   YAxis,
 } from 'recharts';
 
-import type { Match } from '../utils/types';
+import type { Match } from '#utils/types.ts';
 
-import { lastTenMatches } from '../utils/matches';
-import { MatchStats } from './MatchesStats';
+import { MatchStats } from '#components/MatchesStats.tsx';
+import { lastTenMatches } from '#utils/matches.ts';
 
 type PerformanceChartProps = {
   matches: Match[];

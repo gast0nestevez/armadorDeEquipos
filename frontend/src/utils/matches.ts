@@ -1,4 +1,4 @@
-import type { Match } from './types';
+import type { Match } from '#utils/types.ts';
 
 const lastTenMatches: (matches: Match[]) => Match[] = (matches: Match[]): Match[] =>
   [...matches]
