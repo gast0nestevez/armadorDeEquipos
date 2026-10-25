@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { Plus, SquareCheckBig } from 'lucide-react';
+import { Plus, SquareCheckBig, X } from 'lucide-react';
 import { useState } from 'react';
 
 import type { Match, Result } from '#utils/types.ts';
@@ -197,7 +197,7 @@ const MatchesList = ({
               }}
             >
               <motion.div
-                className='bg-white rounded-xl shadow-xl p-6 w-full max-w-2xl mx-4 overflow-y-auto max-h-[90vh]'
+                className='relative bg-white rounded-xl shadow-xl p-6 w-full max-w-2xl mx-4 overflow-y-auto max-h-[90vh]'
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
@@ -206,6 +206,15 @@ const MatchesList = ({
                   e.stopPropagation();
                 }}
               >
+                <button
+                  className='absolute top-3 right-3 cursor-pointer text-gray-400 hover:text-gray-700 transition-colors duration-200 ease-in-out'
+                  onClick={() => {
+                    setNewMatchModal(false);
+                  }}
+                >
+                  <X size={20} />
+                </button>
+
                 <h3 className='text-lg font-semibold text-gray-800 text-center mb-2'>
                   Agregar partido
                 </h3>

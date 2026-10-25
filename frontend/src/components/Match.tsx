@@ -220,7 +220,7 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
             }}
           >
             <motion.div
-              className='bg-white rounded-xl shadow-xl p-6 w-full max-w-sm mx-4 flex flex-col gap-4'
+              className='relative bg-white rounded-xl shadow-xl p-6 w-full max-w-sm mx-4 flex flex-col gap-4'
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
@@ -229,6 +229,15 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
                 e.stopPropagation();
               }}
             >
+              <button
+                className='absolute top-3 right-3 cursor-pointer text-gray-400 hover:text-gray-700 transition-colors duration-200 ease-in-out'
+                onClick={() => {
+                  setShowModal(false);
+                }}
+              >
+                <X size={20} />
+              </button>
+
               <h3 className='text-lg font-semibold black-text text-center'>Editar partido</h3>
 
               <div className='flex justify-center'>
