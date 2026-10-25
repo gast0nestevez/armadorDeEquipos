@@ -1,0 +1,15 @@
+{
+  "name": "armadorDeEquipos",
+  "private": true,
+  "description": "Root scripts that run the same command in backend and frontend",
+  "scripts": {
+    "install:all": "npm --prefix backend install && npm --prefix frontend install",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "lint": "npm --prefix backend run lint && npm --prefix frontend run lint",
+    "lint:fix": "npm --prefix backend run lint:fix && npm --prefix frontend run lint:fix",
+    "format": "npm --prefix backend run format && npm --prefix frontend run format",
+    "build": "npm --prefix backend run build && npm --prefix frontend run build",
+    "all": "npm --prefix backend run all && npm --prefix frontend run all"
+  }
+}

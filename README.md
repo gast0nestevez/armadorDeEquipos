@@ -11,6 +11,7 @@ jugadores, cargar resultados y visualizar estadísticas básicas.
   - [Backend](#backend)
 - [Funcionalidades](#funcionalidades)
 - [Estructura del proyecto](#estructura-del-proyecto)
+- [Scripts desde la raíz](#scripts-desde-la-raíz)
 - [Contribuciones](#contribuciones)
 - [Futuras mejoras](#futuras-mejoras)
 
@@ -54,6 +55,21 @@ jugadores, cargar resultados y visualizar estadísticas básicas.
         /routes
         /context
         /components
+
+## Scripts desde la raíz
+
+Desde la raíz se pueden correr los mismos comandos en backend y frontend:
+
+```bash
+npm run install:all   # instala dependencias de ambos
+npm run all           # format + lint:fix en ambos
+npm run lint          # lint en ambos
+npm run lint:fix
+npm run format
+npm run build
+npm run dev:backend   # levanta solo el backend
+npm run dev:frontend  # levanta solo el frontend
+```
 
 ## Contribuciones
 
