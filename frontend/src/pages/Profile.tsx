@@ -6,12 +6,20 @@ import type { Match } from '#utils/types.ts';
 import { MatchesList } from '#components/MatchesList.tsx';
 import { Nav } from '#components/Nav.tsx';
 import { UserContext } from '#context/userContext.tsx';
+import { useSeo } from '#hooks/useSeo.ts';
 import { handleGoogleLogout } from '#utils/auth.ts';
 import { Env } from '#utils/env.ts';
 
 const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
 
 const Profile = () => {
+  useSeo({
+    title: 'Mis partidos | Armador de Equipos',
+    description: 'Historial y estadísticas de tus partidos.',
+    path: '/perfil',
+    indexable: false,
+  });
+
   const navigate = useNavigate();
   const { user, clearContext } = useContext(UserContext);
   const [matches, setMatches] = useState<Match[]>([]);

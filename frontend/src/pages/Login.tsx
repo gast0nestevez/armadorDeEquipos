@@ -8,6 +8,7 @@ import { Footer } from '#components/Footer.tsx';
 import { Loader } from '#components/Loader.tsx';
 import { Nav } from '#components/Nav.tsx';
 import { UserContext } from '#context/userContext.tsx';
+import { useSeo } from '#hooks/useSeo.ts';
 import {
   handleEmailLogin,
   handleEmailRegister,
@@ -26,6 +27,13 @@ type FormState = {
 type FormErrors = Partial<Record<keyof FormState, string>>;
 
 const Auth = () => {
+  useSeo({
+    title: 'Ingresar | Armador de Equipos',
+    description: 'Ingresá o creá tu cuenta para guardar tus partidos y ver tus estadísticas.',
+    path: '/login',
+    indexable: false,
+  });
+
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
 
@@ -40,9 +48,11 @@ const Auth = () => {
     confirmPassword: '',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
     const { name, value }: { name: string; value: string } = e.target;
-    setForm((prev: FormState) => ({ ...prev, [name]: value }));
+    setForm((prev: FormState): FormState => ({ ...prev, [name]: value }));
 
     if (errors[name as keyof FormState]) {
       setErrors((prev: FormErrors) => ({ ...prev, [name]: '' }));
@@ -50,7 +60,7 @@ const Auth = () => {
     setGeneralError('');
   };
 
-  const validateForm = (): FormErrors => {
+  const validateForm: () => FormErrors = (): FormErrors => {
     const newErrors: FormErrors = {};
 
     if (!form.email.trim()) {
@@ -76,7 +86,9 @@ const Auth = () => {
     return newErrors;
   };
 
-  const onSuccessGoogle = async (credentialResponse: CredentialResponse): Promise<void> => {
+  const onSuccessGoogle: (credentialResponse: CredentialResponse) => Promise<void> = async (
+    credentialResponse: CredentialResponse
+  ): Promise<void> => {
     setIsLoading(true);
     setGeneralError('');
 
@@ -91,7 +103,9 @@ const Auth = () => {
     setIsLoading(false);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void> = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
     setGeneralError('');
 
@@ -146,7 +160,7 @@ const Auth = () => {
             </div>
           )}
 
-          <form onSubmit={(e) => void handleSubmit(e)} className='space-y-3'>
+          <form onSubmit={(e): void => void handleSubmit(e)} className='space-y-3'>
             <div>
               <input
                 type='email'
@@ -215,7 +229,7 @@ const Auth = () => {
 
           <button
             className='mt-4 text-sm text-center w-full text-gray-600 hover:underline transition-colors duration-200 ease-in-out cursor-pointer'
-            onClick={() => {
+            onClick={(): void => {
               setMode(mode === 'login' ? 'register' : 'login');
               setErrors({});
               setGeneralError('');

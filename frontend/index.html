@@ -7,6 +7,8 @@
     <link rel="icon" href="./football.png" />
     <title>Armador de Equipos</title>
     <meta name="application-name" content="Armador de Equipos" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://armador-de-equipos.vercel.app/" />
     <meta
       name="description"
       content="Armá equipos de fútbol con tus amigos. Puntuá por habilidad y generá equipos balanceados en segundos."
@@ -22,6 +24,13 @@
     <!--<meta property='og:image' content='https://armador-de-equipos.vercel.app/football.png' />-->
     <meta property="og:url" content="https://armador-de-equipos.vercel.app/" />
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_AR" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Armador de Equipos" />
+    <meta
+      name="twitter:description"
+      content="Puntuá a tus amigos y generá equipos balanceados al instante."
+    />
 
     <script type="application/ld+json">
       {
@@ -45,7 +54,15 @@
     <link rel="preload" as="image" href="/background.webp" />
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <noscript>
+        <h1>Generador de equipos de fútbol balanceados</h1>
+        <p>
+          Armá partidos balanceados de forma simple y rápida. Puntuá a tus amigos por habilidad y
+          generá equipos equilibrados en segundos.
+        </p>
+      </noscript>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

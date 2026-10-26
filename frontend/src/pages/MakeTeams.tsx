@@ -6,8 +6,16 @@ import { Form } from '#components/Form.tsx';
 import { Nav } from '#components/Nav.tsx';
 import { TeamsDisplay } from '#components/TeamsDisplay.tsx';
 import { usePlayers } from '#hooks/usePlayers.tsx';
+import { useSeo } from '#hooks/useSeo.ts';
 
 const MakeTeams = () => {
+  useSeo({
+    title: 'Armar equipos de fútbol balanceados | Armador de Equipos',
+    description:
+      'Cargá los jugadores con su puntaje y generá dos equipos de fútbol parejos al instante. Gratis y sin registro.',
+    path: '/armar',
+  });
+
   const {
     players,
     handleChange,
