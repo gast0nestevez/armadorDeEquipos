@@ -6,6 +6,7 @@ import type { Match, Player, Result } from '#utils/types.ts';
 
 import { DateInput } from '#components/DateInput.tsx';
 import { Loader } from '#components/Loader.tsx';
+import { Modal } from '#components/Modal.tsx';
 import { isoToDisplay } from '#utils/date.ts';
 import { Env } from '#utils/env.ts';
 import { capitalize } from '#utils/string.ts';
@@ -189,114 +190,103 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
 
         <div className='flex justify-center'>
           <button
+            type='button'
+            aria-label='Editar partido'
             className='px-3 py-2 rounded-lg bg-gray-200 text-gray-600 transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-300'
             onClick={(e) => {
               e.stopPropagation();
               setShowModal(true);
             }}
           >
-            <PencilLine size={16} />
+            <PencilLine size={16} aria-hidden='true' />
           </button>
         </div>
       </div>
 
       <AnimatePresence>
         {showModal && (
-          <motion.div
-            className='fixed inset-0 flex items-center justify-center z-50'
-            style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={() => {
+          <Modal
+            label='Editar partido'
+            className='max-w-sm flex flex-col gap-4'
+            onClose={() => {
               setShowModal(false);
             }}
           >
-            <motion.div
-              className='relative bg-white rounded-xl shadow-xl p-6 w-full max-w-sm mx-4 flex flex-col gap-4'
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
+            <h3 className='text-lg font-semibold black-text text-center'>Editar partido</h3>
+
+            <div className='flex justify-center'>
+              <DateInput
+                value={date}
+                onChange={setDate}
+                className='w-40 bg-white shadow-sm border border-gray-200 rounded-lg p-2 black-text focus:outline-none focus:ring-2 focus:ring-blue-400 text-center'
+              />
+            </div>
+
+            <div className='flex justify-center items-center gap-2 font-semibold text-2xl'>
+              <input
+                type='number'
+                aria-label='Goles equipo 1'
+                value={goals1}
+                onChange={(e) => {
+                  setGoals1(Number.parseInt(e.target.value));
+                }}
+                className='w-10 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 black-text focus:outline-none focus:ring-2 focus:ring-blue-400'
+              />
+              <span>-</span>
+              <input
+                type='number'
+                aria-label='Goles equipo 2'
+                value={goals2}
+                onChange={(e) => {
+                  setGoals2(Number.parseInt(e.target.value));
+                }}
+                className='w-10 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 black-text focus:outline-none focus:ring-2 focus:ring-blue-400'
+              />
+            </div>
+
+            <div className='flex justify-center gap-2'>
               <button
-                className='absolute top-3 right-3 cursor-pointer text-gray-400 hover:text-gray-700 transition-colors duration-200 ease-in-out'
+                type='button'
+                aria-label='Victoria'
+                aria-pressed={result === 'Win'}
+                className={resultButtonClasses('Win', result)}
                 onClick={() => {
-                  setShowModal(false);
+                  setResult('Win');
                 }}
               >
-                <X size={20} />
+                <Trophy />
               </button>
-
-              <h3 className='text-lg font-semibold black-text text-center'>Editar partido</h3>
-
-              <div className='flex justify-center'>
-                <DateInput
-                  value={date}
-                  onChange={setDate}
-                  className='w-40 bg-white shadow-sm border border-gray-200 rounded-lg p-2 black-text focus:outline-none focus:ring-2 focus:ring-blue-400 text-center'
-                />
-              </div>
-
-              <div className='flex justify-center items-center gap-2 font-semibold text-2xl'>
-                <input
-                  type='number'
-                  value={goals1}
-                  onChange={(e) => {
-                    setGoals1(Number.parseInt(e.target.value));
-                  }}
-                  className='w-10 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 black-text focus:outline-none focus:ring-2 focus:ring-blue-400'
-                />
-                <span>-</span>
-                <input
-                  type='number'
-                  value={goals2}
-                  onChange={(e) => {
-                    setGoals2(Number.parseInt(e.target.value));
-                  }}
-                  className='w-10 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 black-text focus:outline-none focus:ring-2 focus:ring-blue-400'
-                />
-              </div>
-
-              <div className='flex justify-center gap-2'>
-                <button
-                  className={resultButtonClasses('Win', result)}
-                  onClick={() => {
-                    setResult('Win');
-                  }}
-                >
-                  <Trophy />
-                </button>
-                <button
-                  className={resultButtonClasses('Draw', result)}
-                  onClick={() => {
-                    setResult('Draw');
-                  }}
-                >
-                  <Minus />
-                </button>
-                <button
-                  className={resultButtonClasses('Lose', result)}
-                  onClick={() => {
-                    setResult('Lose');
-                  }}
-                >
-                  <X />
-                </button>
-              </div>
-
               <button
-                className='px-3 py-2 rounded-lg bg-blue-500 text-white font-semibold text-center transition-colors duration-200 ease-in-out cursor-pointer hover:bg-blue-600'
-                onClick={() => void saveChanges()}
+                type='button'
+                aria-label='Empate'
+                aria-pressed={result === 'Draw'}
+                className={resultButtonClasses('Draw', result)}
+                onClick={() => {
+                  setResult('Draw');
+                }}
               >
-                Listo
+                <Minus />
               </button>
-            </motion.div>
-          </motion.div>
+              <button
+                type='button'
+                aria-label='Derrota'
+                aria-pressed={result === 'Lose'}
+                className={resultButtonClasses('Lose', result)}
+                onClick={() => {
+                  setResult('Lose');
+                }}
+              >
+                <X />
+              </button>
+            </div>
+
+            <button
+              className='px-3 py-2 rounded-lg bg-blue-500 text-white font-semibold text-center transition-colors duration-200 ease-in-out cursor-pointer hover:bg-blue-600'
+              onClick={() => void saveChanges()}
+            >
+              Listo
+            </button>
+          </Modal>
         )}
       </AnimatePresence>
     </div>

@@ -15,7 +15,7 @@ type FormProps = {
 const Form = ({ players, handleChange, deletePlayer, submitPlayers, submitted }: FormProps) => (
   <div className='form flex flex-col justify-between max-[600px]:flex-1 p-6 w-full relative'>
     <div className='flex flex-col items-center mb-4 gap-3'>
-      <h1 className='text-3xl font-bold text-center'>Jugadores</h1>
+      <h2 className='text-3xl font-bold text-center'>Jugadores</h2>
       <HelpMessage />
     </div>
 
@@ -23,7 +23,7 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers, submitted }:
       {players.map((player: PlayerInput, index: number) => (
         <div key={index} className='flex justify-center items-center gap-2 mt-2 mb-2'>
           <label
-            htmlFor={index.toString(10)}
+            htmlFor={`name-${index.toString(10)}`}
             className='min-w-[5%] mr-[10px] text-base font-bold text-center'
           >
             {index + 1}
@@ -32,7 +32,7 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers, submitted }:
             type='text'
             placeholder='Nombre'
             maxLength={25}
-            id={index.toString(10)}
+            id={`name-${index.toString(10)}`}
             className={`border rounded px-3 py-2 bg-white ${submitted && player.name.trim() === '' ? 'border-red-500 ring-1 ring-red-400' : ''}`}
             value={player.name}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,6 +43,7 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers, submitted }:
             type='text'
             inputMode='numeric'
             placeholder='Puntaje'
+            aria-label={`Puntaje del jugador ${(index + 1).toString(10)}`}
             className={`border rounded px-3 py-2 w-24 bg-white ${submitted && player.skill.trim() === '' ? 'border-red-500 ring-1 ring-red-400' : ''}`}
             value={player.skill}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,19 +51,22 @@ const Form = ({ players, handleChange, deletePlayer, submitPlayers, submitted }:
             }}
           />
           <button
+            type='button'
+            aria-label={`Quitar jugador ${(index + 1).toString(10)}`}
             className='cursor-pointer'
             onClick={() => {
               deletePlayer(index);
             }}
             tabIndex={-1}
           >
-            <Trash2 />
+            <Trash2 aria-hidden='true' />
           </button>
         </div>
       ))}
     </div>
 
     <button
+      type='button'
       onClick={submitPlayers}
       className='mt-4 bg-blue-900 px-6 py-2 rounded white-text hover:bg-blue-800 transition-colors duration-200 ease-in-out block mx-auto cursor-pointer'
     >

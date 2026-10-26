@@ -99,8 +99,11 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
   return (
     <div className='flex flex-col justify-center p-4 max-w-4xl mx-auto'>
       <div className='flex flex-col items-center gap-2 py-2'>
-        <label className='font-semibold text-gray-800'>Cantidad de jugadores</label>
+        <label htmlFor='player-count' className='font-semibold text-gray-800'>
+          Cantidad de jugadores
+        </label>
         <select
+          id='player-count'
           className='w-16 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
           value={playerCount}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -120,13 +123,14 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
       <div className='flex flex-col md:flex-row justify-between gap-4 md:gap-6'>
         <div className='flex-1'>
           <h3 className='font-semibold mb-3 text-gray-800 text-center md:text-left'>Equipo 1</h3>
-          <ul className='space-y-2'>
+          <div className='space-y-2'>
             {[...(Array(playerCount / 2) as undefined[])].map(
               (_: undefined, index: number): React.JSX.Element => (
                 <input
                   type='text'
                   key={index}
                   placeholder='Nombre'
+                  aria-label={`Jugador ${(index + 1).toString(10)} del equipo 1`}
                   maxLength={25}
                   className='w-full text-center bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -135,7 +139,7 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
                 />
               )
             )}
-          </ul>
+          </div>
         </div>
 
         <div className='flex md:flex-col justify-center items-center gap-3 md:gap-4 py-4 md:py-0'>
@@ -143,6 +147,7 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
             <input
               type='number'
               min='0'
+              aria-label='Goles equipo 1'
               value={goals1 ?? ''}
               className='w-12 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -153,6 +158,7 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
             <input
               type='number'
               min='0'
+              aria-label='Goles equipo 2'
               value={goals2 ?? ''}
               className='w-12 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -164,13 +170,14 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
 
         <div className='flex-1'>
           <h3 className='font-semibold mb-3 text-gray-800 text-center md:text-right'>Equipo 2</h3>
-          <ul className='space-y-2'>
+          <div className='space-y-2'>
             {[...(Array(playerCount / 2) as undefined[])].map(
               (_: undefined, index: number): React.JSX.Element => (
                 <input
                   type='text'
                   key={index}
                   placeholder='Nombre'
+                  aria-label={`Jugador ${(index + 1).toString(10)} del equipo 2`}
                   maxLength={25}
                   className='w-full text-center bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -179,13 +186,16 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
                 />
               )
             )}
-          </ul>
+          </div>
         </div>
       </div>
 
       <div className='flex flex-col justify-center items-center gap-4 mt-4'>
         <div className='flex justify-center items-center gap-3'>
           <button
+            type='button'
+            aria-label='Victoria'
+            aria-pressed={result === 'Win'}
             className={resultButtonClasses('Win', result)}
             onClick={() => {
               setResult('Win');
@@ -194,6 +204,9 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
             <Trophy size={24} />
           </button>
           <button
+            type='button'
+            aria-label='Empate'
+            aria-pressed={result === 'Draw'}
             className={resultButtonClasses('Draw', result)}
             onClick={() => {
               setResult('Draw');
@@ -202,6 +215,9 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
             <Minus size={24} />
           </button>
           <button
+            type='button'
+            aria-label='Derrota'
+            aria-pressed={result === 'Lose'}
             className={resultButtonClasses('Lose', result)}
             onClick={() => {
               setResult('Lose');

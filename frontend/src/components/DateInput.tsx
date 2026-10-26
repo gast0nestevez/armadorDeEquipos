@@ -17,6 +17,7 @@ const DateInput = ({ value, onChange, className }: DateInputProps) => {
       inputMode='numeric'
       autoComplete='off'
       placeholder='dd/mm/aaaa'
+      aria-label='Fecha del partido'
       maxLength={10}
       value={text}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,11 +1,12 @@
-import { AnimatePresence, motion } from 'framer-motion';
-import { Plus, SquareCheckBig, X } from 'lucide-react';
+import { AnimatePresence } from 'framer-motion';
+import { Plus, SquareCheckBig } from 'lucide-react';
 import { useState } from 'react';
 
 import type { Match, Result } from '#utils/types.ts';
 
 import { Loader } from '#components/Loader.tsx';
 import { MatchCard } from '#components/Match.tsx';
+import { Modal } from '#components/Modal.tsx';
 import { NewMatchForm } from '#components/NewMatchForm.tsx';
 import { PerformanceChart } from '#components/PerformanceChart.tsx';
 import { Env } from '#utils/env.ts';
@@ -185,43 +186,19 @@ const MatchesList = ({
 
         <AnimatePresence>
           {newMatchModal && (
-            <motion.div
-              className='fixed inset-0 flex items-center justify-center z-50'
-              style={{ backgroundColor: 'rgba(0,0,0,0.4)' }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={() => {
+            <Modal
+              label='Agregar partido'
+              className='max-w-2xl overflow-y-auto max-h-[90vh]'
+              onClose={() => {
                 setNewMatchModal(false);
               }}
             >
-              <motion.div
-                className='relative bg-white rounded-xl shadow-xl p-6 w-full max-w-2xl mx-4 overflow-y-auto max-h-[90vh]'
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-              >
-                <button
-                  className='absolute top-3 right-3 cursor-pointer text-gray-400 hover:text-gray-700 transition-colors duration-200 ease-in-out'
-                  onClick={() => {
-                    setNewMatchModal(false);
-                  }}
-                >
-                  <X size={20} />
-                </button>
+              <h3 className='text-lg font-semibold text-gray-800 text-center mb-2'>
+                Agregar partido
+              </h3>
 
-                <h3 className='text-lg font-semibold text-gray-800 text-center mb-2'>
-                  Agregar partido
-                </h3>
-
-                <NewMatchForm setMatches={setMatches} setNewMatchModal={setNewMatchModal} />
-              </motion.div>
-            </motion.div>
+              <NewMatchForm setMatches={setMatches} setNewMatchModal={setNewMatchModal} />
+            </Modal>
           )}
         </AnimatePresence>
 

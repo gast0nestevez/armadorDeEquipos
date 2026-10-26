@@ -37,6 +37,7 @@ const MakeTeams = () => {
   return (
     <div className='main-container flex flex-col h-full'>
       <Nav />
+      <h1 className='sr-only'>Armador de equipos de fútbol</h1>
       <div className='flex flex-col md:flex-row flex-1 h-full overflow-hidden'>
         <Form
           players={players}

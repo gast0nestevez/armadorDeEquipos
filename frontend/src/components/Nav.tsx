@@ -1,36 +1,23 @@
-import { Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
-import { NavButtons } from '#components/NavButtons.tsx';
+import { UserContext } from '#context/userContext.tsx';
+
+const LINK_CLASS: string = 'transition-colors duration-200 ease-in-out hover:text-blue-100';
 
 const Nav = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { user } = useContext(UserContext);
 
   return (
-    <nav className='relative bg-white shadow-md'>
-      <div className='flex justify-between items-center p-4 w-full'>
-        <h2 className='text-xl font-bold'>
-          <Link to='/'>Armador</Link>
-        </h2>
-
-        {/* menu icon for mobile */}
-        <button
-          onClick={() => {
-            setIsOpen(!isOpen);
-          }}
-          className='md:hidden focus:outline-none cursor-pointer'
-          aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
-        >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-
-        {/* desktop buttons */}
-        <NavButtons setIsOpen={setIsOpen} />
+    <nav aria-label='Principal' className='shadow-md'>
+      <div className='flex w-full items-center justify-between p-4'>
+        <Link to='/' className={`text-xl font-bold ${LINK_CLASS}`}>
+          Armador
+        </Link>
+        <Link to={user ? '/perfil' : '/login'} className={LINK_CLASS}>
+          {user ? 'Mis Partidos' : 'Ingresar'}
+        </Link>
       </div>
-
-      {/* mobile menu */}
-      {isOpen && <NavButtons variant='mobile' setIsOpen={setIsOpen} />}
     </nav>
   );
 };
