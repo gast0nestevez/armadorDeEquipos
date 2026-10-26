@@ -4,8 +4,8 @@ import { useState } from 'react';
 
 import type { Match, Result } from '#utils/types.ts';
 
-import { Loader } from '#components/Loader.tsx';
 import { MatchCard } from '#components/Match.tsx';
+import { MatchesSkeleton } from '#components/MatchesSkeleton.tsx';
 import { Modal } from '#components/Modal.tsx';
 import { NewMatchForm } from '#components/NewMatchForm.tsx';
 import { PerformanceChart } from '#components/PerformanceChart.tsx';
@@ -111,11 +111,7 @@ const MatchesList = ({
   const stats: MatchesStats = matchesStats(matches);
 
   if (loadingMatches) {
-    return (
-      <div className='flex justify-center items-center'>
-        <Loader />
-      </div>
-    );
+    return <MatchesSkeleton />;
   }
 
   return (

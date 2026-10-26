@@ -5,7 +5,7 @@ import { useState } from 'react';
 import type { Match, Player, Result } from '#utils/types.ts';
 
 import { DateInput } from '#components/DateInput.tsx';
-import { Loader } from '#components/Loader.tsx';
+import { MatchCardSkeleton } from '#components/MatchesSkeleton.tsx';
 import { Modal } from '#components/Modal.tsx';
 import { isoToDisplay } from '#utils/date.ts';
 import { Env } from '#utils/env.ts';
@@ -90,11 +90,7 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
   };
 
   if (loading) {
-    return (
-      <div className='flex justify-center items-center'>
-        <Loader />
-      </div>
-    );
+    return <MatchCardSkeleton />;
   }
 
   return (

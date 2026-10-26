@@ -1,7 +1,7 @@
 import { SiGithub } from 'react-icons/si';
 
 const Footer = () => (
-  <footer className='flex justify-center w-full bg-black text-sm'>
+  <footer className='flex justify-center w-full bg-[#333] text-sm'>
     <a
       href='https://github.com/gast0nestevez/armadorDeEquipos'
       target='_blank'
