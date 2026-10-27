@@ -1,8 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import type { Match } from '#utils/types.ts';
+import type { Formation, Match } from '#utils/types.ts';
 
+import { FormationsList } from '#components/FormationsList.tsx';
 import { MatchesList } from '#components/MatchesList.tsx';
 import { Nav } from '#components/Nav.tsx';
 import { UserContext } from '#context/userContext.tsx';
@@ -14,8 +15,8 @@ const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
 
 const Profile = () => {
   useSeo({
-    title: 'Mis partidos | Armador de Equipos',
-    description: 'Historial y estadísticas de tus partidos.',
+    title: 'Mis partidos y formaciones | Armador de Equipos',
+    description: 'Historial, estadísticas y formaciones guardadas.',
     path: '/perfil',
     indexable: false,
   });
@@ -23,6 +24,7 @@ const Profile = () => {
   const navigate = useNavigate();
   const { user, clearContext } = useContext(UserContext);
   const [matches, setMatches] = useState<Match[]>([]);
+  const [formations, setFormations] = useState<Formation[]>([]);
   const [loadingMatches, setLoadingMatches] = useState<boolean>(false);
 
   useEffect((): void => {
@@ -31,10 +33,9 @@ const Profile = () => {
       return;
     }
 
-    const fetchMatches = async (): Promise<void> => {
+    const fetchData = async (): Promise<void> => {
       setLoadingMatches(true);
 
-      const url: string = `${API_BASE_URL}/match`;
       const options: RequestInit = {
         headers: {
           'Content-Type': 'application/json',
@@ -43,14 +44,23 @@ const Profile = () => {
       };
 
       try {
-        const response: Response = await fetch(url, options);
+        const [matchesResponse, formationsResponse]: Response[] = await Promise.all([
+          fetch(`${API_BASE_URL}/match`, options),
+          fetch(`${API_BASE_URL}/formation`, options),
+        ]);
 
-        if (!response.ok) {
-          throw new Error('Error fetching matches');
+        if (!matchesResponse.ok || !formationsResponse.ok) {
+          throw new Error('Error fetching profile data');
         }
-        const { data: matches }: { data: Match[] } = (await response.json()) as { data: Match[] };
+        const { data: matches }: { data: Match[] } = (await matchesResponse.json()) as {
+          data: Match[];
+        };
+        const { data: formations }: { data: Formation[] } = (await formationsResponse.json()) as {
+          data: Formation[];
+        };
 
         setMatches(matches);
+        setFormations(formations);
       } catch (err) {
         console.error(err);
       } finally {
@@ -58,7 +68,7 @@ const Profile = () => {
       }
     };
 
-    void fetchMatches();
+    void fetchData();
   }, [user, navigate]);
 
   if (!user) {
@@ -80,6 +90,15 @@ const Profile = () => {
             setMatches={setMatches}
             loadingMatches={loadingMatches}
             setLoadingMatches={setLoadingMatches}
+          />
+        </div>
+
+        <div className='bg-white rounded-xl shadow-lg p-6 w-full max-w-6xl mb-8'>
+          <FormationsList
+            formations={formations}
+            setFormations={setFormations}
+            setMatches={setMatches}
+            loading={loadingMatches}
           />
         </div>
 

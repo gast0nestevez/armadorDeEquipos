@@ -60,11 +60,11 @@ const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
       )
     );
 
-  const saveMatch = async (): Promise<void> => {
+  const saveFormation = async (): Promise<void> => {
     saveMessage.trigger();
     const players: MappedPlayer[] = mapTeamsToPlayers(teams);
 
-    const url: string = `${API_BASE_URL}/match`;
+    const url: string = `${API_BASE_URL}/formation`;
     const options: RequestInit = {
       method: 'POST',
       headers: {
@@ -77,7 +77,7 @@ const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
     try {
       const response: Response = await fetch(url, options);
       if (!response.ok) {
-        throw new Error('Something went wrong during posting match');
+        throw new Error('Something went wrong during posting formation');
       }
     } catch (err) {
       console.error(err);
@@ -131,15 +131,15 @@ const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
 
         {user && playersNotEmpty && (
           <button
-            onClick={() => void saveMatch()}
+            onClick={() => void saveFormation()}
             disabled={saveMessage.visible}
             className='bg-blue-900 white-text px-6 py-2 rounded white-text hover:bg-blue-800 transition-colors duration-200 ease-in-out cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-900'
           >
-            Guardar partido
+            Guardar formación
           </button>
         )}
 
-        {saveMessage.visible && <div className='flash-message'>Partido guardado!</div>}
+        {saveMessage.visible && <div className='flash-message'>Formación guardada!</div>}
       </div>
     </div>
   );

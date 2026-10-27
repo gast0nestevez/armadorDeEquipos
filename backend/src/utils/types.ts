@@ -1,5 +1,6 @@
 type Player = {
   name: string;
+  skill?: number;
   team: number;
 };
 
@@ -11,4 +12,8 @@ type MatchData = {
   date: string;
 };
 
-export type { Player, MatchData };
+type FormationData = {
+  players: Player[];
+};
+
+export type { FormationData, MatchData, Player };

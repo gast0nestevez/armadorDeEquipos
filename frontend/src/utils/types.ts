@@ -21,4 +21,10 @@ type Match = {
   date: string;
 };
 
-export type { Match, Player, Result, Team };
+type Formation = {
+  _id: string;
+  players: Player[];
+  createdAt: string;
+};
+
+export type { Formation, Match, Player, Result, Team };

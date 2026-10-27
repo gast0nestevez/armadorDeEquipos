@@ -10,6 +10,7 @@ import helmet from 'helmet';
 import { connectDB } from '#config/db.ts';
 import { errorHandler } from '#middleware/errorHandler.middleware.ts';
 import { authRouter } from '#routes/auth.route.ts';
+import { formationRouter } from '#routes/formation.route.ts';
 import { matchRouter } from '#routes/match.route.ts';
 import { getEnv } from '#utils/env.ts';
 
@@ -57,6 +58,7 @@ app.use(limiter);
 
 app.use('/auth', authLimiter, authRouter);
 app.use('/match', matchRouter);
+app.use('/formation', formationRouter);
 app.get('/health', (_req: Request, res: Response): void => {
   res.status(200).json({ status: 'ok', timestamp: Date.now() });
 });
