@@ -18,7 +18,14 @@ class TeamsMaker {
   }
 
   randomizePlayers(players: Player[]): Player[] {
-    return players.sort((): number => Math.random() - 0.5);
+    const shuffled: Player[] = [...players];
+
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j: number = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    return shuffled;
   }
 
   makeTeams(players: Player[]): Team[] {
