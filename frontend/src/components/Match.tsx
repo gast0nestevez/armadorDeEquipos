@@ -7,11 +7,11 @@ import type { Match, Player, Result } from '#utils/types.ts';
 import { DateInput } from '#components/DateInput.tsx';
 import { MatchCardSkeleton } from '#components/MatchesSkeleton.tsx';
 import { Modal } from '#components/Modal.tsx';
+import { useNotification } from '#context/notificationContext.tsx';
+import { api } from '#utils/api.ts';
 import { isoToDisplay } from '#utils/date.ts';
-import { Env } from '#utils/env.ts';
+import { getErrorMessage } from '#utils/errors.ts';
 import { capitalize } from '#utils/string.ts';
-
-const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
 
 type MatchProps = {
   match: Match;
@@ -29,6 +29,7 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
   const [result, setResult] = useState<Result>(match.result);
   const [date, setDate] = useState<string>(match.date);
   const [loading, setLoading] = useState<boolean>(false);
+  const { notify } = useNotification();
 
   const resultButtonClasses = (type: Result, currentResult: Result): string => {
     const isActive: boolean = currentResult === type;
@@ -60,30 +61,21 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
 
   const saveChanges = async (): Promise<void> => {
     setLoading(true);
-    const url: string = `${API_BASE_URL}/match/${match._id}`;
-    const body = { goals1, goals2, result, date };
-    const options: RequestInit = {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token') ?? ''}`,
-      },
-      body: JSON.stringify(body),
-    };
 
     try {
-      const response: Response = await fetch(url, options);
-      if (!response.ok) {
-        throw new Error('Something went wrong during update');
-      }
-      const { data: updatedMatch }: { data: Match } = (await response.json()) as { data: Match };
+      const updatedMatch: Match = await api.put<Match>(`/match/${match._id}`, {
+        goals1,
+        goals2,
+        result,
+        date,
+      });
 
       setMatches((prevMatches: Match[]) =>
         prevMatches.map((m: Match) => (m._id === match._id ? updatedMatch : m))
       );
       setShowModal(false);
     } catch (err) {
-      console.error(err);
+      notify(getErrorMessage(err, 'No pudimos guardar los cambios del partido.'));
     } finally {
       setLoading(false);
     }

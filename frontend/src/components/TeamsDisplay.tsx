@@ -3,12 +3,12 @@ import { useContext, useState } from 'react';
 import type { Player, Team } from '#utils/types.ts';
 
 import { TeamCard } from '#components/TeamCard.tsx';
+import { useNotification } from '#context/notificationContext.tsx';
 import { UserContext } from '#context/userContext.tsx';
 import { useFlashMessage } from '#hooks/useFlashMessage.tsx';
-import { Env } from '#utils/env.ts';
+import { api } from '#utils/api.ts';
+import { getErrorMessage } from '#utils/errors.ts';
 import { capitalize } from '#utils/string.ts';
-
-const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
 
 type MappedPlayer = {
   name: string;
@@ -27,6 +27,7 @@ const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
   const [showScores, setShowScores] = useState<boolean>(false);
   const copyMessage = useFlashMessage();
   const saveMessage = useFlashMessage();
+  const { notify } = useNotification();
 
   const playersNotEmpty: boolean = teams[0].players.length > 0 || teams[1].players.length > 0;
 
@@ -45,8 +46,12 @@ const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
       .join('\n\n');
 
   const copyToClipboard = async (): Promise<void> => {
-    copyMessage.trigger();
-    await navigator.clipboard.writeText(teamsToString());
+    try {
+      await navigator.clipboard.writeText(teamsToString());
+      copyMessage.trigger();
+    } catch {
+      notify('No pudimos copiar los equipos.');
+    }
   };
 
   const mapTeamsToPlayers = (teams: Team[]): MappedPlayer[] =>
@@ -61,26 +66,13 @@ const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
     );
 
   const saveFormation = async (): Promise<void> => {
-    saveMessage.trigger();
     const players: MappedPlayer[] = mapTeamsToPlayers(teams);
 
-    const url: string = `${API_BASE_URL}/formation`;
-    const options: RequestInit = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token') ?? ''}`,
-      },
-      body: JSON.stringify({ players }),
-    };
-
     try {
-      const response: Response = await fetch(url, options);
-      if (!response.ok) {
-        throw new Error('Something went wrong during posting formation');
-      }
+      await api.post<unknown>('/formation', { players });
+      saveMessage.trigger();
     } catch (err) {
-      console.error(err);
+      notify(getErrorMessage(err, 'No pudimos guardar la formación.'));
     }
   };
 

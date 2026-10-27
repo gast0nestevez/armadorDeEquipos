@@ -6,9 +6,9 @@ import type { Formation, Result } from '#utils/types.ts';
 
 import { DateInput } from '#components/DateInput.tsx';
 import { Loader } from '#components/Loader.tsx';
-import { Env } from '#utils/env.ts';
-
-const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
+import { useNotification } from '#context/notificationContext.tsx';
+import { api } from '#utils/api.ts';
+import { getErrorMessage } from '#utils/errors.ts';
 
 type PromoteFormationFormProps = {
   formation: Formation;
@@ -17,6 +17,7 @@ type PromoteFormationFormProps = {
 
 const PromoteFormationForm = ({ formation, setFormations }: PromoteFormationFormProps) => {
   const navigate = useNavigate();
+  const { notify } = useNotification();
   const [goals1, setGoals1] = useState<number | null>(null);
   const [goals2, setGoals2] = useState<number | null>(null);
   const [result, setResult] = useState<Result | null>(null);
@@ -53,26 +54,18 @@ const PromoteFormationForm = ({ formation, setFormations }: PromoteFormationForm
   const promote = async (): Promise<void> => {
     setIsLoading(true);
 
-    const url: string = `${API_BASE_URL}/formation/${formation._id}/promote`;
-    const options: RequestInit = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token') ?? ''}`,
-      },
-      body: JSON.stringify({ goals1, goals2, result, date }),
-    };
-
     try {
-      const response: Response = await fetch(url, options);
-      if (!response.ok) {
-        throw new Error('Error while promoting formation');
-      }
+      await api.post<unknown>(`/formation/${formation._id}/promote`, {
+        goals1,
+        goals2,
+        result,
+        date,
+      });
 
       setFormations((prev: Formation[]) => prev.filter((f: Formation) => f._id !== formation._id));
       void navigate('/partidos');
     } catch (err) {
-      console.error(err);
+      notify(getErrorMessage(err, 'No pudimos pasar la formación a partido.'));
       setIsLoading(false);
     }
   };

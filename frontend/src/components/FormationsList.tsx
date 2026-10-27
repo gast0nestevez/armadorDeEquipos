@@ -8,10 +8,10 @@ import type { Formation, Player } from '#utils/types.ts';
 import { Modal } from '#components/Modal.tsx';
 import { PromoteFormationForm } from '#components/PromoteFormationForm.tsx';
 import { Skeleton } from '#components/Skeleton.tsx';
-import { Env } from '#utils/env.ts';
+import { useNotification } from '#context/notificationContext.tsx';
+import { api } from '#utils/api.ts';
+import { getErrorMessage } from '#utils/errors.ts';
 import { capitalize } from '#utils/string.ts';
-
-const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
 
 type FormationsListProps = {
   formations: Formation[];
@@ -24,6 +24,7 @@ const formatCreatedAt: (createdAt: string) => string = (createdAt: string): stri
 
 const FormationsList = ({ formations, setFormations, loading }: FormationsListProps) => {
   const [promoting, setPromoting] = useState<Formation | null>(null);
+  const { notify } = useNotification();
 
   const deleteFormation = async (id: string): Promise<void> => {
     const userChoice: boolean = confirm('¿Seguro que querés eliminar esta formación?');
@@ -32,26 +33,12 @@ const FormationsList = ({ formations, setFormations, loading }: FormationsListPr
       return;
     }
 
-    const url: string = `${API_BASE_URL}/formation`;
-    const options: RequestInit = {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token') ?? ''}`,
-      },
-      body: JSON.stringify({ ids: [id] }),
-    };
-
     try {
-      const response: Response = await fetch(url, options);
-
-      if (!response.ok) {
-        throw new Error('Something went wrong during delete');
-      }
+      await api.delete<unknown>('/formation', { ids: [id] });
 
       setFormations((prev: Formation[]) => prev.filter((f: Formation) => f._id !== id));
     } catch (err) {
-      console.error(err);
+      notify(getErrorMessage(err, 'No pudimos eliminar la formación.'));
     }
   };
 

@@ -9,7 +9,9 @@ import { MatchesSkeleton } from '#components/MatchesSkeleton.tsx';
 import { Modal } from '#components/Modal.tsx';
 import { NewMatchForm } from '#components/NewMatchForm.tsx';
 import { PerformanceChart } from '#components/PerformanceChart.tsx';
-import { Env } from '#utils/env.ts';
+import { useNotification } from '#context/notificationContext.tsx';
+import { api } from '#utils/api.ts';
+import { getErrorMessage } from '#utils/errors.ts';
 
 type MatchesStats = Record<Result, number>;
 
@@ -20,8 +22,6 @@ type MatchesListProps = {
   setLoadingMatches: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
-
 const MatchesList = ({
   matches,
   setMatches,
@@ -31,6 +31,7 @@ const MatchesList = ({
   const [newMatchModal, setNewMatchModal] = useState<boolean>(false);
   const [selectMode, setSelectMode] = useState<boolean>(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set<string>());
+  const { notify } = useNotification();
 
   const toggleSelect = (id: string): void => {
     setSelectedIds((prev: Set<string>) => {
@@ -55,22 +56,8 @@ const MatchesList = ({
 
     setLoadingMatches(true);
 
-    const url: string = `${API_BASE_URL}/match/`;
-    const options: RequestInit = {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token') ?? ''}`,
-      },
-      body: JSON.stringify({ ids: [...selectedIds] }),
-    };
-
     try {
-      const response: Response = await fetch(url, options);
-
-      if (!response.ok) {
-        throw new Error('Something went wrong during delete');
-      }
+      await api.delete<unknown>('/match', { ids: [...selectedIds] });
 
       setMatches((prevMatches: Match[]) =>
         prevMatches.filter((m: Match) => !selectedIds.has(m._id))
@@ -79,7 +66,7 @@ const MatchesList = ({
       setSelectedIds(new Set<string>());
       setSelectMode(false);
     } catch (err) {
-      console.error(err);
+      notify(getErrorMessage(err, 'No pudimos eliminar los partidos.'));
     } finally {
       setLoadingMatches(false);
     }

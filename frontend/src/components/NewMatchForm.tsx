@@ -5,9 +5,9 @@ import type { Match, Result } from '#utils/types.ts';
 
 import { DateInput } from '#components/DateInput.tsx';
 import { Loader } from '#components/Loader.tsx';
-import { Env } from '#utils/env.ts';
-
-const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
+import { useNotification } from '#context/notificationContext.tsx';
+import { api } from '#utils/api.ts';
+import { getErrorMessage } from '#utils/errors.ts';
 
 type MatchPlayer = {
   name: string;
@@ -27,6 +27,7 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
   const [result, setResult] = useState<Result | null>(null);
   const [date, setDate] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { notify } = useNotification();
 
   const resultButtonClasses = (type: Result, currentResult: Result | null): string => {
     const isActive: boolean = currentResult === type;
@@ -57,23 +58,14 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
   const addMatch = async (): Promise<void> => {
     setIsLoading(true);
 
-    const url: string = `${API_BASE_URL}/match`;
-    const options: RequestInit = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token') ?? ''}`,
-      },
-      body: JSON.stringify({ players, goals1, goals2, result, date }),
-    };
-
     try {
-      const response: Response = await fetch(url, options);
-      if (!response.ok) {
-        throw new Error('Error while saving match');
-      }
-
-      const { data: match }: { data: Match } = (await response.json()) as { data: Match };
+      const match: Match = await api.post<Match>('/match', {
+        players,
+        goals1,
+        goals2,
+        result,
+        date,
+      });
       setMatches((prev: Match[]) => [match, ...prev]);
 
       setPlayers([]);
@@ -82,7 +74,7 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
       setResult(null);
       setNewMatchModal(false);
     } catch (err) {
-      console.error(err);
+      notify(getErrorMessage(err, 'No pudimos guardar el partido.'));
     } finally {
       setIsLoading(false);
     }
