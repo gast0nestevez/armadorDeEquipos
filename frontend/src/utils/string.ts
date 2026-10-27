@@ -4,4 +4,4 @@ const capitalizeWord: (word: string) => string = (word: string): string =>
 const capitalize: (s: string) => string = (s: string): string =>
   s.split(' ').map(capitalizeWord).join(' ');
 
-export { capitalize, capitalizeWord };
+export { capitalize };
