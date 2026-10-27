@@ -4,6 +4,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
+import { NotificationProvider } from '#context/notificationContext.tsx';
 import { UserProvider } from '#context/userContext.tsx';
 import { App } from '#routes/App.tsx';
 import { Env } from '#utils/env.ts';
@@ -17,9 +18,11 @@ const CLIENT_ID = Env.getString('VITE_CLIENT_ID');
 createRoot(document.getElementById('root') as Container).render(
   <StrictMode>
     <GoogleOAuthProvider clientId={CLIENT_ID}>
-      <UserProvider>
-        <App />
-      </UserProvider>
+      <NotificationProvider>
+        <UserProvider>
+          <App />
+        </UserProvider>
+      </NotificationProvider>
     </GoogleOAuthProvider>
   </StrictMode>
 );
