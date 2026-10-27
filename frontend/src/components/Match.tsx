@@ -51,11 +51,18 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
     return `${base} ${styles[type]}`;
   };
 
-  const expandMatch = (e: React.MouseEvent<HTMLDivElement>): void => {
-    const tag: string = (e.target as HTMLElement).tagName;
-    if (['DIV', 'H3', 'SPAN', 'UL', 'LI'].includes(tag)) {
+  const activate = (): void => {
+    if (selectMode) {
+      onToggleSelect(match._id);
+    } else {
       setShowDetails(!showDetails);
-      setShowModal(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>): void => {
+    if (e.target === e.currentTarget && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      activate();
     }
   };
 
@@ -86,108 +93,117 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
   }
 
   return (
-    <div
-      className={`flex flex-col justify-center p-4 cursor-pointer ${showDetails ? 'gap-[15px]' : ''}`}
-      onClick={
-        selectMode
-          ? () => {
-              onToggleSelect(match._id);
-            }
-          : expandMatch
-      }
-    >
-      <div className='flex items-center w-full gap-4'>
-        {selectMode && (
-          <div
-            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors duration-200 ease-in-out ${selected ? 'bg-blue-600 border-blue-600' : 'border-gray-400'}`}
-          >
-            {selected && <span className='white-text text-xs'>✓</span>}
-          </div>
-        )}
-        <div className='flex flex-col flex-1'>
-          {!showModal && (
-            <div className='text-center text-gray-600 text-sm mb-2'>
-              {match.date ? isoToDisplay(match.date) : 'Sin fecha'}
+    <>
+      <div
+        role='button'
+        tabIndex={0}
+        aria-expanded={selectMode ? undefined : showDetails}
+        aria-pressed={selectMode ? selected : undefined}
+        className={`flex flex-col justify-center p-4 cursor-pointer ${showDetails ? 'gap-[15px]' : ''}`}
+        onClick={activate}
+        onKeyDown={handleKeyDown}
+      >
+        <div className='flex items-center w-full gap-4'>
+          {selectMode && (
+            <div
+              className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors duration-200 ease-in-out ${selected ? 'bg-blue-600 border-blue-600' : 'border-gray-400'}`}
+            >
+              {selected && <span className='white-text text-xs'>✓</span>}
             </div>
           )}
+          <div className='flex flex-col flex-1'>
+            {!showModal && (
+              <div className='text-center text-gray-600 text-sm mb-2'>
+                {match.date ? isoToDisplay(match.date) : 'Sin fecha'}
+              </div>
+            )}
 
-          <div className='flex justify-between gap-1'>
-            <div className='grow max-w-1/3'>
-              <AnimatePresence>
-                {showDetails && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: 'easeInOut' }}
-                    className='overflow-hidden'
-                  >
-                    <h3 className='font-semibold black-text mb-2 text-nowrap'>Equipo 1</h3>
-                    <ul className='space-y-1'>
-                      {match.players
-                        .filter((p: Player): boolean => p.team === 1)
-                        .map(
-                          (p: Player): React.JSX.Element => (
-                            <li key={p._id} className='text-gray-700 truncate'>
-                              {capitalize(p.name)}
-                            </li>
-                          )
-                        )}
-                    </ul>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+            <div className='flex justify-between gap-1'>
+              <div className='grow max-w-1/3'>
+                <AnimatePresence>
+                  {showDetails && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      className='overflow-hidden'
+                    >
+                      <h3 className='font-semibold black-text mb-2 text-nowrap'>Equipo 1</h3>
+                      <ul className='space-y-1'>
+                        {match.players
+                          .filter((p: Player): boolean => p.team === 1)
 
-            <div className='flex justify-center items-center font-semibold text-2xl text-nowrap'>
-              <span>
-                {match.goals1} - {match.goals2}
-              </span>
-            </div>
+                          .map(
+                            (p: Player, index: number): React.JSX.Element => (
+                              <li
+                                key={`${p.name}-${index.toString()}`}
+                                className='text-gray-700 truncate'
+                              >
+                                {capitalize(p.name)}
+                              </li>
+                            )
+                          )}
+                      </ul>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
 
-            <div className='grow max-w-1/3'>
-              <AnimatePresence>
-                {showDetails && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: 'easeInOut' }}
-                    className='overflow-hidden'
-                  >
-                    <h3 className='font-semibold black-text mb-2 text-right text-nowrap'>
-                      Equipo 2
-                    </h3>
-                    <ul className='space-y-1'>
-                      {match.players
-                        .filter((p: Player): boolean => p.team === 2)
-                        .map(
-                          (p: Player): React.JSX.Element => (
-                            <li key={p._id} className='text-gray-700 text-right truncate'>
-                              {capitalize(p.name)}
-                            </li>
-                          )
-                        )}
-                    </ul>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              <div className='flex justify-center items-center font-semibold text-2xl text-nowrap'>
+                <span>
+                  {match.goals1} - {match.goals2}
+                </span>
+              </div>
+
+              <div className='grow max-w-1/3'>
+                <AnimatePresence>
+                  {showDetails && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      className='overflow-hidden'
+                    >
+                      <h3 className='font-semibold black-text mb-2 text-right text-nowrap'>
+                        Equipo 2
+                      </h3>
+                      <ul className='space-y-1'>
+                        {match.players
+                          .filter((p: Player): boolean => p.team === 2)
+
+                          .map(
+                            (p: Player, index: number): React.JSX.Element => (
+                              <li
+                                key={`${p.name}-${index.toString()}`}
+                                className='text-gray-700 text-right truncate'
+                              >
+                                {capitalize(p.name)}
+                              </li>
+                            )
+                          )}
+                      </ul>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className='flex justify-center'>
-          <button
-            type='button'
-            aria-label='Editar partido'
-            className='px-3 py-2 rounded-lg bg-gray-200 text-gray-600 transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-300'
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowModal(true);
-            }}
-          >
-            <PencilLine size={16} aria-hidden='true' />
-          </button>
+          <div className='flex justify-center'>
+            <button
+              type='button'
+              aria-label='Editar partido'
+              className='px-3 py-2 rounded-lg bg-gray-200 text-gray-600 transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-300'
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowModal(true);
+              }}
+            >
+              <PencilLine size={16} aria-hidden='true' />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -277,7 +293,7 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
           </Modal>
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 };
 
