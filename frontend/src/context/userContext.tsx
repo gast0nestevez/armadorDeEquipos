@@ -1,4 +1,7 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
+
+import { SESSION_EXPIRED_EVENT } from '#utils/api.ts';
+import { clearSession, readStoredUser } from '#utils/session.ts';
 
 type User = Record<string, unknown>;
 
@@ -17,16 +20,24 @@ type UserProviderProps = {
 };
 
 const UserProvider = ({ children }: UserProviderProps) => {
-  const [user, setUser] = useState<User | null>((): User | null => {
-    const saved: string | null = localStorage.getItem('user');
-    return saved ? (JSON.parse(saved) as User) : null;
-  });
+  const [user, setUser] = useState<User | null>(readStoredUser);
 
   const clearContext = (): void => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
+    clearSession();
     setUser(null);
   };
+
+  useEffect((): (() => void) => {
+    const handleSessionExpired = (): void => {
+      setUser(null);
+    };
+
+    window.addEventListener(SESSION_EXPIRED_EVENT, handleSessionExpired);
+
+    return (): void => {
+      window.removeEventListener(SESSION_EXPIRED_EVENT, handleSessionExpired);
+    };
+  }, []);
 
   return (
     <UserContext.Provider value={{ user, setUser, clearContext }}>{children}</UserContext.Provider>
