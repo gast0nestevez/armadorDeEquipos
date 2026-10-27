@@ -33,4 +33,6 @@ const UserProvider = ({ children }: UserProviderProps) => {
   );
 };
 
+export type { User };
+
 export { UserContext, UserProvider };

@@ -1,8 +1,9 @@
 import { AnimatePresence } from 'framer-motion';
 import { Trash2, Trophy } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-import type { Formation, Match, Player } from '#utils/types.ts';
+import type { Formation, Player } from '#utils/types.ts';
 
 import { Modal } from '#components/Modal.tsx';
 import { PromoteFormationForm } from '#components/PromoteFormationForm.tsx';
@@ -15,19 +16,13 @@ const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
 type FormationsListProps = {
   formations: Formation[];
   setFormations: React.Dispatch<React.SetStateAction<Formation[]>>;
-  setMatches: React.Dispatch<React.SetStateAction<Match[]>>;
   loading: boolean;
 };
 
 const formatCreatedAt: (createdAt: string) => string = (createdAt: string): string =>
   new Date(createdAt).toLocaleDateString('es-AR');
 
-const FormationsList = ({
-  formations,
-  setFormations,
-  setMatches,
-  loading,
-}: FormationsListProps) => {
+const FormationsList = ({ formations, setFormations, loading }: FormationsListProps) => {
   const [promoting, setPromoting] = useState<Formation | null>(null);
 
   const deleteFormation = async (id: string): Promise<void> => {
@@ -75,8 +70,11 @@ const FormationsList = ({
         </div>
       ) : formations.length === 0 ? (
         <p className='text-gray-600 text-center'>
-          Todavía no guardaste ninguna formación. Armá equipos en la sección Armar y guardalos para
-          jugarlos después.
+          Todavía no guardaste ninguna formación.{' '}
+          <Link to='/armar' className='font-semibold text-blue-900 underline'>
+            Armá equipos
+          </Link>{' '}
+          y guardalos para jugarlos después.
         </p>
       ) : (
         <ul className='grid gap-4 md:grid-cols-2'>
@@ -145,14 +143,7 @@ const FormationsList = ({
               setPromoting(null);
             }}
           >
-            <PromoteFormationForm
-              formation={promoting}
-              setMatches={setMatches}
-              setFormations={setFormations}
-              onClose={() => {
-                setPromoting(null);
-              }}
-            />
+            <PromoteFormationForm formation={promoting} setFormations={setFormations} />
           </Modal>
         )}
       </AnimatePresence>

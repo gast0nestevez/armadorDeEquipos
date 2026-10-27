@@ -1,7 +1,8 @@
 import { Minus, Trophy, X } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import type { Formation, Match, Result } from '#utils/types.ts';
+import type { Formation, Result } from '#utils/types.ts';
 
 import { DateInput } from '#components/DateInput.tsx';
 import { Loader } from '#components/Loader.tsx';
@@ -11,17 +12,11 @@ const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
 
 type PromoteFormationFormProps = {
   formation: Formation;
-  setMatches: React.Dispatch<React.SetStateAction<Match[]>>;
   setFormations: React.Dispatch<React.SetStateAction<Formation[]>>;
-  onClose: () => void;
 };
 
-const PromoteFormationForm = ({
-  formation,
-  setMatches,
-  setFormations,
-  onClose,
-}: PromoteFormationFormProps) => {
+const PromoteFormationForm = ({ formation, setFormations }: PromoteFormationFormProps) => {
+  const navigate = useNavigate();
   const [goals1, setGoals1] = useState<number | null>(null);
   const [goals2, setGoals2] = useState<number | null>(null);
   const [result, setResult] = useState<Result | null>(null);
@@ -74,10 +69,8 @@ const PromoteFormationForm = ({
         throw new Error('Error while promoting formation');
       }
 
-      const { data: match }: { data: Match } = (await response.json()) as { data: Match };
-      setMatches((prev: Match[]) => [match, ...prev]);
       setFormations((prev: Formation[]) => prev.filter((f: Formation) => f._id !== formation._id));
-      onClose();
+      void navigate('/partidos');
     } catch (err) {
       console.error(err);
       setIsLoading(false);

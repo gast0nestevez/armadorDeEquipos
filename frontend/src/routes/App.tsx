@@ -2,12 +2,13 @@ import type { Location } from 'react-router-dom';
 
 import { Analytics } from '@vercel/analytics/react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 
+import { Formations } from '#pages/Formations.tsx';
 import { Home } from '#pages/Home.tsx';
 import { Auth } from '#pages/Login.tsx';
 import { MakeTeams } from '#pages/MakeTeams.tsx';
-import { Profile } from '#pages/Profile.tsx';
+import { Matches } from '#pages/Matches.tsx';
 
 type PageVariants = {
   initial: { opacity: number; x: number };
@@ -71,13 +72,22 @@ function AnimatedRoutes() {
           }
         />
         <Route
-          path='/perfil'
+          path='/partidos'
           element={
             <PageWrapper>
-              <Profile />
+              <Matches />
             </PageWrapper>
           }
         />
+        <Route
+          path='/formaciones'
+          element={
+            <PageWrapper>
+              <Formations />
+            </PageWrapper>
+          }
+        />
+        <Route path='/perfil' element={<Navigate to='/partidos' replace />} />
       </Routes>
     </AnimatePresence>
   );
