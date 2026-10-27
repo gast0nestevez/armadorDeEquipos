@@ -45,17 +45,20 @@ function usePlayers(initialPlayers: PlayerInput[] = initialDefault) {
   const handleChange = (index: number, field: Field, value: string): void => {
     setSubmitted(false);
 
-    const newPlayers: PlayerInput[] = [...players];
-    newPlayers[index][field] = sanitizeValue(value, field);
-    setPlayers(newPlayers);
+    const newPlayers: PlayerInput[] = players.map(
+      (player: PlayerInput, i: number): PlayerInput =>
+        i === index ? { ...player, [field]: sanitizeValue(value, field) } : player
+    );
 
     if (
       index === players.length - 1 &&
       newPlayers[index].name.trim() !== '' &&
       index < MAX_INPUTS - 1
     ) {
-      setPlayers([...newPlayers, { name: '', skill: '' }]);
+      newPlayers.push({ name: '', skill: '' });
     }
+
+    setPlayers(newPlayers);
   };
 
   const deletePlayer = (index: number): void => {
