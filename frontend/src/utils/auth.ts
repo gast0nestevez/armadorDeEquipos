@@ -2,11 +2,10 @@ import type { CredentialResponse } from '@react-oauth/google';
 
 import { googleLogout } from '@react-oauth/google';
 
-import { Env } from '#utils/env.ts';
+import type { User } from '#context/userContext.tsx';
 
-const API_BASE_URL: string = Env.getString('VITE_API_BASE_PATH');
-
-type User = Record<string, unknown>;
+import { api } from '#utils/api.ts';
+import { saveSession } from '#utils/session.ts';
 
 type AuthResponseData = {
   user: User;
@@ -15,109 +14,44 @@ type AuthResponseData = {
 
 type SetUser = (user: User) => void;
 
-const handleGoogleLogin = async (
-  credentialResponse: CredentialResponse,
+const authenticate: (
+  path: string,
+  body: Record<string, unknown>,
+  setUser: SetUser
+) => Promise<void> = async (
+  path: string,
+  body: Record<string, unknown>,
   setUser: SetUser
 ): Promise<void> => {
-  const googleToken: string | undefined = credentialResponse.credential;
+  const { user, token }: AuthResponseData = await api.post<AuthResponseData>(path, body, {
+    authenticated: false,
+  });
 
-  const url: string = `${API_BASE_URL}/auth/googleLogin`;
-  const options: RequestInit = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ googleToken }),
-  };
-
-  try {
-    const response: Response = await fetch(url, options);
-    if (!response.ok) {
-      throw new Error('Something went wrong during fetch');
-    }
-
-    const { data }: { data: AuthResponseData } = (await response.json()) as {
-      data: AuthResponseData;
-    };
-    localStorage.setItem('user', JSON.stringify(data.user));
-    localStorage.setItem('token', data.token);
-    setUser(data.user);
-  } catch (err) {
-    console.error('Error while login: ', err);
-  }
+  saveSession(user, token);
+  setUser(user);
 };
 
-const handleGoogleError = (): void => {
-  console.error('Google error: ');
-};
+const handleGoogleLogin: (
+  credentialResponse: CredentialResponse,
+  setUser: SetUser
+) => Promise<void> = (credentialResponse: CredentialResponse, setUser: SetUser): Promise<void> =>
+  authenticate('/auth/googleLogin', { googleToken: credentialResponse.credential }, setUser);
 
-const handleGoogleLogout = (clearContext: () => void): void => {
+const handleEmailLogin: (email: string, password: string, setUser: SetUser) => Promise<void> = (
+  email: string,
+  password: string,
+  setUser: SetUser
+): Promise<void> => authenticate('/auth/login', { email, password }, setUser);
+
+const handleEmailRegister: (email: string, password: string, setUser: SetUser) => Promise<void> = (
+  email: string,
+  password: string,
+  setUser: SetUser
+): Promise<void> => authenticate('/auth/register', { email, password }, setUser);
+
+const handleGoogleLogout: (clearContext: () => void) => void = (clearContext: () => void): void => {
   googleLogout();
   clearContext();
 };
 
-const handleEmailLogin = async (
-  email: string,
-  password: string,
-  setUser: SetUser
-): Promise<void> => {
-  const url: string = `${API_BASE_URL}/auth/login`;
-  const options: RequestInit = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password }),
-  };
-
-  try {
-    const response: Response = await fetch(url, options);
-    if (!response.ok) {
-      throw new Error('Something went wrong during login');
-    }
-
-    const { data }: { data: AuthResponseData } = (await response.json()) as {
-      data: AuthResponseData;
-    };
-    localStorage.setItem('user', JSON.stringify(data.user));
-    localStorage.setItem('token', data.token);
-    setUser(data.user);
-  } catch (err) {
-    console.error('Error while login: ', err);
-    throw new Error('Credenciales Inválidas');
-  }
-};
-
-const handleEmailRegister = async (
-  email: string,
-  password: string,
-  setUser: SetUser
-): Promise<void> => {
-  const url: string = `${API_BASE_URL}/auth/register`;
-  const options: RequestInit = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password }),
-  };
-
-  try {
-    const response: Response = await fetch(url, options);
-    if (!response.ok) {
-      throw new Error('Something went wrong during register');
-    }
-
-    const { data }: { data: AuthResponseData } = (await response.json()) as {
-      data: AuthResponseData;
-    };
-    localStorage.setItem('user', JSON.stringify(data.user));
-    localStorage.setItem('token', data.token);
-    setUser(data.user);
-  } catch (err) {
-    console.error('Error while login: ', err);
-    throw new Error('Credenciales Inválidas');
-  }
-};
-
-export {
-  handleEmailLogin,
-  handleEmailRegister,
-  handleGoogleError,
-  handleGoogleLogin,
-  handleGoogleLogout,
-};
+export { handleEmailLogin, handleEmailRegister, handleGoogleLogin, handleGoogleLogout };

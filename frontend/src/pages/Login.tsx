@@ -9,12 +9,8 @@ import { Loader } from '#components/Loader.tsx';
 import { Nav } from '#components/Nav.tsx';
 import { UserContext } from '#context/userContext.tsx';
 import { useSeo } from '#hooks/useSeo.ts';
-import {
-  handleEmailLogin,
-  handleEmailRegister,
-  handleGoogleError,
-  handleGoogleLogin,
-} from '#utils/auth.ts';
+import { handleEmailLogin, handleEmailRegister, handleGoogleLogin } from '#utils/auth.ts';
+import { getErrorMessage } from '#utils/errors.ts';
 
 type AuthMode = 'login' | 'register';
 
@@ -96,11 +92,16 @@ const Auth = () => {
       await handleGoogleLogin(credentialResponse, setUser);
       await navigate('/');
     } catch (error) {
-      console.error(error);
-      setGeneralError('Error al iniciar sesión con Google. Intenta nuevamente.');
+      setGeneralError(
+        getErrorMessage(error, 'Error al iniciar sesión con Google. Intenta nuevamente.')
+      );
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    setIsLoading(false);
+  const onErrorGoogle: () => void = (): void => {
+    setGeneralError('Error al iniciar sesión con Google. Intenta nuevamente.');
   };
 
   const handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void> = async (
@@ -125,14 +126,9 @@ const Auth = () => {
       }
       await navigate('/');
     } catch (err) {
-      console.error(err);
-      const errorMessage: string =
-        err instanceof Error ? err.message : 'Ocurrió un error. Intenta nuevamente.';
-      setGeneralError(errorMessage);
-      return;
+      setGeneralError(getErrorMessage(err, 'Ocurrió un error. Intenta nuevamente.'));
     } finally {
       setIsLoading(false);
-      await navigate('/');
     }
   };
 
@@ -223,7 +219,7 @@ const Auth = () => {
               size='large'
               shape='rectangular'
               onSuccess={(e) => void onSuccessGoogle(e)}
-              onError={handleGoogleError}
+              onError={onErrorGoogle}
             />
           </div>
 
