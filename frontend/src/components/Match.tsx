@@ -34,7 +34,7 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
   const resultButtonClasses = (type: Result, currentResult: Result): string => {
     const isActive: boolean = currentResult === type;
     const base: string =
-      'flex justify-center items-center l-2 px-2 py-1 rounded-md transition-colors duration-200 ease-in-out border cursor-pointer';
+      'flex justify-center items-center px-2 py-1 rounded-md transition-colors duration-200 ease-in-out border cursor-pointer';
 
     const styles: Record<string, string> = {
       Win: isActive

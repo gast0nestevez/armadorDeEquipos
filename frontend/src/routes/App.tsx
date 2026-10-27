@@ -56,7 +56,7 @@ function AnimatedRoutes() {
           }
         />
         <Route
-          path='login'
+          path='/login'
           element={
             <PageWrapper>
               <Auth />
