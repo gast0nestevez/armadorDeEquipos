@@ -48,7 +48,11 @@ const MatchesList = ({
   };
 
   const deleteSelected = async (): Promise<void> => {
-    const userChoice: boolean = confirm('¿Seguro que querés eliminar este partido?');
+    const userChoice: boolean = confirm(
+      selectedIds.size === 1
+        ? '¿Seguro que querés eliminar este partido?'
+        : `¿Seguro que querés eliminar estos ${selectedIds.size.toString()} partidos?`
+    );
 
     if (!userChoice) {
       return;
