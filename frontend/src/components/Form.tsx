@@ -1,12 +1,12 @@
 import { Trash2 } from 'lucide-react';
 
-import type { PlayerInput } from '#hooks/types.ts';
+import type { Field, PlayerInput } from '#utils/types.ts';
 
 import { HelpMessage } from '#components/HelpMessage.tsx';
 
 type FormProps = {
   players: PlayerInput[];
-  handleChange: (index: number, field: keyof PlayerInput, value: string) => void;
+  handleChange: (index: number, field: Field, value: string) => void;
   deletePlayer: (index: number) => void;
   submitPlayers: () => void;
   submitted: boolean;

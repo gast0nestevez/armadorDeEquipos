@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import type { UsePlayersReturn } from '#hooks/types.ts';
+import type { UsePlayersReturn } from '#utils/types.ts';
 
 import { Form } from '#components/Form.tsx';
 import { Nav } from '#components/Nav.tsx';

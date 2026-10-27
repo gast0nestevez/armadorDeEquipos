@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
-import type { Field, PlayerInput } from '#hooks/types.ts';
-import type { Player, Team } from '#utils/types.ts';
+import type { Field, Player, PlayerInput, Team } from '#utils/types.ts';
 
 import { TeamsMaker } from '#utils/teamsMaker.ts';
 

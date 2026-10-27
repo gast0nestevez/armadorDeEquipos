@@ -27,4 +27,22 @@ type Formation = {
   createdAt: string;
 };
 
-export type { Formation, Match, Player, Result, Team };
+type PlayerInput = {
+  name: string;
+  skill: string;
+};
+
+type Field = keyof PlayerInput;
+
+type UsePlayersReturn = {
+  players: PlayerInput[];
+  setPlayers: React.Dispatch<React.SetStateAction<PlayerInput[]>>;
+  handleChange: (index: number, field: Field, value: string) => void;
+  deletePlayer: (index: number) => void;
+  submitPlayers: () => void;
+  submitted: boolean;
+  teams: Team[];
+  loading: boolean;
+};
+
+export type { Field, Formation, Match, Player, PlayerInput, Result, Team, UsePlayersReturn };
