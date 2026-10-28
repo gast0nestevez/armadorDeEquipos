@@ -12,7 +12,6 @@ import { errorHandler } from '#middleware/errorHandler.middleware.ts';
 import { authRouter } from '#routes/auth.route.ts';
 import { formationRouter } from '#routes/formation.route.ts';
 import { matchRouter } from '#routes/match.route.ts';
-import { getEnv } from '#utils/env.ts';
 
 dotenv.config();
 
@@ -65,7 +64,16 @@ app.get('/health', (_req: Request, res: Response): void => {
 
 app.use(errorHandler);
 
-connectDB();
+const startServer: () => Promise<void> = async (): Promise<void> => {
+  await connectDB();
 
-const PORT: string = getEnv('PORT') || '3000';
-app.listen(PORT, (): void => console.log(`Server running on ${getEnv('BASE_URL')}:${PORT}`));
+  const PORT: string = process.env.PORT ?? '3000';
+  app.listen(PORT, (): void => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
+
+startServer().catch((err: unknown): void => {
+  console.error('Failed to start server:', err);
+  process.exit(1);
+});
