@@ -12,6 +12,7 @@ import { useNotification } from '#context/notificationContext.tsx';
 import { api } from '#utils/api.ts';
 import { isoToDisplay } from '#utils/date.ts';
 import { getErrorMessage } from '#utils/errors.ts';
+import { canBeDraw } from '#utils/matches.ts';
 import { capitalize } from '#utils/string.ts';
 
 type MatchProps = {
@@ -32,6 +33,21 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
   const [date, setDate] = useState<string>(match.date);
   const [loading, setLoading] = useState<boolean>(false);
   const { notify } = useNotification();
+
+  const changeGoals = (team: 1 | 2, value: number): void => {
+    const nextGoals1: number | null = team === 1 ? value : goals1;
+    const nextGoals2: number | null = team === 2 ? value : goals2;
+
+    if (team === 1) {
+      setGoals1(value);
+    } else {
+      setGoals2(value);
+    }
+
+    if (result === 'Draw' && !canBeDraw(nextGoals1, nextGoals2)) {
+      setResult('');
+    }
+  };
 
   const resultButtonClasses = (type: Result, currentResult: Result): string => {
     const isActive: boolean = currentResult === type;
@@ -259,7 +275,7 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
                 aria-label='Goles equipo 1'
                 value={goals1}
                 onChange={(e) => {
-                  setGoals1(Number.parseInt(e.target.value));
+                  changeGoals(1, Number.parseInt(e.target.value));
                 }}
                 className='w-10 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 black-text focus:outline-none focus:ring-2 focus:ring-blue-400'
               />
@@ -269,7 +285,7 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
                 aria-label='Goles equipo 2'
                 value={goals2}
                 onChange={(e) => {
-                  setGoals2(Number.parseInt(e.target.value));
+                  changeGoals(2, Number.parseInt(e.target.value));
                 }}
                 className='w-10 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-1 black-text focus:outline-none focus:ring-2 focus:ring-blue-400'
               />
@@ -291,7 +307,9 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
                 type='button'
                 aria-label='Empate'
                 aria-pressed={result === 'Draw'}
-                className={resultButtonClasses('Draw', result)}
+                disabled={!canBeDraw(goals1, goals2)}
+                title='Solo con goles iguales'
+                className={`${resultButtonClasses('Draw', result)} disabled:opacity-50 disabled:cursor-not-allowed`}
                 onClick={() => {
                   setResult('Draw');
                 }}
@@ -312,7 +330,8 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
             </div>
 
             <button
-              className='px-3 py-2 rounded-lg bg-blue-500 text-white font-semibold text-center transition-colors duration-200 ease-in-out cursor-pointer hover:bg-blue-600'
+              disabled={!result}
+              className='px-3 py-2 rounded-lg bg-blue-500 text-white font-semibold text-center transition-colors duration-200 ease-in-out cursor-pointer hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-500'
               onClick={() => void saveChanges()}
             >
               Listo

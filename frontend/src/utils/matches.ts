@@ -19,4 +19,14 @@ const lastTenMatches: (matches: Match[]) => Match[] = (matches: Match[]): Match[
     .toReversed()
     .slice(-10);
 
-export { lastTenMatches };
+const canBeDraw: (goals1: number | null, goals2: number | null) => boolean = (
+  goals1: number | null,
+  goals2: number | null
+): boolean =>
+  goals1 !== null &&
+  goals2 !== null &&
+  !Number.isNaN(goals1) &&
+  !Number.isNaN(goals2) &&
+  goals1 === goals2;
+
+export { canBeDraw, lastTenMatches };

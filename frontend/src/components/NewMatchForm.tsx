@@ -8,6 +8,7 @@ import { Loader } from '#components/Loader.tsx';
 import { useNotification } from '#context/notificationContext.tsx';
 import { api } from '#utils/api.ts';
 import { getErrorMessage } from '#utils/errors.ts';
+import { canBeDraw } from '#utils/matches.ts';
 
 type MatchPlayer = {
   name: string;
@@ -28,6 +29,21 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
   const [date, setDate] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { notify } = useNotification();
+
+  const changeGoals = (team: 1 | 2, value: number): void => {
+    const nextGoals1: number | null = team === 1 ? value : goals1;
+    const nextGoals2: number | null = team === 2 ? value : goals2;
+
+    if (team === 1) {
+      setGoals1(value);
+    } else {
+      setGoals2(value);
+    }
+
+    if (result === 'Draw' && !canBeDraw(nextGoals1, nextGoals2)) {
+      setResult(null);
+    }
+  };
 
   const resultButtonClasses = (type: Result, currentResult: Result | null): string => {
     const isActive: boolean = currentResult === type;
@@ -143,7 +159,7 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
               value={goals1 ?? ''}
               className='w-12 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setGoals1(Number.parseInt(e.target.value));
+                changeGoals(1, Number.parseInt(e.target.value));
               }}
             />
             <span className='font-bold text-gray-600'>-</span>
@@ -154,7 +170,7 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
               value={goals2 ?? ''}
               className='w-12 text-center bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setGoals2(Number.parseInt(e.target.value));
+                changeGoals(2, Number.parseInt(e.target.value));
               }}
             />
           </div>
@@ -199,7 +215,9 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
             type='button'
             aria-label='Empate'
             aria-pressed={result === 'Draw'}
-            className={resultButtonClasses('Draw', result)}
+            disabled={!canBeDraw(goals1, goals2)}
+            title='Solo con goles iguales'
+            className={`${resultButtonClasses('Draw', result)} disabled:opacity-50 disabled:cursor-not-allowed`}
             onClick={() => {
               setResult('Draw');
             }}
@@ -228,7 +246,8 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
         </div>
 
         <button
-          className='w-full md:w-auto px-6 py-3 rounded-lg bg-blue-500 white-text font-semibold transition-colors duration-200 ease-in-out cursor-pointer hover:bg-blue-600'
+          disabled={!result}
+          className='w-full md:w-auto px-6 py-3 rounded-lg bg-blue-500 white-text font-semibold transition-colors duration-200 ease-in-out cursor-pointer hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-blue-500'
           onClick={() => void addMatch()}
         >
           Guardar
