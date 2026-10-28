@@ -1,8 +1,11 @@
-import { Copy } from 'lucide-react';
+import { Copy, Image as ImageIcon } from 'lucide-react';
+import { useState } from 'react';
 
+import type { ShareOutcome } from '#utils/matchImage.ts';
 import type { Match } from '#utils/types.ts';
 
 import { useNotification } from '#context/notificationContext.tsx';
+import { renderMatchImage, shareImage } from '#utils/matchImage.ts';
 import { matchToText } from '#utils/share.ts';
 
 type ShareMatchProps = {
@@ -14,6 +17,7 @@ const BUTTON_CLASS: string =
 
 const ShareMatch = ({ match }: ShareMatchProps) => {
   const { notify } = useNotification();
+  const [generating, setGenerating] = useState<boolean>(false);
 
   const copyText = async (): Promise<void> => {
     try {
@@ -21,6 +25,26 @@ const ShareMatch = ({ match }: ShareMatchProps) => {
       notify('Partido copiado!', 'success');
     } catch {
       notify('No pudimos copiar el partido.');
+    }
+  };
+
+  const shareAsImage = async (): Promise<void> => {
+    setGenerating(true);
+
+    try {
+      const blob: Blob = await renderMatchImage(match);
+      const outcome: ShareOutcome = await shareImage(
+        blob,
+        `partido-${match.date || match._id}.png`
+      );
+
+      if (outcome === 'downloaded') {
+        notify('Imagen descargada!', 'success');
+      }
+    } catch {
+      notify('No pudimos generar la imagen.');
+    } finally {
+      setGenerating(false);
     }
   };
 
@@ -32,8 +56,18 @@ const ShareMatch = ({ match }: ShareMatchProps) => {
         <Copy size={16} aria-hidden='true' />
         Copiar texto
       </button>
+
+      <button
+        type='button'
+        disabled={generating}
+        className={BUTTON_CLASS}
+        onClick={() => void shareAsImage()}
+      >
+        <ImageIcon size={16} aria-hidden='true' />
+        {generating ? 'Generando...' : 'Compartir imagen'}
+      </button>
     </div>
   );
 };
 
-export { BUTTON_CLASS, ShareMatch };
+export { ShareMatch };
