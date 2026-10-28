@@ -8,6 +8,7 @@ import { UserContext } from '#context/userContext.tsx';
 import { useFlashMessage } from '#hooks/useFlashMessage.tsx';
 import { api } from '#utils/api.ts';
 import { getErrorMessage } from '#utils/errors.ts';
+import { playersToText } from '#utils/share.ts';
 import { capitalize } from '#utils/string.ts';
 
 type MappedPlayer = {
@@ -31,23 +32,11 @@ const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
 
   const playersNotEmpty: boolean = teams[0].players.length > 0 || teams[1].players.length > 0;
 
-  const teamsToString = (): string =>
-    teams
-      .map(
-        (team: Team, index: number): string =>
-          `Equipo ${(index + 1).toString()}:\n` +
-          (team.players.length === 0
-            ? 'Sin jugadores\n'
-            : team.players
-                .sort()
-                .map((player: Player): string => `  - ${capitalize(player.name)}`)
-                .join('\n'))
-      )
-      .join('\n\n');
-
   const copyToClipboard = async (): Promise<void> => {
     try {
-      await navigator.clipboard.writeText(teamsToString());
+      await navigator.clipboard.writeText(
+        playersToText(teams.map((team: Team): Player[] => team.players))
+      );
       copyMessage.trigger();
     } catch {
       notify('No pudimos copiar los equipos.');

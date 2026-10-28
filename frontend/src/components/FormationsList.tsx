@@ -1,5 +1,5 @@
 import { AnimatePresence } from 'framer-motion';
-import { Trash2, Trophy } from 'lucide-react';
+import { Copy, Trash2, Trophy } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -11,6 +11,7 @@ import { Skeleton } from '#components/Skeleton.tsx';
 import { useNotification } from '#context/notificationContext.tsx';
 import { api } from '#utils/api.ts';
 import { getErrorMessage } from '#utils/errors.ts';
+import { formationToText, teamPlayers } from '#utils/share.ts';
 import { capitalize } from '#utils/string.ts';
 
 type FormationsListProps = {
@@ -42,8 +43,14 @@ const FormationsList = ({ formations, setFormations, loading }: FormationsListPr
     }
   };
 
-  const teamPlayers = (formation: Formation, team: 1 | 2): Player[] =>
-    formation.players.filter((p: Player): boolean => p.team === team);
+  const copyFormation = async (formation: Formation): Promise<void> => {
+    try {
+      await navigator.clipboard.writeText(formationToText(formation.players));
+      notify('Formación copiada!', 'success');
+    } catch {
+      notify('No pudimos copiar la formación.');
+    }
+  };
 
   return (
     <div className='w-full'>
@@ -81,7 +88,7 @@ const FormationsList = ({ formations, setFormations, loading }: FormationsListPr
                       <div key={team} className={team === 1 ? 'flex-1' : 'flex-1 text-right'}>
                         <h3 className='font-semibold black-text mb-2'>Equipo {team}</h3>
                         <ul className='space-y-1'>
-                          {teamPlayers(formation, team).map(
+                          {teamPlayers(formation.players, team).map(
                             (p: Player, index: number): React.JSX.Element => (
                               <li key={`${p.name}-${index.toString()}`} className='text-gray-700'>
                                 {capitalize(p.name)}
@@ -95,14 +102,25 @@ const FormationsList = ({ formations, setFormations, loading }: FormationsListPr
                 </div>
 
                 <div className='flex justify-between items-center'>
-                  <button
-                    type='button'
-                    aria-label='Eliminar formación'
-                    className='px-3 py-2 rounded-lg bg-gray-200 text-gray-600 transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-300'
-                    onClick={() => void deleteFormation(formation._id)}
-                  >
-                    <Trash2 size={16} aria-hidden='true' />
-                  </button>
+                  <div className='flex gap-2'>
+                    <button
+                      type='button'
+                      aria-label='Eliminar formación'
+                      className='px-3 py-2 rounded-lg bg-gray-200 text-gray-600 transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-300'
+                      onClick={() => void deleteFormation(formation._id)}
+                    >
+                      <Trash2 size={16} aria-hidden='true' />
+                    </button>
+
+                    <button
+                      type='button'
+                      className='flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-200 text-gray-600 transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-300'
+                      onClick={() => void copyFormation(formation)}
+                    >
+                      <Copy size={16} aria-hidden='true' />
+                      Copiar
+                    </button>
+                  </div>
 
                   <button
                     type='button'
