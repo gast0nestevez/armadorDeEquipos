@@ -53,11 +53,11 @@ const matchController = {
     const userId: string = getUserId(req);
     const { ids }: { ids: string[] } = req.body as { ids: string[] };
 
-    const result: { deletedCount?: number } = await matchService.deleteMatch(userId, ids);
+    const result: { deletedCount: number } = await matchService.deleteMatch(userId, ids);
 
     res.status(200).json({
       success: true,
-      deleted: result.deletedCount,
+      data: result,
     });
   },
 };

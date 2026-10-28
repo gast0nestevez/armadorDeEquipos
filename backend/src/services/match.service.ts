@@ -80,12 +80,12 @@ const matchService = {
     return updated;
   },
 
-  deleteMatch: async (userId: string, ids: string[]): Promise<{ deletedCount?: number }> => {
+  deleteMatch: async (userId: string, ids: string[]): Promise<{ deletedCount: number }> => {
     if (!Array.isArray(ids) || ids.length === 0) {
       throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Ids are required');
     }
 
-    const result: { deletedCount: number | undefined } = await matchRepo.delete(userId, ids);
+    const result: { deletedCount: number } = await matchRepo.delete(userId, ids);
 
     if (!result.deletedCount) {
       throw new AppError(ErrorCode.MATCH_NOT_FOUND, 404, 'Match not found');

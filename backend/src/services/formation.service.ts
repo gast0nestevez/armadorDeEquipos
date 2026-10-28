@@ -25,12 +25,12 @@ const formationService = {
     return formationRepo.findByUser(userId);
   },
 
-  deleteFormation: async (userId: string, ids: string[]): Promise<{ deletedCount?: number }> => {
+  deleteFormation: async (userId: string, ids: string[]): Promise<{ deletedCount: number }> => {
     if (!Array.isArray(ids) || ids.length === 0) {
       throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Ids are required');
     }
 
-    const result: { deletedCount: number | undefined } = await formationRepo.delete(userId, ids);
+    const result: { deletedCount: number } = await formationRepo.delete(userId, ids);
 
     if (!result.deletedCount) {
       throw new AppError(ErrorCode.FORMATION_NOT_FOUND, 404, 'Formation not found');
