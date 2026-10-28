@@ -16,4 +16,10 @@ type FormationData = {
   players: Player[];
 };
 
-export type { FormationData, MatchData, Player };
+type AuthenticatedUser = {
+  userId: string;
+  name?: string;
+  email: string;
+};
+
+export type { AuthenticatedUser, FormationData, MatchData, Player };

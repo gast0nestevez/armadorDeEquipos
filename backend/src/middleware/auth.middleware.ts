@@ -3,48 +3,59 @@ import type { JwtPayload } from 'jsonwebtoken';
 
 import jwt from 'jsonwebtoken';
 
+import { AppError } from '#error/app.error.ts';
+import { ErrorCode } from '#error/errorCodes.ts';
 import { getEnv } from '#utils/env.ts';
 
 type AuthenticatedRequest = {
-  userId: string;
-  userEmail: string;
+  userId?: string;
 } & Request;
 
-const authMiddleware: (req: Request, res: Response, next: NextFunction) => void = (
+const authMiddleware: (req: Request, _res: Response, next: NextFunction) => void = (
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ): void => {
   const authHeader: string | undefined = req.headers.authorization;
   if (!authHeader) {
-    res.status(401).json({ error: 'Authorization header missing' });
-    return;
+    throw new AppError(ErrorCode.UNAUTHORIZED, 401, 'Authorization header missing');
   }
 
   const [scheme, token]: string[] = authHeader.split(' ');
   if (scheme !== 'Bearer' || !token) {
-    res.status(401).json({ error: 'Invalid authorization format' });
-    return;
+    throw new AppError(ErrorCode.UNAUTHORIZED, 401, 'Invalid authorization format');
   }
+
+  const secret: string = getEnv('JWT_SECRET');
+  let decoded: string | JwtPayload;
 
   try {
-    const decoded: JwtPayload = jwt.verify(token, getEnv('JWT_SECRET')) as JwtPayload;
-
-    if (!decoded.userId) {
-      res.status(403).json({ error: 'Invalid token payload' });
-      return;
+    decoded = jwt.verify(token, secret);
+  } catch (err: unknown) {
+    if (err instanceof jwt.TokenExpiredError) {
+      throw new AppError(ErrorCode.TOKEN_EXPIRED, 401, 'Token expired');
     }
 
-    const authReq: AuthenticatedRequest = req as AuthenticatedRequest;
-    authReq.userId = decoded.userId as string;
-    authReq.userEmail = decoded.email as string;
-
-    next();
-    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  } catch (e) {
-    res.status(403).json({ error: 'Invalid or expired token' });
+    throw new AppError(ErrorCode.UNAUTHORIZED, 401, 'Invalid token');
   }
+
+  if (typeof decoded === 'string' || typeof decoded.userId !== 'string') {
+    throw new AppError(ErrorCode.UNAUTHORIZED, 401, 'Invalid token payload');
+  }
+
+  (req as AuthenticatedRequest).userId = decoded.userId;
+
+  next();
 };
 
-export type { AuthenticatedRequest };
-export { authMiddleware };
+const getUserId: (req: Request) => string = (req: Request): string => {
+  const { userId }: AuthenticatedRequest = req;
+
+  if (!userId) {
+    throw new AppError(ErrorCode.UNAUTHORIZED, 401, 'User not authenticated');
+  }
+
+  return userId;
+};
+
+export { authMiddleware, getUserId };

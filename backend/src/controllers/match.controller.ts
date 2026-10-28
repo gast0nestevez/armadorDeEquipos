@@ -1,9 +1,9 @@
 import type { Request, Response } from 'express';
 
-import type { AuthenticatedRequest } from '#middleware/auth.middleware.ts';
 import type { IMatch } from '#models/match.model.ts';
 import type { MatchData } from '#utils/types.ts';
 
+import { getUserId } from '#middleware/auth.middleware.ts';
 import { matchService } from '#services/match.service.ts';
 
 type MatchParams = {
@@ -12,7 +12,7 @@ type MatchParams = {
 
 const matchController = {
   createMatch: async (req: Request, res: Response): Promise<void> => {
-    const { userId }: { userId: string } = req as AuthenticatedRequest;
+    const userId: string = getUserId(req);
 
     const match: IMatch = await matchService.createMatch(userId, req.body as MatchData);
 
@@ -23,7 +23,7 @@ const matchController = {
   },
 
   getUserMatches: async (req: Request, res: Response): Promise<void> => {
-    const { userId }: { userId: string } = req as AuthenticatedRequest;
+    const userId: string = getUserId(req);
 
     const matches: IMatch[] = await matchService.getUserMatches(userId);
 
@@ -34,7 +34,7 @@ const matchController = {
   },
 
   updateMatch: async (req: Request<MatchParams>, res: Response): Promise<void> => {
-    const { userId }: { userId: string } = req as unknown as AuthenticatedRequest;
+    const userId: string = getUserId(req);
     const { matchId }: { matchId: string } = req.params;
 
     const updatedMatch: IMatch | null = await matchService.updateMatch(
@@ -49,8 +49,8 @@ const matchController = {
     });
   },
 
-  deleteMatch: async (req: Request<MatchParams>, res: Response): Promise<void> => {
-    const { userId }: { userId: string } = req as unknown as AuthenticatedRequest;
+  deleteMatch: async (req: Request, res: Response): Promise<void> => {
+    const userId: string = getUserId(req);
     const { ids }: { ids: string[] } = req.body as { ids: string[] };
 
     const result: { deletedCount?: number } = await matchService.deleteMatch(userId, ids);

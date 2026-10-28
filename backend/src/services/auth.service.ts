@@ -5,6 +5,7 @@ import { OAuth2Client } from 'google-auth-library';
 import jwt from 'jsonwebtoken';
 
 import type { IUser } from '#models/user.model.ts';
+import type { AuthenticatedUser } from '#utils/types.ts';
 
 import { AppError } from '#error/app.error.ts';
 import { ErrorCode } from '#error/errorCodes.ts';
@@ -14,38 +15,22 @@ import { isValidEmail, isValidPasswordLength, MAX_PASSWORD_LENGTH } from '#utils
 
 const client: OAuth2Client = new OAuth2Client();
 
-type User = {
-  id?: string;
-  name?: string;
-  email?: string;
-};
-
 type AuthUserResponse = {
   appToken: string;
-  authenticatedUser: {
-    userId: string;
-    name: string;
-    email: string;
-  };
+  authenticatedUser: AuthenticatedUser;
 };
 
 const EXP_DATE: number = 60 * 60 * 24 * 30;
 const LOCAL_PROVIDER: string = 'local';
 const GOOGLE_PROVIDER: string = 'google';
 
-type AuthenticatedUser = {
-  userId: string;
-  name: string;
-  email: string;
-};
-
-const signToken = (user: User): string =>
+const signToken = (user: AuthenticatedUser): string =>
   jwt.sign(user, getEnv('JWT_SECRET'), { expiresIn: EXP_DATE });
 
 const generateAuthUserResponse = (user: IUser): AuthUserResponse => {
   const authenticatedUser: AuthenticatedUser = {
     userId: user.id as string,
-    name: user.name as string,
+    name: user.name,
     email: user.email,
   };
   const appToken: string = signToken(authenticatedUser);
@@ -150,5 +135,4 @@ const authService = {
   },
 };
 
-export type { AuthenticatedUser };
 export { authService };

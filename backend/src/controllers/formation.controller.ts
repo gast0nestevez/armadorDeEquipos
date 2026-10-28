@@ -1,10 +1,10 @@
 import type { Request, Response } from 'express';
 
-import type { AuthenticatedRequest } from '#middleware/auth.middleware.ts';
 import type { IFormation } from '#models/formation.model.ts';
 import type { IMatch } from '#models/match.model.ts';
 import type { FormationData, MatchData } from '#utils/types.ts';
 
+import { getUserId } from '#middleware/auth.middleware.ts';
 import { formationService } from '#services/formation.service.ts';
 
 type FormationParams = {
@@ -13,7 +13,7 @@ type FormationParams = {
 
 const formationController = {
   createFormation: async (req: Request, res: Response): Promise<void> => {
-    const { userId }: { userId: string } = req as AuthenticatedRequest;
+    const userId: string = getUserId(req);
 
     const formation: IFormation = await formationService.createFormation(
       userId,
@@ -27,7 +27,7 @@ const formationController = {
   },
 
   getUserFormations: async (req: Request, res: Response): Promise<void> => {
-    const { userId }: { userId: string } = req as AuthenticatedRequest;
+    const userId: string = getUserId(req);
 
     const formations: IFormation[] = await formationService.getUserFormations(userId);
 
@@ -38,7 +38,7 @@ const formationController = {
   },
 
   promoteToMatch: async (req: Request<FormationParams>, res: Response): Promise<void> => {
-    const { userId }: { userId: string } = req as unknown as AuthenticatedRequest;
+    const userId: string = getUserId(req);
     const { formationId }: { formationId: string } = req.params;
 
     const match: IMatch = await formationService.promoteToMatch(
@@ -54,7 +54,7 @@ const formationController = {
   },
 
   deleteFormation: async (req: Request, res: Response): Promise<void> => {
-    const { userId }: { userId: string } = req as AuthenticatedRequest;
+    const userId: string = getUserId(req);
     const { ids }: { ids: string[] } = req.body as { ids: string[] };
 
     const result: { deletedCount?: number } = await formationService.deleteFormation(userId, ids);

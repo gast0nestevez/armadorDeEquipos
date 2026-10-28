@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 
-import type { AuthenticatedUser } from '#services/auth.service.ts';
+import type { AuthenticatedUser } from '#utils/types.ts';
 
 import { authService } from '#services/auth.service.ts';
 
