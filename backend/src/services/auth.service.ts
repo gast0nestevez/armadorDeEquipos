@@ -9,7 +9,7 @@ import type { AuthenticatedUser } from '#utils/types.ts';
 
 import { AppError } from '#error/app.error.ts';
 import { ErrorCode } from '#error/errorCodes.ts';
-import userModel from '#models/user.model.ts';
+import User from '#models/user.model.ts';
 import { getEnv } from '#utils/env.ts';
 import { isValidEmail, isValidPasswordLength, MAX_PASSWORD_LENGTH } from '#utils/validation.ts';
 
@@ -37,13 +37,17 @@ const generateAuthUserResponse = (user: IUser): AuthUserResponse => {
   return { appToken, authenticatedUser };
 };
 
+const assertCredentials = (email: string, password: string): void => {
+  if (typeof email !== 'string' || typeof password !== 'string' || !email || !password) {
+    throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Email and password are required');
+  }
+};
+
 const authService = {
   checkCredentials: async (email: string, password: string): Promise<AuthUserResponse> => {
-    if (typeof email !== 'string' || typeof password !== 'string' || !email || !password) {
-      throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Email and password are required');
-    }
+    assertCredentials(email, password);
 
-    const user: IUser | null = await userModel.findOne({ email: email.toLowerCase() });
+    const user: IUser | null = await User.findOne({ email: email.toLowerCase() });
     if (!user?.passwordHash) {
       throw new AppError(ErrorCode.INVALID_CREDENTIALS, 401, 'Invalid credentials');
     }
@@ -57,9 +61,7 @@ const authService = {
   },
 
   createUser: async (email: string, password: string): Promise<AuthUserResponse> => {
-    if (typeof email !== 'string' || typeof password !== 'string' || !email || !password) {
-      throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Email and password are required');
-    }
+    assertCredentials(email, password);
 
     if (!isValidEmail(email)) {
       throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Email format is invalid');
@@ -77,7 +79,7 @@ const authService = {
       const saltRounds: number = 10;
       const passwordHash: string = await bcrypt.hash(password, saltRounds);
 
-      const user: IUser = new userModel({
+      const user: IUser = new User({
         email: email.toLowerCase(),
         passwordHash,
         provider: LOCAL_PROVIDER,
@@ -117,7 +119,7 @@ const authService = {
       throw new AppError(ErrorCode.INVALID_GOOGLE_TOKEN, 401, 'Invalid Google token');
     }
 
-    const user = await userModel.findOneAndUpdate(
+    const user: IUser | null = await User.findOneAndUpdate(
       { email: payload.email.toLowerCase() },
       {
         $set: {
@@ -130,6 +132,10 @@ const authService = {
       },
       { upsert: true, new: true }
     );
+
+    if (!user) {
+      throw new AppError(ErrorCode.INTERNAL_SERVER_ERROR, 500, 'User could not be created');
+    }
 
     return generateAuthUserResponse(user);
   },
