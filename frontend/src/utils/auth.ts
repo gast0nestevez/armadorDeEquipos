@@ -35,7 +35,7 @@ const handleGoogleLogin: (
   credentialResponse: CredentialResponse,
   setUser: SetUser
 ) => Promise<void> = (credentialResponse: CredentialResponse, setUser: SetUser): Promise<void> =>
-  authenticate('/auth/googleLogin', { googleToken: credentialResponse.credential }, setUser);
+  authenticate('/auth/google', { googleToken: credentialResponse.credential }, setUser);
 
 const handleEmailLogin: (email: string, password: string, setUser: SetUser) => Promise<void> = (
   email: string,
