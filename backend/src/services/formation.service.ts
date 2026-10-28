@@ -6,38 +6,22 @@ import { AppError } from '#error/app.error.ts';
 import { ErrorCode } from '#error/errorCodes.ts';
 import { formationRepo } from '#repositories/formation.repo.ts';
 import { matchService } from '#services/match.service.ts';
+import { parsePlayers } from '#utils/players.ts';
 
 type PromoteData = Omit<MatchData, 'players'>;
 
 const formationService = {
   createFormation: async (userId: string, data: FormationData): Promise<IFormation> => {
-    const { players }: { players: Player[] } = data;
+    const players: Player[] = parsePlayers(data.players);
 
-    if (!userId) {
-      throw new AppError(ErrorCode.UNAUTHORIZED, 401, 'User not authenticated');
+    if (players.length === 0) {
+      throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'At least one player is required');
     }
 
-    if (!players || !Array.isArray(players)) {
-      throw new AppError(ErrorCode.VALIDATION_ERROR, 422, 'Players array is required');
-    }
-
-    const validPlayers: Player[] = players.filter(
-      (player: Player): boolean =>
-        undefined !== player?.name && undefined !== player?.team && player.name.trim() !== ''
-    );
-
-    if (validPlayers.length === 0) {
-      throw new AppError(ErrorCode.VALIDATION_ERROR, 422, 'At least one player is required');
-    }
-
-    return formationRepo.create({ userId, players: validPlayers });
+    return formationRepo.create({ userId, players });
   },
 
   getUserFormations: async (userId: string): Promise<IFormation[]> => {
-    if (!userId) {
-      throw new AppError(ErrorCode.UNAUTHORIZED, 401, 'User not authenticated');
-    }
-
     return formationRepo.findByUser(userId);
   },
 

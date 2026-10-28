@@ -4,21 +4,22 @@ import type { MatchData, Player } from '#utils/types.ts';
 import { AppError } from '#error/app.error.ts';
 import { ErrorCode } from '#error/errorCodes.ts';
 import { matchRepo } from '#repositories/match.repo.ts';
+import { parsePlayers } from '#utils/players.ts';
 import { isValidDate, isValidGoal, isValidResult } from '#utils/validation.ts';
 
 const ALLOWED_UPDATE_FIELDS: string[] = ['players', 'goals1', 'goals2', 'result', 'date'];
 
 const assertValidMatchFields = (body: Partial<MatchData>): void => {
   if (!isValidGoal(body.goals1) || !isValidGoal(body.goals2)) {
-    throw new AppError(ErrorCode.VALIDATION_ERROR, 422, 'Goals must be non-negative integers');
+    throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Goals must be non-negative integers');
   }
 
   if (!isValidResult(body.result)) {
-    throw new AppError(ErrorCode.VALIDATION_ERROR, 422, 'Result must be Lose, Draw, Win or empty');
+    throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Result must be Lose, Draw, Win or empty');
   }
 
   if (!isValidDate(body.date)) {
-    throw new AppError(ErrorCode.VALIDATION_ERROR, 422, 'Date must have YYYY-MM-DD format');
+    throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Date must have YYYY-MM-DD format');
   }
 };
 
@@ -27,63 +28,48 @@ const sanitize = (body: object, allowed: string[]): Record<string, unknown> =>
     Object.entries(body).filter(([key]: [string, unknown]): boolean => allowed.includes(key))
   );
 
+const buildUpdate = (body: Partial<MatchData>): Record<string, unknown> => {
+  const update: Record<string, unknown> = sanitize(body, ALLOWED_UPDATE_FIELDS);
+
+  if (update.players !== undefined) {
+    update.players = parsePlayers(update.players);
+  }
+
+  return update;
+};
+
 const matchService = {
   createMatch: async (userId: string, data: MatchData): Promise<IMatch> => {
-    const {
-      players,
-      goals1,
-      goals2,
-      result,
-      date,
-    }: {
-      players: Player[];
-      goals1: number;
-      goals2: number;
-      result: string;
-      date: string;
-    } = data;
-
-    if (!userId) {
-      throw new AppError(ErrorCode.UNAUTHORIZED, 401, 'User not authenticated');
-    }
-
-    if (!players || !Array.isArray(players)) {
-      throw new AppError(ErrorCode.VALIDATION_ERROR, 422, 'Players array is required');
-    }
+    const players: Player[] = parsePlayers(data.players);
 
     assertValidMatchFields(data);
 
-    const validPlayers: Player[] = players.filter(
-      (player: Player): boolean =>
-        undefined !== player?.name && undefined !== player?.team && player.name.trim() !== ''
-    );
-
     return matchRepo.create({
       userId,
-      players: validPlayers,
-      goals1,
-      goals2,
-      result,
-      date,
+      players,
+      goals1: data.goals1,
+      goals2: data.goals2,
+      result: data.result,
+      date: data.date,
     });
   },
 
   getUserMatches: async (userId: string): Promise<IMatch[]> => {
-    if (!userId) {
-      throw new AppError(ErrorCode.UNAUTHORIZED, 401, 'User not authenticated');
-    }
-
     return matchRepo.findByUser(userId);
   },
 
-  updateMatch: async (userId: string, matchId: string, body: MatchData): Promise<IMatch | null> => {
+  updateMatch: async (
+    userId: string,
+    matchId: string,
+    body: Partial<MatchData>
+  ): Promise<IMatch | null> => {
     if (!matchId) {
       throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Match id is required');
     }
 
     assertValidMatchFields(body);
 
-    const filteredBody: Record<string, unknown> = sanitize(body, ALLOWED_UPDATE_FIELDS);
+    const filteredBody: Record<string, unknown> = buildUpdate(body);
 
     const updated: IMatch | null = await matchRepo.update(userId, matchId, filteredBody);
 

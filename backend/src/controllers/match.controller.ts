@@ -40,7 +40,7 @@ const matchController = {
     const updatedMatch: IMatch | null = await matchService.updateMatch(
       userId,
       matchId,
-      req.body as MatchData
+      req.body as Partial<MatchData>
     );
 
     res.status(200).json({
