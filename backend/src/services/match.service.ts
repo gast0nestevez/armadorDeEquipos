@@ -18,6 +18,15 @@ const assertValidMatchFields = (body: Partial<MatchData>): void => {
     throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Result must be Lose, Draw, Win or empty');
   }
 
+  if (
+    body.result === 'Draw' &&
+    body.goals1 !== undefined &&
+    body.goals2 !== undefined &&
+    body.goals1 !== body.goals2
+  ) {
+    throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'A draw requires equal goals');
+  }
+
   if (!isValidDate(body.date)) {
     throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Date must have YYYY-MM-DD format');
   }
@@ -41,6 +50,10 @@ const buildUpdate = (body: Partial<MatchData>): Record<string, unknown> => {
 const matchService = {
   createMatch: async (userId: string, data: MatchData): Promise<IMatch> => {
     const players: Player[] = parsePlayers(data.players);
+
+    if (!data.result) {
+      throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Result is required');
+    }
 
     assertValidMatchFields(data);
 
