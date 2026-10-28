@@ -5,16 +5,14 @@ import type { IFormation } from '#models/formation.model.ts';
 import type { IMatch } from '#models/match.model.ts';
 import type { FormationData, MatchData } from '#utils/types.ts';
 
-import { FormationService } from '#services/formation.service.ts';
+import { formationService } from '#services/formation.service.ts';
 
 type FormationParams = {
   formationId: string;
 };
 
-const formationService: FormationService = new FormationService();
-
-class FormationController {
-  async createFormation(req: Request, res: Response): Promise<void> {
+const formationController = {
+  createFormation: async (req: Request, res: Response): Promise<void> => {
     const { userId }: { userId: string } = req as AuthenticatedRequest;
 
     const formation: IFormation = await formationService.createFormation(
@@ -26,9 +24,9 @@ class FormationController {
       success: true,
       data: formation,
     });
-  }
+  },
 
-  async getUserFormations(req: Request, res: Response): Promise<void> {
+  getUserFormations: async (req: Request, res: Response): Promise<void> => {
     const { userId }: { userId: string } = req as AuthenticatedRequest;
 
     const formations: IFormation[] = await formationService.getUserFormations(userId);
@@ -37,9 +35,9 @@ class FormationController {
       success: true,
       data: formations,
     });
-  }
+  },
 
-  async promoteToMatch(req: Request<FormationParams>, res: Response): Promise<void> {
+  promoteToMatch: async (req: Request<FormationParams>, res: Response): Promise<void> => {
     const { userId }: { userId: string } = req as unknown as AuthenticatedRequest;
     const { formationId }: { formationId: string } = req.params;
 
@@ -53,9 +51,9 @@ class FormationController {
       success: true,
       data: match,
     });
-  }
+  },
 
-  async deleteFormation(req: Request, res: Response): Promise<void> {
+  deleteFormation: async (req: Request, res: Response): Promise<void> => {
     const { userId }: { userId: string } = req as AuthenticatedRequest;
     const { ids }: { ids: string[] } = req.body as { ids: string[] };
 
@@ -65,7 +63,7 @@ class FormationController {
       success: true,
       deleted: result.deletedCount,
     });
-  }
-}
+  },
+};
 
-export { FormationController };
+export { formationController };

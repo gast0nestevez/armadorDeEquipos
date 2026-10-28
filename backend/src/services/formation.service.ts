@@ -4,15 +4,13 @@ import type { FormationData, MatchData, Player } from '#utils/types.ts';
 
 import { AppError } from '#error/app.error.ts';
 import { ErrorCode } from '#error/errorCodes.ts';
-import formationRepo from '#repositories/formation.repo.ts';
-import { MatchService } from '#services/match.service.ts';
+import { formationRepo } from '#repositories/formation.repo.ts';
+import { matchService } from '#services/match.service.ts';
 
 type PromoteData = Omit<MatchData, 'players'>;
 
-const matchService: MatchService = new MatchService();
-
-class FormationService {
-  async createFormation(userId: string, data: FormationData): Promise<IFormation> {
+const formationService = {
+  createFormation: async (userId: string, data: FormationData): Promise<IFormation> => {
     const { players }: { players: Player[] } = data;
 
     if (!userId) {
@@ -33,17 +31,17 @@ class FormationService {
     }
 
     return formationRepo.create({ userId, players: validPlayers });
-  }
+  },
 
-  async getUserFormations(userId: string): Promise<IFormation[]> {
+  getUserFormations: async (userId: string): Promise<IFormation[]> => {
     if (!userId) {
       throw new AppError(ErrorCode.UNAUTHORIZED, 401, 'User not authenticated');
     }
 
     return formationRepo.findByUser(userId);
-  }
+  },
 
-  async deleteFormation(userId: string, ids: string[]): Promise<{ deletedCount?: number }> {
+  deleteFormation: async (userId: string, ids: string[]): Promise<{ deletedCount?: number }> => {
     if (!Array.isArray(ids) || ids.length === 0) {
       throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Ids are required');
     }
@@ -55,9 +53,13 @@ class FormationService {
     }
 
     return result;
-  }
+  },
 
-  async promoteToMatch(userId: string, formationId: string, body: PromoteData): Promise<IMatch> {
+  promoteToMatch: async (
+    userId: string,
+    formationId: string,
+    body: PromoteData
+  ): Promise<IMatch> => {
     if (!formationId) {
       throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Formation id is required');
     }
@@ -79,7 +81,7 @@ class FormationService {
     await formationRepo.delete(userId, [formationId]);
 
     return match;
-  }
-}
+  },
+};
 
-export { FormationService };
+export { formationService };

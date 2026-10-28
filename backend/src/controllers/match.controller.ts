@@ -4,16 +4,14 @@ import type { AuthenticatedRequest } from '#middleware/auth.middleware.ts';
 import type { IMatch } from '#models/match.model.ts';
 import type { MatchData } from '#utils/types.ts';
 
-import { MatchService } from '#services/match.service.ts';
+import { matchService } from '#services/match.service.ts';
 
 type MatchParams = {
   matchId: string;
 };
 
-const matchService: MatchService = new MatchService();
-
-class MatchController {
-  async createMatch(req: Request, res: Response): Promise<void> {
+const matchController = {
+  createMatch: async (req: Request, res: Response): Promise<void> => {
     const { userId }: { userId: string } = req as AuthenticatedRequest;
 
     const match: IMatch = await matchService.createMatch(userId, req.body as MatchData);
@@ -22,9 +20,9 @@ class MatchController {
       success: true,
       data: match,
     });
-  }
+  },
 
-  async getUserMatches(req: Request, res: Response): Promise<void> {
+  getUserMatches: async (req: Request, res: Response): Promise<void> => {
     const { userId }: { userId: string } = req as AuthenticatedRequest;
 
     const matches: IMatch[] = await matchService.getUserMatches(userId);
@@ -33,9 +31,9 @@ class MatchController {
       success: true,
       data: matches,
     });
-  }
+  },
 
-  async updateMatch(req: Request<MatchParams>, res: Response): Promise<void> {
+  updateMatch: async (req: Request<MatchParams>, res: Response): Promise<void> => {
     const { userId }: { userId: string } = req as unknown as AuthenticatedRequest;
     const { matchId }: { matchId: string } = req.params;
 
@@ -49,9 +47,9 @@ class MatchController {
       success: true,
       data: updatedMatch,
     });
-  }
+  },
 
-  async deleteMatch(req: Request<MatchParams>, res: Response): Promise<void> {
+  deleteMatch: async (req: Request<MatchParams>, res: Response): Promise<void> => {
     const { userId }: { userId: string } = req as unknown as AuthenticatedRequest;
     const { ids }: { ids: string[] } = req.body as { ids: string[] };
 
@@ -61,7 +59,7 @@ class MatchController {
       success: true,
       deleted: result.deletedCount,
     });
-  }
-}
+  },
+};
 
-export { MatchController };
+export { matchController };

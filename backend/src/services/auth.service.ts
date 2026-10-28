@@ -39,22 +39,21 @@ type AuthenticatedUser = {
   email: string;
 };
 
-class AuthService {
-  signToken(user: User): string {
-    return jwt.sign(user, getEnv('JWT_SECRET'), { expiresIn: EXP_DATE });
-  }
+const signToken = (user: User): string =>
+  jwt.sign(user, getEnv('JWT_SECRET'), { expiresIn: EXP_DATE });
 
-  generateAuthUserResponse(user: IUser): AuthUserResponse {
-    const authenticatedUser: AuthenticatedUser = {
-      userId: user.id as string,
-      name: user.name as string,
-      email: user.email,
-    };
-    const appToken: string = this.signToken(authenticatedUser);
-    return { appToken, authenticatedUser };
-  }
+const generateAuthUserResponse = (user: IUser): AuthUserResponse => {
+  const authenticatedUser: AuthenticatedUser = {
+    userId: user.id as string,
+    name: user.name as string,
+    email: user.email,
+  };
+  const appToken: string = signToken(authenticatedUser);
+  return { appToken, authenticatedUser };
+};
 
-  async checkCredentials(email: string, password: string): Promise<AuthUserResponse> {
+const authService = {
+  checkCredentials: async (email: string, password: string): Promise<AuthUserResponse> => {
     if (typeof email !== 'string' || typeof password !== 'string' || !email || !password) {
       throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Email and password are required');
     }
@@ -69,10 +68,10 @@ class AuthService {
       throw new AppError(ErrorCode.INVALID_CREDENTIALS, 401, 'Invalid credentials');
     }
 
-    return this.generateAuthUserResponse(user);
-  }
+    return generateAuthUserResponse(user);
+  },
 
-  async createUser(email: string, password: string): Promise<AuthUserResponse> {
+  createUser: async (email: string, password: string): Promise<AuthUserResponse> => {
     if (typeof email !== 'string' || typeof password !== 'string' || !email || !password) {
       throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Email and password are required');
     }
@@ -101,7 +100,7 @@ class AuthService {
 
       await user.save();
 
-      return this.generateAuthUserResponse(user);
+      return generateAuthUserResponse(user);
     } catch (err: unknown) {
       if (err instanceof Error && 'code' in err && err.code === 11000) {
         throw new AppError(ErrorCode.EMAIL_ALREADY_EXISTS, 409, 'Email already registered');
@@ -109,9 +108,9 @@ class AuthService {
 
       throw err;
     }
-  }
+  },
 
-  async validateGoogleToken(googleToken: string): Promise<AuthUserResponse> {
+  validateGoogleToken: async (googleToken: string): Promise<AuthUserResponse> => {
     if (!googleToken) {
       throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Google token is required');
     }
@@ -147,9 +146,9 @@ class AuthService {
       { upsert: true, new: true }
     );
 
-    return this.generateAuthUserResponse(user);
-  }
-}
+    return generateAuthUserResponse(user);
+  },
+};
 
 export type { AuthenticatedUser };
-export { AuthService };
+export { authService };

@@ -3,7 +3,7 @@ import type { MatchData, Player } from '#utils/types.ts';
 
 import { AppError } from '#error/app.error.ts';
 import { ErrorCode } from '#error/errorCodes.ts';
-import matchRepo from '#repositories/match.repo.ts';
+import { matchRepo } from '#repositories/match.repo.ts';
 import { isValidDate, isValidGoal, isValidResult } from '#utils/validation.ts';
 
 const ALLOWED_UPDATE_FIELDS: string[] = ['players', 'goals1', 'goals2', 'result', 'date'];
@@ -27,8 +27,8 @@ const sanitize = (body: object, allowed: string[]): Record<string, unknown> =>
     Object.entries(body).filter(([key]: [string, unknown]): boolean => allowed.includes(key))
   );
 
-class MatchService {
-  async createMatch(userId: string, data: MatchData): Promise<IMatch> {
+const matchService = {
+  createMatch: async (userId: string, data: MatchData): Promise<IMatch> => {
     const {
       players,
       goals1,
@@ -66,17 +66,17 @@ class MatchService {
       result,
       date,
     });
-  }
+  },
 
-  async getUserMatches(userId: string): Promise<IMatch[]> {
+  getUserMatches: async (userId: string): Promise<IMatch[]> => {
     if (!userId) {
       throw new AppError(ErrorCode.UNAUTHORIZED, 401, 'User not authenticated');
     }
 
     return matchRepo.findByUser(userId);
-  }
+  },
 
-  async updateMatch(userId: string, matchId: string, body: MatchData): Promise<IMatch | null> {
+  updateMatch: async (userId: string, matchId: string, body: MatchData): Promise<IMatch | null> => {
     if (!matchId) {
       throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Match id is required');
     }
@@ -92,9 +92,9 @@ class MatchService {
     }
 
     return updated;
-  }
+  },
 
-  async deleteMatch(userId: string, ids: string[]): Promise<{ deletedCount?: number }> {
+  deleteMatch: async (userId: string, ids: string[]): Promise<{ deletedCount?: number }> => {
     if (!Array.isArray(ids) || ids.length === 0) {
       throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Ids are required');
     }
@@ -106,7 +106,7 @@ class MatchService {
     }
 
     return result;
-  }
-}
+  },
+};
 
-export { MatchService };
+export { matchService };

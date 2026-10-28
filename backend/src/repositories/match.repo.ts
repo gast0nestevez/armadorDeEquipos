@@ -9,7 +9,7 @@ type MatchCreateData = MatchData & {
   userId: string;
 };
 
-export default {
+const matchRepo = {
   create: (data: MatchCreateData): Promise<IMatch> => Match.create(data),
 
   findByUser: (userId: string): Promise<IMatch[]> =>
@@ -28,3 +28,5 @@ export default {
       runValidators: true,
     }),
 };
+
+export { matchRepo };

@@ -2,11 +2,10 @@ import type { Router } from 'express';
 
 import express from 'express';
 
-import { MatchController } from '#controllers/match.controller.ts';
+import { matchController } from '#controllers/match.controller.ts';
 import { authMiddleware } from '#middleware/auth.middleware.ts';
 
 const matchRouter: Router = express.Router();
-const matchController: MatchController = new MatchController();
 
 matchRouter.get('/', authMiddleware, matchController.getUserMatches);
 matchRouter.post('/', authMiddleware, matchController.createMatch);

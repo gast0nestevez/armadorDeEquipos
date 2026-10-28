@@ -9,7 +9,7 @@ type FormationCreateData = FormationData & {
   userId: string;
 };
 
-export default {
+const formationRepo = {
   create: (data: FormationCreateData): Promise<IFormation> => Formation.create(data),
 
   findByUser: (userId: string): Promise<IFormation[]> =>
@@ -21,3 +21,5 @@ export default {
   delete: (userId: string, ids: string[]): Promise<{ deletedCount: number }> =>
     Formation.deleteMany({ _id: { $in: ids }, userId }),
 };
+
+export { formationRepo };

@@ -2,12 +2,10 @@ import type { Request, Response } from 'express';
 
 import type { AuthenticatedUser } from '#services/auth.service.ts';
 
-import { AuthService } from '#services/auth.service.ts';
+import { authService } from '#services/auth.service.ts';
 
-const authService: AuthService = new AuthService();
-
-class AuthController {
-  async login(req: Request, res: Response): Promise<void> {
+const authController = {
+  login: async (req: Request, res: Response): Promise<void> => {
     const { email, password }: { email: string; password: string } = req.body as {
       email: string;
       password: string;
@@ -26,9 +24,9 @@ class AuthController {
         user: authenticatedUser,
       },
     });
-  }
+  },
 
-  async register(req: Request, res: Response): Promise<void> {
+  register: async (req: Request, res: Response): Promise<void> => {
     const { email, password }: { email: string; password: string } = req.body as {
       email: string;
       password: string;
@@ -49,9 +47,9 @@ class AuthController {
         user: authenticatedUser,
       },
     });
-  }
+  },
 
-  async googleLogin(req: Request, res: Response): Promise<void> {
+  googleLogin: async (req: Request, res: Response): Promise<void> => {
     const { googleToken }: { googleToken: string } = req.body as { googleToken: string };
 
     const {
@@ -67,7 +65,7 @@ class AuthController {
         user: authenticatedUser,
       },
     });
-  }
-}
+  },
+};
 
-export { AuthController };
+export { authController };
