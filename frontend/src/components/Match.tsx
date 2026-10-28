@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { Minus, PencilLine, Trophy, X } from 'lucide-react';
+import { Minus, PencilLine, Share2, Trophy, X } from 'lucide-react';
 import { useState } from 'react';
 
 import type { Match, Player, Result } from '#utils/types.ts';
@@ -7,6 +7,7 @@ import type { Match, Player, Result } from '#utils/types.ts';
 import { DateInput } from '#components/DateInput.tsx';
 import { MatchCardSkeleton } from '#components/MatchesSkeleton.tsx';
 import { Modal } from '#components/Modal.tsx';
+import { ShareMatch } from '#components/ShareMatch.tsx';
 import { useNotification } from '#context/notificationContext.tsx';
 import { api } from '#utils/api.ts';
 import { isoToDisplay } from '#utils/date.ts';
@@ -23,6 +24,7 @@ type MatchProps = {
 
 const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: MatchProps) => {
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [showShare, setShowShare] = useState<boolean>(false);
   const [showDetails, setShowDetails] = useState<boolean>(false);
   const [goals1, setGoals1] = useState<number>(match.goals1);
   const [goals2, setGoals2] = useState<number>(match.goals2);
@@ -191,7 +193,18 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
             </div>
           </div>
 
-          <div className='flex justify-center'>
+          <div className='flex justify-center gap-2'>
+            <button
+              type='button'
+              aria-label='Compartir partido'
+              className='px-3 py-2 rounded-lg bg-gray-200 text-gray-600 transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-300'
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowShare(true);
+              }}
+            >
+              <Share2 size={16} aria-hidden='true' />
+            </button>
             <button
               type='button'
               aria-label='Editar partido'
@@ -206,6 +219,20 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
           </div>
         </div>
       </div>
+
+      <AnimatePresence>
+        {showShare && (
+          <Modal
+            label='Compartir partido'
+            className='max-w-sm'
+            onClose={() => {
+              setShowShare(false);
+            }}
+          >
+            <ShareMatch match={match} />
+          </Modal>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {showModal && (
