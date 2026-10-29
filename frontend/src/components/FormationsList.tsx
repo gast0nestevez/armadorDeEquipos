@@ -101,7 +101,7 @@ const FormationsList = ({ formations, setFormations, loading }: FormationsListPr
                   )}
                 </div>
 
-                <div className='flex justify-between items-center'>
+                <div className='flex justify-between items-center gap-2'>
                   <div className='flex gap-2'>
                     <button
                       type='button'
@@ -114,17 +114,18 @@ const FormationsList = ({ formations, setFormations, loading }: FormationsListPr
 
                     <button
                       type='button'
-                      className='flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-200 text-gray-600 transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-300'
+                      aria-label='Copiar formación'
+                      className='flex items-center gap-2 px-3 py-2 rounded-lg whitespace-nowrap bg-gray-200 text-gray-600 transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-300'
                       onClick={() => void copyFormation(formation)}
                     >
                       <Copy size={16} aria-hidden='true' />
-                      Copiar
+                      <span className='hidden sm:inline'>Copiar</span>
                     </button>
                   </div>
 
                   <button
                     type='button'
-                    className='flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-600 white-text transition-colors duration-200 ease-in-out cursor-pointer hover:bg-blue-700'
+                    className='flex items-center gap-2 px-3 py-2 rounded-lg whitespace-nowrap text-sm sm:text-base bg-blue-600 white-text transition-colors duration-200 ease-in-out cursor-pointer hover:bg-blue-700'
                     onClick={() => {
                       setPromoting(formation);
                     }}
