@@ -35,13 +35,13 @@ const PeriodSelector = ({ period, onChange }: PeriodSelectorProps) => (
       <label className='flex items-center gap-2 text-sm text-gray-500'>
         Últimos
         <input
-          type='number'
-          min='1'
+          type='text'
           inputMode='numeric'
+          pattern='[0-9]*'
           aria-label='Cantidad de partidos'
           value={period.customCount ?? ''}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            const count: number = Number.parseInt(e.target.value);
+            const count: number = Number.parseInt(e.target.value.replaceAll(/\D/g, ''));
             onChange({ ...period, customCount: Number.isNaN(count) ? null : count });
           }}
           className='w-20 bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 text-center focus:outline-none focus:ring-2 focus:ring-blue-400'
