@@ -57,10 +57,12 @@ const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
   const saveFormation = async (): Promise<void> => {
     const players: MappedPlayer[] = mapTeamsToPlayers(teams);
 
+    saveMessage.trigger();
+
     try {
       await api.post<unknown>('/formation', { players });
-      saveMessage.trigger();
     } catch (err) {
+      saveMessage.hide();
       notify(getErrorMessage(err, 'No pudimos guardar la formación.'));
     }
   };
