@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import type { Match, MatchStatsSummary, Result } from '#utils/types.ts';
+import type { Match, MatchStatsSummary } from '#utils/types.ts';
 
 import { computeStats } from '#utils/matches.ts';
 
@@ -21,13 +21,6 @@ const ACCENT = {
   blue: { border: 'border-blue-500', text: 'text-blue-500' },
   yellow: { border: 'border-yellow-500', text: 'text-yellow-500' },
 } as const;
-
-const STREAK_LABEL: Record<Result, string> = {
-  '': '—',
-  Win: 'ganando',
-  Lose: 'perdiendo',
-  Draw: 'empatando',
-};
 
 const StatCard = ({ label, value, sub, accent }: StatCardProps) => (
   <div className={`flex flex-col gap-1 border-l-4 pl-3 py-1 ${ACCENT[accent].border}`}>
@@ -91,24 +84,20 @@ const MatchStats = ({ matches }: MatchStatsProps) => {
         accent='blue'
       />
       <StatCard
-        label='Racha actual'
-        value={`${stats.streak.toString()} partido${stats.streak > 1 ? 's' : ''}`}
-        sub={STREAK_LABEL[stats.streakResult]}
-        accent='yellow'
-      />
-      <StatCard
         label='Mejor racha ganando'
         value={`${stats.bestWinStreak.toString()} partido${stats.bestWinStreak === 1 ? '' : 's'}`}
         sub='victorias seguidas'
         accent='yellow'
       />
-      {stats.biggestWin && (
-        <StatCard
-          label='Mayor victoria'
-          value={`${stats.biggestWin.goalsFor.toString()} - ${stats.biggestWin.goalsAgainst.toString()}`}
-          accent='green'
-        />
-      )}
+      <StatCard
+        label='Mayor victoria'
+        value={
+          stats.biggestWin
+            ? `${stats.biggestWin.goalsFor.toString()} - ${stats.biggestWin.goalsAgainst.toString()}`
+            : '—'
+        }
+        accent='green'
+      />
     </div>
   );
 };

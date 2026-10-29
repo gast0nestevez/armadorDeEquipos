@@ -120,12 +120,6 @@ const computeStats: (matches: Match[]) => MatchStatsSummary | null = (
     }
   });
 
-  const streakResult: Result = played[played.length - 1].result;
-  let streak: number = 0;
-  for (let i: number = played.length - 1; i >= 0 && played[i].result === streakResult; i--) {
-    streak++;
-  }
-
   return {
     played: played.length,
     wins: count('Win'),
@@ -138,8 +132,6 @@ const computeStats: (matches: Match[]) => MatchStatsSummary | null = (
     avgAgainst: goalsAgainst / played.length,
     goalDifference: goalsFor - goalsAgainst,
     cleanSheets,
-    streak,
-    streakResult,
     bestWinStreak,
     biggestWin,
   };

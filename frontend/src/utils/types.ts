@@ -45,8 +45,6 @@ type MatchStatsSummary = {
   avgAgainst: number;
   goalDifference: number;
   cleanSheets: number;
-  streak: number;
-  streakResult: Result;
   bestWinStreak: number;
   biggestWin: MatchGoals | null;
 };
