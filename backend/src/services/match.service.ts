@@ -27,6 +27,15 @@ const assertValidMatchFields = (body: Partial<MatchData>): void => {
     throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'A draw requires equal goals');
   }
 
+  if (
+    (body.result === 'Win' || body.result === 'Lose') &&
+    body.goals1 !== undefined &&
+    body.goals2 !== undefined &&
+    body.goals1 === body.goals2
+  ) {
+    throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Equal goals require a draw');
+  }
+
   if (!isValidDate(body.date)) {
     throw new AppError(ErrorCode.VALIDATION_ERROR, 400, 'Date must have YYYY-MM-DD format');
   }

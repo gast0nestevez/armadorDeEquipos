@@ -31,7 +31,7 @@ const PromoteFormationForm = ({ formation, setFormations }: PromoteFormationForm
     !Number.isNaN(goals1) &&
     !Number.isNaN(goals2) &&
     !!result &&
-    (result !== 'Draw' || canBeDraw(goals1, goals2));
+    (result === 'Draw') === canBeDraw(goals1, goals2);
 
   const changeGoals = (team: 1 | 2, value: number): void => {
     const nextGoals1: number | null = team === 1 ? value : goals1;
@@ -43,7 +43,8 @@ const PromoteFormationForm = ({ formation, setFormations }: PromoteFormationForm
       setGoals2(value);
     }
 
-    if (result === 'Draw' && !canBeDraw(nextGoals1, nextGoals2)) {
+    const tied: boolean = canBeDraw(nextGoals1, nextGoals2);
+    if ((result === 'Draw' && !tied) || ((result === 'Win' || result === 'Lose') && tied)) {
       setResult(null);
     }
   };
@@ -136,7 +137,9 @@ const PromoteFormationForm = ({ formation, setFormations }: PromoteFormationForm
           type='button'
           aria-label='Victoria'
           aria-pressed={result === 'Win'}
-          className={resultButtonClasses('Win', result)}
+          disabled={canBeDraw(goals1, goals2)}
+          title='Solo con goles distintos'
+          className={`${resultButtonClasses('Win', result)} disabled:opacity-50 disabled:cursor-not-allowed`}
           onClick={() => {
             setResult('Win');
           }}
@@ -160,7 +163,9 @@ const PromoteFormationForm = ({ formation, setFormations }: PromoteFormationForm
           type='button'
           aria-label='Derrota'
           aria-pressed={result === 'Lose'}
-          className={resultButtonClasses('Lose', result)}
+          disabled={canBeDraw(goals1, goals2)}
+          title='Solo con goles distintos'
+          className={`${resultButtonClasses('Lose', result)} disabled:opacity-50 disabled:cursor-not-allowed`}
           onClick={() => {
             setResult('Lose');
           }}

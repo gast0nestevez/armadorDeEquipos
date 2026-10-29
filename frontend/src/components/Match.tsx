@@ -44,7 +44,8 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
       setGoals2(value);
     }
 
-    if (result === 'Draw' && !canBeDraw(nextGoals1, nextGoals2)) {
+    const tied: boolean = canBeDraw(nextGoals1, nextGoals2);
+    if ((result === 'Draw' && !tied) || ((result === 'Win' || result === 'Lose') && tied)) {
       setResult('');
     }
   };
@@ -296,7 +297,9 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
                 type='button'
                 aria-label='Victoria'
                 aria-pressed={result === 'Win'}
-                className={resultButtonClasses('Win', result)}
+                disabled={canBeDraw(goals1, goals2)}
+                title='Solo con goles distintos'
+                className={`${resultButtonClasses('Win', result)} disabled:opacity-50 disabled:cursor-not-allowed`}
                 onClick={() => {
                   setResult('Win');
                 }}
@@ -320,7 +323,9 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
                 type='button'
                 aria-label='Derrota'
                 aria-pressed={result === 'Lose'}
-                className={resultButtonClasses('Lose', result)}
+                disabled={canBeDraw(goals1, goals2)}
+                title='Solo con goles distintos'
+                className={`${resultButtonClasses('Lose', result)} disabled:opacity-50 disabled:cursor-not-allowed`}
                 onClick={() => {
                   setResult('Lose');
                 }}
