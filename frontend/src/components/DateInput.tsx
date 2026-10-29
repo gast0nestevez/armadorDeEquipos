@@ -6,9 +6,15 @@ type DateInputProps = {
   value: string;
   onChange: (isoDate: string) => void;
   className?: string;
+  ariaLabel?: string;
 };
 
-const DateInput = ({ value, onChange, className }: DateInputProps) => {
+const DateInput = ({
+  value,
+  onChange,
+  className,
+  ariaLabel = 'Fecha del partido',
+}: DateInputProps) => {
   const [text, setText] = useState<string>(isoToDisplay(value));
 
   return (
@@ -17,7 +23,7 @@ const DateInput = ({ value, onChange, className }: DateInputProps) => {
       inputMode='numeric'
       autoComplete='off'
       placeholder='dd/mm/aaaa'
-      aria-label='Fecha del partido'
+      aria-label={ariaLabel}
       maxLength={10}
       value={text}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {

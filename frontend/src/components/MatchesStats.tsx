@@ -1,12 +1,10 @@
 import { useMemo } from 'react';
 
-import type { ChartMatch } from '#components/PerformanceChart.tsx';
-import type { Match } from '#utils/types.ts';
+import type { Match, MatchStatsSummary, Result } from '#utils/types.ts';
 
-import { lastTenMatches } from '#utils/matches.ts';
+import { computeStats } from '#utils/matches.ts';
 
 type MatchStatsProps = {
-  chartData: ChartMatch[];
   matches: Match[];
 };
 
@@ -17,14 +15,6 @@ type StatCardProps = {
   accent: 'green' | 'red' | 'blue' | 'yellow';
 };
 
-type Stats = {
-  avgFor: number;
-  avgAgainst: number;
-  cleanSheets: number;
-  streak: number;
-  streakResult: string;
-};
-
 const ACCENT = {
   green: { border: 'border-green-500', text: 'text-green-500' },
   red: { border: 'border-red-500', text: 'text-red-500' },
@@ -32,7 +22,8 @@ const ACCENT = {
   yellow: { border: 'border-yellow-500', text: 'text-yellow-500' },
 } as const;
 
-const STREAK_LABEL: Record<string, string> = {
+const STREAK_LABEL: Record<Result, string> = {
+  '': '—',
   Win: 'ganando',
   Lose: 'perdiendo',
   Draw: 'empatando',
@@ -46,63 +37,78 @@ const StatCard = ({ label, value, sub, accent }: StatCardProps) => (
   </div>
 );
 
-const MatchStats = ({ chartData, matches }: MatchStatsProps) => {
-  const stats: Stats | null = useMemo((): Stats | null => {
-    const total: number = chartData.length;
-    if (total === 0) {
-      return null;
-    }
+const formatSigned: (value: number) => string = (value: number): string =>
+  value > 0 ? `+${value.toString()}` : value.toString();
 
-    const averageFor: number =
-      chartData.reduce((sum: number, match: ChartMatch): number => sum + match.goalsFor, 0) / total;
-    const averageAgainst: number =
-      chartData.reduce<number>(
-        (sum: number, match: ChartMatch): number => sum + match.goalsAgainst,
-        0
-      ) / total;
-    const cleanSheets: number = chartData.filter(
-      (match: ChartMatch): boolean => match.goalsAgainst === 0
-    ).length;
-
-    const lastResults: string[] = lastTenMatches(matches).map((match: Match) => match.result);
-
-    const streakResult: string = lastResults[lastResults.length - 1];
-    let streak: number = 0;
-    for (let i = lastResults.length - 1; i >= 0; i--) {
-      if (lastResults[i] === streakResult) {
-        streak++;
-      } else {
-        break;
-      }
-    }
-
-    return { avgFor: averageFor, avgAgainst: averageAgainst, cleanSheets, streak, streakResult };
-  }, [chartData, matches]);
+const MatchStats = ({ matches }: MatchStatsProps) => {
+  const stats: MatchStatsSummary | null = useMemo(
+    (): MatchStatsSummary | null => computeStats(matches),
+    [matches]
+  );
 
   if (!stats) {
-    return null;
+    return (
+      <p className='mt-5 text-center text-sm text-gray-500'>No hay partidos en este período.</p>
+    );
   }
 
   return (
     <div className='grid grid-cols-2 gap-x-6 gap-y-4 mt-5 px-1'>
       <StatCard
-        label='Promedio goles a favor'
-        value={stats.avgFor.toFixed(1)}
-        sub='por partido'
+        label='Partidos jugados'
+        value={stats.played.toString()}
+        sub={`${stats.wins.toString()}G · ${stats.draws.toString()}E · ${stats.losses.toString()}P`}
+        accent='blue'
+      />
+      <StatCard
+        label='Victorias'
+        value={`${stats.winRate.toFixed(0)}%`}
+        sub={`${stats.wins.toString()} de ${stats.played.toString()}`}
         accent='green'
       />
       <StatCard
-        label='Promedio goles en contra'
-        value={stats.avgAgainst.toFixed(1)}
-        sub='por partido'
+        label='Goles a favor'
+        value={stats.goalsFor.toString()}
+        sub={`${stats.avgFor.toFixed(1)} por partido`}
+        accent='green'
+      />
+      <StatCard
+        label='Goles en contra'
+        value={stats.goalsAgainst.toString()}
+        sub={`${stats.avgAgainst.toFixed(1)} por partido`}
         accent='red'
+      />
+      <StatCard
+        label='Diferencia de gol'
+        value={formatSigned(stats.goalDifference)}
+        sub={`${formatSigned(Number((stats.goalDifference / stats.played).toFixed(1)))} por partido`}
+        accent={stats.goalDifference >= 0 ? 'green' : 'red'}
+      />
+      <StatCard
+        label='Vallas invictas'
+        value={stats.cleanSheets.toString()}
+        sub={`${((stats.cleanSheets / stats.played) * 100).toFixed(0)}% de los partidos`}
+        accent='blue'
       />
       <StatCard
         label='Racha actual'
         value={`${stats.streak.toString()} partido${stats.streak > 1 ? 's' : ''}`}
-        sub={STREAK_LABEL[stats.streakResult] ?? '—'}
+        sub={STREAK_LABEL[stats.streakResult]}
         accent='yellow'
       />
+      <StatCard
+        label='Mejor racha ganando'
+        value={`${stats.bestWinStreak.toString()} partido${stats.bestWinStreak === 1 ? '' : 's'}`}
+        sub='victorias seguidas'
+        accent='yellow'
+      />
+      {stats.biggestWin && (
+        <StatCard
+          label='Mayor victoria'
+          value={`${stats.biggestWin.goalsFor.toString()} - ${stats.biggestWin.goalsAgainst.toString()}`}
+          accent='green'
+        />
+      )}
     </div>
   );
 };
