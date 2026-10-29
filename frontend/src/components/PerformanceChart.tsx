@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   CartesianGrid,
   Legend,
@@ -9,10 +10,11 @@ import {
   YAxis,
 } from 'recharts';
 
-import type { Match } from '#utils/types.ts';
+import type { Match, MatchGoals, PeriodFilter } from '#utils/types.ts';
 
 import { MatchStats } from '#components/MatchesStats.tsx';
-import { lastTenMatches } from '#utils/matches.ts';
+import { PeriodSelector } from '#components/PeriodSelector.tsx';
+import { chronologicalMatches, filterByPeriod, matchGoals } from '#utils/matches.ts';
 
 type PerformanceChartProps = {
   matches: Match[];
@@ -25,35 +27,25 @@ type ChartMatch = {
 };
 
 const PerformanceChart = ({ matches }: PerformanceChartProps) => {
-  const chartData: ChartMatch[] = lastTenMatches(matches)
-    .map(({ goals1, goals2, result }: Match, index: number): ChartMatch | undefined => {
-      if (result === 'Win') {
-        return {
-          match: `Partido ${(index + 1).toString()}`,
-          goalsFor: Math.max(goals1, goals2),
-          goalsAgainst: Math.min(goals1, goals2),
-        };
-      } else if (result === 'Lose') {
-        return {
-          match: `Partido ${(index + 1).toString()}`,
-          goalsFor: Math.min(goals1, goals2),
-          goalsAgainst: Math.max(goals1, goals2),
-        };
-      } else if (result === 'Draw') {
-        return {
-          match: `Partido ${(index + 1).toString()}`,
-          goalsFor: goals1,
-          goalsAgainst: goals2,
-        };
-      }
+  const [period, setPeriod] = useState<PeriodFilter>({ preset: 'all', customCount: null });
 
-      return undefined;
-    })
-    .filter((match: ChartMatch | undefined): match is ChartMatch => match !== undefined);
+  const periodMatches: Match[] = filterByPeriod(matches, period);
+
+  const chartData: ChartMatch[] = chronologicalMatches(periodMatches)
+    .map((match: Match): MatchGoals | null => matchGoals(match))
+    .filter((goals: MatchGoals | null): goals is MatchGoals => goals !== null)
+    .map(
+      (goals: MatchGoals, index: number): ChartMatch => ({
+        match: `Partido ${(index + 1).toString()}`,
+        ...goals,
+      })
+    );
 
   return (
     <div className='w-full lg:w-[450px]'>
-      <h3 className='text-xl font-semibold mb-4 text-center'>Rendimiento reciente</h3>
+      <h3 className='text-xl font-semibold mb-4 text-center'>Rendimiento</h3>
+
+      <PeriodSelector period={period} onChange={setPeriod} />
 
       <div className='w-full h-72'>
         <ResponsiveContainer width='100%' height='100%'>
@@ -99,11 +91,9 @@ const PerformanceChart = ({ matches }: PerformanceChartProps) => {
         </ResponsiveContainer>
       </div>
 
-      <MatchStats chartData={chartData} matches={matches} />
+      <MatchStats matches={periodMatches} />
     </div>
   );
 };
-
-export type { ChartMatch };
 
 export { PerformanceChart };

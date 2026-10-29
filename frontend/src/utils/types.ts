@@ -21,6 +21,34 @@ type Match = {
   date: string;
 };
 
+type PeriodPreset = 'all' | 'custom' | 'last5' | 'last10';
+
+type PeriodFilter = {
+  preset: PeriodPreset;
+  customCount: number | null;
+};
+
+type MatchGoals = {
+  goalsFor: number;
+  goalsAgainst: number;
+};
+
+type MatchStatsSummary = {
+  played: number;
+  wins: number;
+  draws: number;
+  losses: number;
+  winRate: number;
+  goalsFor: number;
+  goalsAgainst: number;
+  avgFor: number;
+  avgAgainst: number;
+  goalDifference: number;
+  cleanSheets: number;
+  bestWinStreak: number;
+  biggestWin: MatchGoals | null;
+};
+
 type Formation = {
   _id: string;
   players: Player[];
@@ -45,4 +73,17 @@ type UsePlayersReturn = {
   loading: boolean;
 };
 
-export type { Field, Formation, Match, Player, PlayerInput, Result, Team, UsePlayersReturn };
+export type {
+  Field,
+  Formation,
+  Match,
+  MatchGoals,
+  MatchStatsSummary,
+  PeriodFilter,
+  PeriodPreset,
+  Player,
+  PlayerInput,
+  Result,
+  Team,
+  UsePlayersReturn,
+};
