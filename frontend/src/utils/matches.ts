@@ -21,7 +21,7 @@ const chronologicalMatches: (matches: Match[]) => Match[] = (matches: Match[]): 
 const lastMatches: (matches: Match[], count: number) => Match[] = (
   matches: Match[],
   count: number
-): Match[] => chronologicalMatches(matches).slice(-count);
+): Match[] => chronologicalMatches(matches).slice(-count).toReversed();
 
 const canBeDraw: (goals1: number | null, goals2: number | null) => boolean = (
   goals1: number | null,
