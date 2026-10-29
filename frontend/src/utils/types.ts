@@ -21,12 +21,11 @@ type Match = {
   date: string;
 };
 
-type PeriodPreset = 'all' | 'custom' | 'last10' | 'last30' | 'last90' | 'year';
+type PeriodPreset = 'all' | 'custom' | 'last5' | 'last10';
 
 type PeriodFilter = {
   preset: PeriodPreset;
-  from: string;
-  to: string;
+  customCount: number | null;
 };
 
 type MatchGoals = {

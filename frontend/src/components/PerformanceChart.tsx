@@ -14,7 +14,7 @@ import type { Match, MatchGoals, PeriodFilter } from '#utils/types.ts';
 
 import { MatchStats } from '#components/MatchesStats.tsx';
 import { PeriodSelector } from '#components/PeriodSelector.tsx';
-import { chronologicalMatches, filterByPeriod, matchGoals, toIsoDate } from '#utils/matches.ts';
+import { chronologicalMatches, filterByPeriod, matchGoals } from '#utils/matches.ts';
 
 type PerformanceChartProps = {
   matches: Match[];
@@ -27,9 +27,9 @@ type ChartMatch = {
 };
 
 const PerformanceChart = ({ matches }: PerformanceChartProps) => {
-  const [period, setPeriod] = useState<PeriodFilter>({ preset: 'all', from: '', to: '' });
+  const [period, setPeriod] = useState<PeriodFilter>({ preset: 'all', customCount: null });
 
-  const periodMatches: Match[] = filterByPeriod(matches, period, toIsoDate(new Date()));
+  const periodMatches: Match[] = filterByPeriod(matches, period);
 
   const chartData: ChartMatch[] = chronologicalMatches(periodMatches)
     .map((match: Match): MatchGoals | null => matchGoals(match))

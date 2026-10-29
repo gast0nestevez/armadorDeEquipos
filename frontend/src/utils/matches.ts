@@ -18,8 +18,10 @@ const chronologicalMatches: (matches: Match[]) => Match[] = (matches: Match[]): 
     })
     .toReversed();
 
-const lastTenMatches: (matches: Match[]) => Match[] = (matches: Match[]): Match[] =>
-  chronologicalMatches(matches).slice(-10);
+const lastMatches: (matches: Match[], count: number) => Match[] = (
+  matches: Match[],
+  count: number
+): Match[] => chronologicalMatches(matches).slice(-count);
 
 const canBeDraw: (goals1: number | null, goals2: number | null) => boolean = (
   goals1: number | null,
@@ -49,52 +51,24 @@ const matchGoals: (match: Match) => MatchGoals | null = ({
   return null;
 };
 
-const toIsoDate: (date: Date) => string = (date: Date): string =>
-  `${date.getFullYear().toString()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-
-const shiftIsoDate: (isoDate: string, days: number) => string = (
-  isoDate: string,
-  days: number
-): string => {
-  const [year, month, day]: number[] = isoDate.split('-').map(Number);
-  const shifted: Date = new Date(Date.UTC(year, month - 1, day + days));
-  return shifted.toISOString().slice(0, 10);
-};
-
-const filterByDateRange: (matches: Match[], from: string, to: string) => Match[] = (
+const filterByPeriod: (matches: Match[], period: PeriodFilter) => Match[] = (
   matches: Match[],
-  from: string,
-  to: string
-): Match[] =>
-  matches.filter(
-    ({ date }: Match): boolean => date !== '' && (!from || date >= from) && (!to || date <= to)
-  );
-
-const filterByPeriod: (matches: Match[], period: PeriodFilter, today: string) => Match[] = (
-  matches: Match[],
-  period: PeriodFilter,
-  today: string
+  period: PeriodFilter
 ): Match[] => {
   switch (period.preset) {
     case 'all': {
       return matches;
     }
     case 'custom': {
-      return period.from || period.to
-        ? filterByDateRange(matches, period.from, period.to)
+      return period.customCount && period.customCount > 0
+        ? lastMatches(matches, period.customCount)
         : matches;
     }
+    case 'last5': {
+      return lastMatches(matches, 5);
+    }
     case 'last10': {
-      return lastTenMatches(matches);
-    }
-    case 'last30': {
-      return filterByDateRange(matches, shiftIsoDate(today, -30), '');
-    }
-    case 'last90': {
-      return filterByDateRange(matches, shiftIsoDate(today, -90), '');
-    }
-    case 'year': {
-      return filterByDateRange(matches, `${today.slice(0, 4)}-01-01`, '');
+      return lastMatches(matches, 10);
     }
   }
 };
@@ -171,12 +145,4 @@ const computeStats: (matches: Match[]) => MatchStatsSummary | null = (
   };
 };
 
-export {
-  canBeDraw,
-  chronologicalMatches,
-  computeStats,
-  filterByPeriod,
-  lastTenMatches,
-  matchGoals,
-  toIsoDate,
-};
+export { canBeDraw, chronologicalMatches, computeStats, filterByPeriod, matchGoals };
