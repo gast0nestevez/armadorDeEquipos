@@ -82,7 +82,7 @@ const FormationsList = ({ formations, setFormations, loading }: FormationsListPr
                   {formatCreatedAt(formation.createdAt)}
                 </div>
 
-                <div className='flex justify-between gap-4'>
+                <div className='flex justify-between grow gap-4'>
                   {([1, 2] as const).map(
                     (team: 1 | 2): React.JSX.Element => (
                       <div key={team} className={team === 1 ? 'flex-1' : 'flex-1 text-right'}>
