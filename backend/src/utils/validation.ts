@@ -10,8 +10,4 @@ const isValidResult: (result: unknown) => boolean = (result: unknown): boolean =
 const isValidDate: (date: unknown) => boolean = (date: unknown): boolean =>
   date === undefined || (typeof date === 'string' && (DATE_REGEX.test(date) || date === ''));
 
-export {
-  isValidDate,
-  isValidGoal,
-  isValidResult,
-};
+export { isValidDate, isValidGoal, isValidResult };

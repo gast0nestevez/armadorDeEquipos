@@ -37,21 +37,9 @@ const handleGoogleLogin: (
 ) => Promise<void> = (credentialResponse: CredentialResponse, setUser: SetUser): Promise<void> =>
   authenticate('/auth/google', { googleToken: credentialResponse.credential }, setUser);
 
-const handleEmailLogin: (email: string, password: string, setUser: SetUser) => Promise<void> = (
-  email: string,
-  password: string,
-  setUser: SetUser
-): Promise<void> => authenticate('/auth/login', { email, password }, setUser);
-
-const handleEmailRegister: (email: string, password: string, setUser: SetUser) => Promise<void> = (
-  email: string,
-  password: string,
-  setUser: SetUser
-): Promise<void> => authenticate('/auth/register', { email, password }, setUser);
-
 const handleGoogleLogout: (clearContext: () => void) => void = (clearContext: () => void): void => {
   googleLogout();
   clearContext();
 };
 
-export { handleEmailLogin, handleEmailRegister, handleGoogleLogin, handleGoogleLogout };
+export { handleGoogleLogin, handleGoogleLogout };

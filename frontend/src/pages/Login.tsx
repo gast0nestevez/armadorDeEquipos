@@ -9,23 +9,13 @@ import { Loader } from '#components/Loader.tsx';
 import { Nav } from '#components/Nav.tsx';
 import { UserContext } from '#context/userContext.tsx';
 import { useSeo } from '#hooks/useSeo.ts';
-import { handleEmailLogin, handleEmailRegister, handleGoogleLogin } from '#utils/auth.ts';
+import { handleGoogleLogin } from '#utils/auth.ts';
 import { getErrorMessage } from '#utils/errors.ts';
-
-type AuthMode = 'login' | 'register';
-
-type FormState = {
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
-
-type FormErrors = Partial<Record<keyof FormState, string>>;
 
 const Auth = () => {
   useSeo({
     title: 'Ingresar | Armador de Equipos',
-    description: 'Ingresá o creá tu cuenta para guardar tus partidos y ver tus estadísticas.',
+    description: 'Ingresá con Google para guardar tus partidos y ver tus estadísticas.',
     path: '/login',
     indexable: false,
   });
@@ -33,54 +23,8 @@ const Auth = () => {
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
 
-  const [mode, setMode] = useState<AuthMode>('login');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [errors, setErrors] = useState<FormErrors>({});
   const [generalError, setGeneralError] = useState<string>('');
-
-  const [form, setForm] = useState<FormState>({
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
-
-  const handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    const { name, value }: { name: string; value: string } = e.target;
-    setForm((prev: FormState): FormState => ({ ...prev, [name]: value }));
-
-    if (errors[name as keyof FormState]) {
-      setErrors((prev: FormErrors) => ({ ...prev, [name]: '' }));
-    }
-    setGeneralError('');
-  };
-
-  const validateForm: () => FormErrors = (): FormErrors => {
-    const newErrors: FormErrors = {};
-
-    if (!form.email.trim()) {
-      newErrors.email = 'El correo es requerido';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      newErrors.email = 'Por favor ingresá un correo válido';
-    }
-
-    if (!form.password.trim()) {
-      newErrors.password = 'La contraseña es requerida';
-    } else if (form.password.length < 8) {
-      newErrors.password = 'La contraseña debe tener al menos 8 caracteres';
-    }
-
-    if (mode === 'register') {
-      if (!form.confirmPassword.trim()) {
-        newErrors.confirmPassword = 'Debe confirmar la contraseña';
-      } else if (form.password !== form.confirmPassword) {
-        newErrors.confirmPassword = 'Las contraseñas no coinciden';
-      }
-    }
-
-    return newErrors;
-  };
 
   const onSuccessGoogle: (credentialResponse: CredentialResponse) => Promise<void> = async (
     credentialResponse: CredentialResponse
@@ -104,34 +48,6 @@ const Auth = () => {
     setGeneralError('Error al iniciar sesión con Google. Intenta nuevamente.');
   };
 
-  const handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void> = async (
-    e: React.FormEvent<HTMLFormElement>
-  ): Promise<void> => {
-    e.preventDefault();
-    setGeneralError('');
-
-    const newErrors: FormErrors = validateForm();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      if (mode === 'login') {
-        await handleEmailLogin(form.email, form.password, setUser);
-      } else {
-        await handleEmailRegister(form.email, form.password, setUser);
-      }
-      await navigate('/');
-    } catch (err) {
-      setGeneralError(getErrorMessage(err, 'Ocurrió un error. Intenta nuevamente.'));
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   if (isLoading) {
     return (
       <div className='flex justify-center items-center min-h-screen'>
@@ -146,72 +62,13 @@ const Auth = () => {
 
       <div className='flex justify-center items-center h-full'>
         <div className='bg-white p-8 rounded-lg shadow-md w-80'>
-          <h1 className='text-xl font-semibold mb-4 text-center'>
-            {mode === 'login' ? 'Iniciar sesión' : 'Crear cuenta'}
-          </h1>
+          <h1 className='text-xl font-semibold mb-4 text-center'>Iniciar sesión</h1>
 
           {generalError && (
             <div className='mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm'>
               {generalError}
             </div>
           )}
-
-          <form onSubmit={(e): void => void handleSubmit(e)} className='space-y-3'>
-            <div>
-              <input
-                type='email'
-                name='email'
-                placeholder='Mail'
-                value={form.email}
-                onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded ${
-                  errors.email ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                }`}
-              />
-              {errors.email && <p className='text-red-600 text-xs mt-1'>{errors.email}</p>}
-            </div>
-
-            <div>
-              <input
-                type='password'
-                name='password'
-                placeholder='Contraseña'
-                value={form.password}
-                onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded ${
-                  errors.password ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                }`}
-              />
-              {errors.password && <p className='text-red-600 text-xs mt-1'>{errors.password}</p>}
-            </div>
-
-            {mode === 'register' && (
-              <div>
-                <input
-                  type='password'
-                  name='confirmPassword'
-                  placeholder='Repetir contraseña'
-                  value={form.confirmPassword}
-                  onChange={handleChange}
-                  className={`w-full px-3 py-2 border rounded ${
-                    errors.confirmPassword ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                  }`}
-                />
-                {errors.confirmPassword && (
-                  <p className='text-red-600 text-xs mt-1'>{errors.confirmPassword}</p>
-                )}
-              </div>
-            )}
-
-            <button
-              type='submit'
-              className='w-full bg-black white-text py-2 rounded hover:opacity-90 transition-opacity duration-200 ease-in-out cursor-pointer'
-            >
-              {mode === 'login' ? 'Entrar' : 'Registrarse'}
-            </button>
-          </form>
-
-          <div className='my-4 text-center text-sm text-gray-500'>o continuar con</div>
 
           <div className='flex justify-center'>
             <GoogleLogin
@@ -222,17 +79,6 @@ const Auth = () => {
               onError={onErrorGoogle}
             />
           </div>
-
-          <button
-            className='mt-4 text-sm text-center w-full text-gray-600 hover:underline transition-colors duration-200 ease-in-out cursor-pointer'
-            onClick={(): void => {
-              setMode(mode === 'login' ? 'register' : 'login');
-              setErrors({});
-              setGeneralError('');
-            }}
-          >
-            {mode === 'login' ? 'No tenés cuenta? Registrate' : 'Ya tenés cuenta? Iniciá sesión'}
-          </button>
         </div>
       </div>
 
