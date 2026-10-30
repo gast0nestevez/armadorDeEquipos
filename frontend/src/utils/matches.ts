@@ -37,15 +37,16 @@ const matchGoals: (match: Match) => MatchGoals | null = ({
   goals1,
   goals2,
   result,
+  date,
 }: Match): MatchGoals | null => {
   if (result === 'Win') {
-    return { goalsFor: Math.max(goals1, goals2), goalsAgainst: Math.min(goals1, goals2) };
+    return { goalsFor: Math.max(goals1, goals2), goalsAgainst: Math.min(goals1, goals2), date };
   }
   if (result === 'Lose') {
-    return { goalsFor: Math.min(goals1, goals2), goalsAgainst: Math.max(goals1, goals2) };
+    return { goalsFor: Math.min(goals1, goals2), goalsAgainst: Math.max(goals1, goals2), date };
   }
   if (result === 'Draw') {
-    return { goalsFor: goals1, goalsAgainst: goals2 };
+    return { goalsFor: goals1, goalsAgainst: goals2, date };
   }
 
   return null;

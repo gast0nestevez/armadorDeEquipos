@@ -31,6 +31,7 @@ type PeriodFilter = {
 type MatchGoals = {
   goalsFor: number;
   goalsAgainst: number;
+  date: string;
 };
 
 type MatchStatsSummary = {

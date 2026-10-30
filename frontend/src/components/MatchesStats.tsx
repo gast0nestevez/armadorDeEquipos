@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 
 import type { Match, MatchStatsSummary } from '#utils/types.ts';
 
+import { isoToDisplay } from '#utils/date.ts';
 import { computeStats } from '#utils/matches.ts';
 
 type MatchStatsProps = {
@@ -96,6 +97,7 @@ const MatchStats = ({ matches }: MatchStatsProps) => {
             ? `${stats.biggestWin.goalsFor.toString()} - ${stats.biggestWin.goalsAgainst.toString()}`
             : '—'
         }
+        sub={stats.biggestWin?.date ? `el ${isoToDisplay(stats.biggestWin.date)}` : 'Sin fecha'}
         accent='green'
       />
     </div>
