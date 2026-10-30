@@ -6,8 +6,6 @@ import { authController } from '#controllers/auth.controller.ts';
 
 const authRouter: Router = express.Router();
 
-authRouter.post('/login', authController.login);
-authRouter.post('/register', authController.register);
 authRouter.post('/google', authController.googleLogin);
 
 export { authRouter };
