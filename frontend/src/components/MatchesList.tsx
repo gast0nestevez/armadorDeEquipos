@@ -15,6 +15,15 @@ import { getErrorMessage } from '#utils/errors.ts';
 
 type MatchesStats = Record<Result, number>;
 
+type ResultFilter = 'all' | Exclude<Result, ''>;
+
+const FILTER_OPTIONS: { value: ResultFilter; label: string }[] = [
+  { value: 'all', label: 'Todos' },
+  { value: 'Win', label: 'Ganados' },
+  { value: 'Draw', label: 'Empatados' },
+  { value: 'Lose', label: 'Perdidos' },
+];
+
 type MobileTab = 'history' | 'performance';
 
 const MOBILE_TABS: { id: MobileTab; label: string }[] = [
@@ -38,6 +47,7 @@ const MatchesList = ({
   const [newMatchModal, setNewMatchModal] = useState<boolean>(false);
   const [selectMode, setSelectMode] = useState<boolean>(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set<string>());
+  const [resultFilter, setResultFilter] = useState<ResultFilter>('all');
   const [mobileTab, setMobileTab] = useState<MobileTab>('history');
   const { notify } = useNotification();
 
@@ -108,6 +118,11 @@ const MatchesList = ({
   };
 
   const stats: MatchesStats = matchesStats(matches);
+
+  const visibleMatches: Match[] =
+    resultFilter === 'all'
+      ? matches
+      : matches.filter((m: Match): boolean => m.result === resultFilter);
 
   if (loadingMatches) {
     return <MatchesSkeleton />;
@@ -181,6 +196,32 @@ const MatchesList = ({
           </div>
         </div>
 
+        {matches.length > 0 && (
+          <div className='flex items-center gap-2 mb-4 text-sm'>
+            <label htmlFor='result-filter' className='text-gray-600'>
+              Mostrar
+            </label>
+
+            <select
+              id='result-filter'
+              value={resultFilter}
+              className='bg-white border border-gray-300 rounded-md px-3 py-1 black-text focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer'
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                setResultFilter(e.target.value as ResultFilter);
+                setSelectedIds(new Set<string>());
+              }}
+            >
+              {FILTER_OPTIONS.map(
+                ({ value, label }: { value: ResultFilter; label: string }): React.JSX.Element => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                )
+              )}
+            </select>
+          </div>
+        )}
+
         {selectMode && selectedIds.size > 0 && (
           <div className='flex items-center justify-between bg-gray-100 border border-gray-300 rounded-md px-4 py-2 mb-4 text-sm'>
             <span className='text-gray-700'>
@@ -217,9 +258,11 @@ const MatchesList = ({
 
         {matches.length === 0 ? (
           <p className='text-gray-600'>Todavía no guardaste ningún partido</p>
+        ) : visibleMatches.length === 0 ? (
+          <p className='text-gray-600'>No hay partidos con ese resultado</p>
         ) : (
           <ul className='space-y-4'>
-            {[...matches]
+            {[...visibleMatches]
               .toSorted(({ date: dateA }: Match, { date: dateB }: Match): number => {
                 if (!dateA && !dateB) {
                   return 0;
