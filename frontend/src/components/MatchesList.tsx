@@ -13,8 +13,6 @@ import { useNotification } from '#context/notificationContext.tsx';
 import { api } from '#utils/api.ts';
 import { getErrorMessage } from '#utils/errors.ts';
 
-type MatchesStats = Record<Result, number>;
-
 type ResultFilter = 'all' | Exclude<Result, ''>;
 
 const FILTER_OPTIONS: { value: ResultFilter; label: string }[] = [
@@ -94,16 +92,6 @@ const MatchesList = ({
     }
   };
 
-  const matchesStats = (matches: Match[]): MatchesStats => {
-    const stats: MatchesStats = { Win: 0, Draw: 0, Lose: 0, '': 0 };
-    matches.forEach((m: Match) => {
-      if (m.result) {
-        stats[m.result] = stats[m.result] + 1;
-      }
-    });
-    return stats;
-  };
-
   const matchBorderColor = (result: Result): string => {
     switch (result) {
       case 'Win':
@@ -116,8 +104,6 @@ const MatchesList = ({
         return 'bg-white';
     }
   };
-
-  const stats: MatchesStats = matchesStats(matches);
 
   const visibleMatches: Match[] =
     resultFilter === 'all'
@@ -152,21 +138,33 @@ const MatchesList = ({
         <h2 className='hidden lg:block text-xl font-semibold mb-4 text-center'>Historial</h2>
 
         <div className='flex flex-col sm:flex-row gap-3 justify-between items-center mb-4'>
-          <div className='flex justify-center items-center gap-4 text-sm'>
-            <div className='flex items-center gap-2 px-3 py-1 rounded-md bg-green-100 text-green-800 border border-green-300'>
-              G {stats.Win}
-            </div>
+          {matches.length > 0 && (
+            <div className='flex items-center gap-2 text-sm'>
+              <label htmlFor='result-filter' className='text-gray-600'>
+                Mostrar
+              </label>
 
-            <div className='flex items-center gap-2 px-3 py-1 rounded-md bg-yellow-100 text-yellow-800 border border-gray-300'>
-              E {stats.Draw}
+              <select
+                id='result-filter'
+                value={resultFilter}
+                className='bg-white border border-gray-300 rounded-md px-3 py-1 black-text focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer'
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                  setResultFilter(e.target.value as ResultFilter);
+                  setSelectedIds(new Set<string>());
+                }}
+              >
+                {FILTER_OPTIONS.map(
+                  ({ value, label }: { value: ResultFilter; label: string }): React.JSX.Element => (
+                    <option key={value} value={value}>
+                      {label}
+                    </option>
+                  )
+                )}
+              </select>
             </div>
+          )}
 
-            <div className='flex items-center gap-2 px-3 py-1 rounded-md bg-red-100 text-red-800 border border-red-300'>
-              P {stats.Lose}
-            </div>
-          </div>
-
-          <div className='flex gap-2'>
+          <div className='flex gap-2 sm:ml-auto'>
             {matches.length > 0 && (
               <div>
                 <button
@@ -195,32 +193,6 @@ const MatchesList = ({
             </div>
           </div>
         </div>
-
-        {matches.length > 0 && (
-          <div className='flex items-center gap-2 mb-4 text-sm'>
-            <label htmlFor='result-filter' className='text-gray-600'>
-              Mostrar
-            </label>
-
-            <select
-              id='result-filter'
-              value={resultFilter}
-              className='bg-white border border-gray-300 rounded-md px-3 py-1 black-text focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer'
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                setResultFilter(e.target.value as ResultFilter);
-                setSelectedIds(new Set<string>());
-              }}
-            >
-              {FILTER_OPTIONS.map(
-                ({ value, label }: { value: ResultFilter; label: string }): React.JSX.Element => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                )
-              )}
-            </select>
-          </div>
-        )}
 
         {selectMode && selectedIds.size > 0 && (
           <div className='flex items-center justify-between bg-gray-100 border border-gray-300 rounded-md px-4 py-2 mb-4 text-sm'>
