@@ -18,6 +18,7 @@ import { chronologicalMatches, filterByPeriod, matchGoals } from '#utils/matches
 
 type PerformanceChartProps = {
   matches: Match[];
+  className: string;
 };
 
 type ChartMatch = {
@@ -26,7 +27,7 @@ type ChartMatch = {
   goalsAgainst: number;
 };
 
-const PerformanceChart = ({ matches }: PerformanceChartProps) => {
+const PerformanceChart = ({ matches, className }: PerformanceChartProps) => {
   const [period, setPeriod] = useState<PeriodFilter>({ preset: 'all', customCount: null });
 
   const periodMatches: Match[] = filterByPeriod(matches, period);
@@ -42,8 +43,8 @@ const PerformanceChart = ({ matches }: PerformanceChartProps) => {
     );
 
   return (
-    <div className='w-full lg:w-[450px]'>
-      <h3 className='text-xl font-semibold mb-4 text-center'>Rendimiento</h3>
+    <div className={`w-full lg:w-[450px] ${className}`}>
+      <h3 className='hidden lg:block text-xl font-semibold mb-4 text-center'>Rendimiento</h3>
 
       <PeriodSelector period={period} onChange={setPeriod} />
 

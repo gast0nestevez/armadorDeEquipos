@@ -15,6 +15,13 @@ import { getErrorMessage } from '#utils/errors.ts';
 
 type MatchesStats = Record<Result, number>;
 
+type MobileTab = 'history' | 'performance';
+
+const MOBILE_TABS: { id: MobileTab; label: string }[] = [
+  { id: 'history', label: 'Historial' },
+  { id: 'performance', label: 'Rendimiento' },
+];
+
 type MatchesListProps = {
   matches: Match[];
   setMatches: React.Dispatch<React.SetStateAction<Match[]>>;
@@ -31,6 +38,7 @@ const MatchesList = ({
   const [newMatchModal, setNewMatchModal] = useState<boolean>(false);
   const [selectMode, setSelectMode] = useState<boolean>(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set<string>());
+  const [mobileTab, setMobileTab] = useState<MobileTab>('history');
   const { notify } = useNotification();
 
   const toggleSelect = (id: string): void => {
@@ -106,9 +114,27 @@ const MatchesList = ({
   }
 
   return (
-    <div className='flex flex-col lg:flex-row gap-10 items-start'>
-      <div className='w-full lg:w-[600px]'>
-        <h2 className='text-xl font-semibold mb-4 text-center'>Historial</h2>
+    <div className='flex flex-col lg:flex-row gap-6 lg:gap-10 items-start'>
+      <div className='flex w-full lg:hidden border-b border-gray-200' role='tablist'>
+        {MOBILE_TABS.map(
+          ({ id, label }: { id: MobileTab; label: string }): React.JSX.Element => (
+            <button
+              key={id}
+              role='tab'
+              aria-selected={mobileTab === id}
+              className={`flex-1 py-2 text-center font-semibold border-b-2 -mb-px transition-colors duration-200 ease-in-out cursor-pointer ${mobileTab === id ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500'}`}
+              onClick={() => {
+                setMobileTab(id);
+              }}
+            >
+              {label}
+            </button>
+          )
+        )}
+      </div>
+
+      <div className={`w-full lg:w-[600px] ${mobileTab === 'history' ? '' : 'hidden lg:block'}`}>
+        <h2 className='hidden lg:block text-xl font-semibold mb-4 text-center'>Historial</h2>
 
         <div className='flex flex-col sm:flex-row gap-3 justify-between items-center mb-4'>
           <div className='flex justify-center items-center gap-4 text-sm'>
@@ -226,7 +252,10 @@ const MatchesList = ({
         )}
       </div>
 
-      <PerformanceChart matches={matches} />
+      <PerformanceChart
+        matches={matches}
+        className={mobileTab === 'performance' ? '' : 'hidden lg:block'}
+      />
     </div>
   );
 };
