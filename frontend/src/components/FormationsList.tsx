@@ -1,5 +1,5 @@
 import { AnimatePresence } from 'framer-motion';
-import { Copy, Trash2, Trophy } from 'lucide-react';
+import { Copy, Eye, EyeOff, Trash2, Trophy } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -25,6 +25,7 @@ const formatCreatedAt: (createdAt: string) => string = (createdAt: string): stri
 
 const FormationsList = ({ formations, setFormations, loading }: FormationsListProps) => {
   const [promoting, setPromoting] = useState<Formation | null>(null);
+  const [scoresShownIds, setScoresShownIds] = useState<Set<string>>(new Set<string>());
   const { notify } = useNotification();
 
   const deleteFormation = async (id: string): Promise<void> => {
@@ -43,9 +44,25 @@ const FormationsList = ({ formations, setFormations, loading }: FormationsListPr
     }
   };
 
+  const toggleScores = (id: string): void => {
+    setScoresShownIds((prev: Set<string>) => {
+      const next: Set<string> = new Set<string>(prev);
+
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+
+      return next;
+    });
+  };
+
   const copyFormation = async (formation: Formation): Promise<void> => {
     try {
-      await navigator.clipboard.writeText(formationToText(formation.players));
+      await navigator.clipboard.writeText(
+        formationToText(formation.players, scoresShownIds.has(formation._id))
+      );
       notify('Formación copiada!', 'success');
     } catch {
       notify('No pudimos copiar la formación.');
@@ -72,8 +89,10 @@ const FormationsList = ({ formations, setFormations, loading }: FormationsListPr
         </p>
       ) : (
         <ul className='grid gap-4 md:grid-cols-2'>
-          {formations.map(
-            (formation: Formation): React.JSX.Element => (
+          {formations.map((formation: Formation): React.JSX.Element => {
+            const showScores: boolean = scoresShownIds.has(formation._id);
+
+            return (
               <li
                 key={formation._id}
                 className='flex flex-col gap-3 border border-gray-200 rounded-lg shadow-sm p-4 bg-white'
@@ -90,8 +109,12 @@ const FormationsList = ({ formations, setFormations, loading }: FormationsListPr
                         <ul className='space-y-1'>
                           {teamPlayers(formation.players, team).map(
                             (p: Player, index: number): React.JSX.Element => (
-                              <li key={`${p.name}-${index.toString()}`} className='text-gray-700'>
-                                {capitalize(p.name)}
+                              <li
+                                key={`${p.name}-${index.toString()}`}
+                                className={`text-gray-700 flex gap-2 ${team === 1 ? '' : 'flex-row-reverse'}`}
+                              >
+                                <span>{capitalize(p.name)}</span>
+                                {showScores && <span className='text-gray-500'>{p.skill}</span>}
                               </li>
                             )
                           )}
@@ -110,6 +133,23 @@ const FormationsList = ({ formations, setFormations, loading }: FormationsListPr
                       onClick={() => void deleteFormation(formation._id)}
                     >
                       <Trash2 size={16} aria-hidden='true' />
+                    </button>
+
+                    <button
+                      type='button'
+                      aria-label={showScores ? 'Ocultar habilidades' : 'Mostrar habilidades'}
+                      aria-pressed={showScores}
+                      className='flex items-center gap-2 px-3 py-2 rounded-lg whitespace-nowrap bg-gray-200 text-gray-600 transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-300'
+                      onClick={() => {
+                        toggleScores(formation._id);
+                      }}
+                    >
+                      {showScores ? (
+                        <EyeOff size={16} aria-hidden='true' />
+                      ) : (
+                        <Eye size={16} aria-hidden='true' />
+                      )}
+                      <span className='hidden sm:inline'>Habilidades</span>
                     </button>
 
                     <button
@@ -135,8 +175,8 @@ const FormationsList = ({ formations, setFormations, loading }: FormationsListPr
                   </button>
                 </div>
               </li>
-            )
-          )}
+            );
+          })}
         </ul>
       )}
 

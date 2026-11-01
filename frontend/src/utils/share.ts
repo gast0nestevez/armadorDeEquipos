@@ -14,19 +14,30 @@ const teamPlayers: (players: Player[], team: 1 | 2) => Player[] = (
   team: 1 | 2
 ): Player[] => players.filter((player: Player): boolean => player.team === team);
 
-const playersToText: (teams: Player[][]) => string = (teams: Player[][]): string =>
+const playersToText: (teams: Player[][], showScores: boolean) => string = (
+  teams: Player[][],
+  showScores: boolean
+): string =>
   teams
     .map(
       (players: Player[], index: number): string =>
         `Equipo ${(index + 1).toString()}:\n` +
         (players.length === 0
           ? 'Sin jugadores'
-          : players.map((player: Player): string => `  - ${capitalize(player.name)}`).join('\n'))
+          : players
+              .map(
+                (player: Player): string =>
+                  `  - ${capitalize(player.name)}` +
+                  (showScores ? ` (${player.skill.toString()})` : '')
+              )
+              .join('\n'))
     )
     .join('\n\n');
 
-const formationToText: (players: Player[]) => string = (players: Player[]): string =>
-  playersToText([teamPlayers(players, 1), teamPlayers(players, 2)]);
+const formationToText: (players: Player[], showScores: boolean) => string = (
+  players: Player[],
+  showScores: boolean
+): string => playersToText([teamPlayers(players, 1), teamPlayers(players, 2)], showScores);
 
 const matchToText: (match: Match) => string = (match: Match): string => {
   const header: string[] = [
@@ -38,7 +49,7 @@ const matchToText: (match: Match) => string = (match: Match): string => {
     header.push(`Resultado: ${RESULT_LABELS[match.result]}`);
   }
 
-  return `${header.join('\n')}\n\n${formationToText(match.players)}`;
+  return `${header.join('\n')}\n\n${formationToText(match.players, false)}`;
 };
 
 export { formationToText, matchToText, playersToText, RESULT_LABELS, teamPlayers };
