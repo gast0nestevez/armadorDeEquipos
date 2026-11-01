@@ -35,7 +35,10 @@ const TeamsDisplay = ({ teams, loading, teamsRef }: TeamsDisplayProps) => {
   const copyToClipboard = async (): Promise<void> => {
     try {
       await navigator.clipboard.writeText(
-        playersToText(teams.map((team: Team): Player[] => team.players))
+        playersToText(
+          teams.map((team: Team): Player[] => team.players),
+          showScores
+        )
       );
       copyMessage.trigger();
     } catch {
