@@ -70,7 +70,7 @@ const PerformanceChart = ({ matches, className }: PerformanceChartProps) => {
             <Legend />
 
             <Line
-              type='monotone'
+              type='linear'
               dataKey='goalsAgainst'
               name='Goles en contra'
               stroke='#ef4444'
@@ -80,7 +80,7 @@ const PerformanceChart = ({ matches, className }: PerformanceChartProps) => {
             />
 
             <Line
-              type='monotone'
+              type='linear'
               dataKey='goalsFor'
               name='Goles a favor'
               stroke='#22c55e'
