@@ -137,7 +137,7 @@ const MatchesList = ({
       <div className={`w-full lg:w-[600px] ${mobileTab === 'history' ? '' : 'hidden lg:block'}`}>
         <h2 className='hidden lg:block text-xl font-semibold mb-4 text-center'>Historial</h2>
 
-        <div className='flex flex-col sm:flex-row gap-3 justify-between items-center mb-4'>
+        <div className='flex flex-col-reverse sm:flex-row gap-3 justify-between items-center mb-4'>
           {matches.length > 0 && (
             <div className='flex items-center gap-2 text-sm'>
               <label htmlFor='result-filter' className='text-gray-600'>
