@@ -210,7 +210,7 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
             </div>
           </div>
 
-          <div className='flex justify-center gap-2'>
+          <div className={`flex justify-center gap-2 ${showDetails ? 'flex-col' : ''}`}>
             <button
               type='button'
               aria-label='Compartir partido'
