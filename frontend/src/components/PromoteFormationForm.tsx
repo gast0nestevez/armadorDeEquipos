@@ -104,7 +104,7 @@ const PromoteFormationForm = ({ formation, setFormations }: PromoteFormationForm
         <DateInput
           value={date}
           onChange={setDate}
-          className='w-40 bg-white shadow-sm border border-gray-200 rounded-lg p-2 black-text focus:outline-none focus:ring-2 focus:ring-blue-400 text-center'
+          className='w-44 bg-white shadow-sm border border-gray-200 rounded-lg p-2 black-text focus:outline-none focus:ring-2 focus:ring-blue-400 text-center'
         />
       </div>
 
