@@ -246,7 +246,7 @@ const NewMatchForm = ({ setMatches, setNewMatchModal }: NewMatchProps) => {
           <DateInput
             value={date}
             onChange={setDate}
-            className='w-40 bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 text-center'
+            className='w-44 bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400 text-center'
           />
         </div>
 
