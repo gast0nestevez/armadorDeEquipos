@@ -210,7 +210,9 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
             </div>
           </div>
 
-          <div className={`flex justify-center gap-2 ${showDetails ? 'flex-col' : ''}`}>
+          <div
+            className={`flex flex-wrap justify-center content-center gap-2 transition-[width] duration-300 ease-in-out ${showDetails ? 'w-10' : 'w-22'}`}
+          >
             <button
               type='button'
               aria-label='Compartir partido'
