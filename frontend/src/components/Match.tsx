@@ -210,13 +210,11 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
             </div>
           </div>
 
-          <div
-            className={`flex flex-wrap justify-center content-center gap-2 transition-[width] duration-300 ease-in-out ${showDetails ? 'w-10 lg:w-22' : 'w-22'}`}
-          >
+          <div className='flex flex-col lg:flex-row justify-center gap-2'>
             <button
               type='button'
               aria-label='Compartir partido'
-              className='px-3 py-2 rounded-lg bg-gray-200 text-gray-600 transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-300'
+              className='order-2 lg:order-1 px-3 py-2 rounded-lg bg-gray-200 text-gray-600 transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-300'
               onClick={(e) => {
                 e.stopPropagation();
                 setShowShare(true);
@@ -227,7 +225,7 @@ const MatchCard = ({ match, setMatches, selectMode, selected, onToggleSelect }: 
             <button
               type='button'
               aria-label='Editar partido'
-              className='px-3 py-2 rounded-lg bg-gray-200 text-gray-600 transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-300'
+              className='order-1 lg:order-2 px-3 py-2 rounded-lg bg-gray-200 text-gray-600 transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-300'
               onClick={(e) => {
                 e.stopPropagation();
                 setShowModal(true);
