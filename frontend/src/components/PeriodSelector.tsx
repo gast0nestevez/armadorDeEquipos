@@ -15,9 +15,9 @@ const PRESET_LABEL: Record<PeriodPreset, string> = {
 const PRESETS: PeriodPreset[] = ['all', 'last5', 'last10', 'custom'];
 
 const PeriodSelector = ({ period, onChange }: PeriodSelectorProps) => (
-  <div className='flex flex-col items-center gap-2 mb-4'>
+  <div className='flex flex-col items-center gap-2'>
     <select
-      aria-label='Período de las estadísticas'
+      aria-label='Período'
       className='bg-white shadow-sm border border-gray-200 rounded-lg p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400'
       value={period.preset}
       onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
