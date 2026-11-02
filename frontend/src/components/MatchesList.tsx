@@ -2,9 +2,10 @@ import { AnimatePresence } from 'framer-motion';
 import { Plus, SquareCheckBig } from 'lucide-react';
 import { useState } from 'react';
 
-import type { Match, Result } from '#utils/types.ts';
+import type { Match, PeriodFilter, PlayedResult, Result } from '#utils/types.ts';
 
 import { MatchCard } from '#components/Match.tsx';
+import { MatchesFilter } from '#components/MatchesFilter.tsx';
 import { MatchesSkeleton } from '#components/MatchesSkeleton.tsx';
 import { Modal } from '#components/Modal.tsx';
 import { NewMatchForm } from '#components/NewMatchForm.tsx';
@@ -12,15 +13,9 @@ import { PerformanceChart } from '#components/PerformanceChart.tsx';
 import { useNotification } from '#context/notificationContext.tsx';
 import { api } from '#utils/api.ts';
 import { getErrorMessage } from '#utils/errors.ts';
+import { filterMatches } from '#utils/matches.ts';
 
-type ResultFilter = 'all' | Exclude<Result, ''>;
-
-const FILTER_OPTIONS: { value: ResultFilter; label: string }[] = [
-  { value: 'all', label: 'Todos' },
-  { value: 'Win', label: 'Ganados' },
-  { value: 'Draw', label: 'Empatados' },
-  { value: 'Lose', label: 'Perdidos' },
-];
+const ALL_RESULTS: PlayedResult[] = ['Win', 'Draw', 'Lose'];
 
 type MobileTab = 'history' | 'performance';
 
@@ -45,7 +40,8 @@ const MatchesList = ({
   const [newMatchModal, setNewMatchModal] = useState<boolean>(false);
   const [selectMode, setSelectMode] = useState<boolean>(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set<string>());
-  const [resultFilter, setResultFilter] = useState<ResultFilter>('all');
+  const [period, setPeriod] = useState<PeriodFilter>({ preset: 'all', customCount: null });
+  const [results, setResults] = useState<PlayedResult[]>(ALL_RESULTS);
   const [mobileTab, setMobileTab] = useState<MobileTab>('history');
   const { notify } = useNotification();
 
@@ -105,172 +101,160 @@ const MatchesList = ({
     }
   };
 
-  const visibleMatches: Match[] =
-    resultFilter === 'all'
-      ? matches
-      : matches.filter((m: Match): boolean => m.result === resultFilter);
+  const visibleMatches: Match[] = filterMatches(matches, period, results);
 
   if (loadingMatches) {
     return <MatchesSkeleton />;
   }
 
   return (
-    <div className='flex flex-col lg:flex-row gap-6 lg:gap-10 items-start'>
-      <div className='flex w-full lg:hidden border-b border-gray-200' role='tablist'>
-        {MOBILE_TABS.map(
-          ({ id, label }: { id: MobileTab; label: string }): React.JSX.Element => (
-            <button
-              key={id}
-              role='tab'
-              aria-selected={mobileTab === id}
-              className={`flex-1 py-2 text-center font-semibold border-b-2 -mb-px transition-colors duration-200 ease-in-out cursor-pointer ${mobileTab === id ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500'}`}
-              onClick={() => {
-                setMobileTab(id);
-              }}
-            >
-              {label}
-            </button>
-          )
-        )}
-      </div>
+    <div>
+      {matches.length > 0 && (
+        <MatchesFilter
+          period={period}
+          results={results}
+          onPeriodChange={(newPeriod: PeriodFilter): void => {
+            setPeriod(newPeriod);
+            setSelectedIds(new Set<string>());
+          }}
+          onResultsChange={(newResults: PlayedResult[]): void => {
+            setResults(newResults);
+            setSelectedIds(new Set<string>());
+          }}
+        />
+      )}
 
-      <div className={`w-full lg:w-[600px] ${mobileTab === 'history' ? '' : 'hidden lg:block'}`}>
-        <h2 className='hidden lg:block text-xl font-semibold mb-4 text-center'>Historial</h2>
-
-        <div className='flex flex-col-reverse sm:flex-row gap-3 justify-between items-center mb-4'>
-          {matches.length > 0 && (
-            <div className='flex items-center gap-2 text-sm'>
-              <label htmlFor='result-filter' className='text-gray-600'>
-                Mostrar
-              </label>
-
-              <select
-                id='result-filter'
-                value={resultFilter}
-                className='bg-white border border-gray-300 rounded-md px-3 py-1 black-text focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer'
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                  setResultFilter(e.target.value as ResultFilter);
-                  setSelectedIds(new Set<string>());
+      <div className='flex flex-col lg:flex-row gap-6 lg:gap-10 items-start'>
+        <div className='flex w-full lg:hidden border-b border-gray-200' role='tablist'>
+          {MOBILE_TABS.map(
+            ({ id, label }: { id: MobileTab; label: string }): React.JSX.Element => (
+              <button
+                key={id}
+                role='tab'
+                aria-selected={mobileTab === id}
+                className={`flex-1 py-2 text-center font-semibold border-b-2 -mb-px transition-colors duration-200 ease-in-out cursor-pointer ${mobileTab === id ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500'}`}
+                onClick={() => {
+                  setMobileTab(id);
                 }}
               >
-                {FILTER_OPTIONS.map(
-                  ({ value, label }: { value: ResultFilter; label: string }): React.JSX.Element => (
-                    <option key={value} value={value}>
-                      {label}
-                    </option>
-                  )
-                )}
-              </select>
-            </div>
+                {label}
+              </button>
+            )
           )}
+        </div>
 
-          <div className='flex gap-2 sm:ml-auto'>
-            {matches.length > 0 && (
+        <div className={`w-full lg:w-[600px] ${mobileTab === 'history' ? '' : 'hidden lg:block'}`}>
+          <h2 className='hidden lg:block text-xl font-semibold mb-4 text-center'>Historial</h2>
+
+          <div className='flex gap-2 justify-around mb-4'>
+            <div className='flex gap-2'>
+              {matches.length > 0 && (
+                <div>
+                  <button
+                    className='flex items-center gap-1 px-3 py-1 rounded-md bg-gray-300 black-text border border-gray-300 hover:bg-gray-400 transition-colors duration-200 ease-in-out cursor-pointer'
+                    onClick={() => {
+                      setSelectedIds(new Set<string>());
+                      setSelectMode(!selectMode);
+                    }}
+                  >
+                    {!selectMode && <SquareCheckBig size={16} />}
+                    {selectMode ? 'Cancelar' : 'Seleccionar'}
+                  </button>
+                </div>
+              )}
+
               <div>
                 <button
                   className='flex items-center gap-1 px-3 py-1 rounded-md bg-gray-300 black-text border border-gray-300 hover:bg-gray-400 transition-colors duration-200 ease-in-out cursor-pointer'
                   onClick={() => {
-                    setSelectedIds(new Set<string>());
-                    setSelectMode(!selectMode);
+                    setNewMatchModal(true);
                   }}
                 >
-                  {!selectMode && <SquareCheckBig size={16} />}
-                  {selectMode ? 'Cancelar' : 'Seleccionar'}
+                  <Plus size={16} />
+                  Agregar partido
                 </button>
               </div>
-            )}
-
-            <div>
-              <button
-                className='flex items-center gap-1 px-3 py-1 rounded-md bg-blue-600 white-text border border-blue-600 hover:bg-blue-700 transition-colors duration-200 ease-in-out cursor-pointer'
-                onClick={() => {
-                  setNewMatchModal(true);
-                }}
-              >
-                <Plus size={16} />
-                Agregar partido
-              </button>
             </div>
           </div>
+
+          {selectMode && selectedIds.size > 0 && (
+            <div className='flex items-center justify-between bg-gray-100 border border-gray-300 rounded-md px-4 py-2 mb-4 text-sm'>
+              <span className='text-gray-700'>
+                {selectedIds.size}{' '}
+                {selectedIds.size === 1 ? 'partido seleccionado' : 'partidos seleccionados'}
+              </span>
+
+              <button
+                className='flex items-center gap-2 px-3 py-1 rounded-md bg-red-500 white-text hover:bg-red-600 transition-colors duration-200 ease-in-out cursor-pointer'
+                onClick={() => void deleteSelected()}
+              >
+                Eliminar
+              </button>
+            </div>
+          )}
+
+          <AnimatePresence>
+            {newMatchModal && (
+              <Modal
+                label='Agregar partido'
+                className='max-w-2xl overflow-y-auto max-h-[90vh]'
+                onClose={() => {
+                  setNewMatchModal(false);
+                }}
+              >
+                <h3 className='text-lg font-semibold text-gray-800 text-center mb-2'>
+                  Agregar partido
+                </h3>
+
+                <NewMatchForm setMatches={setMatches} setNewMatchModal={setNewMatchModal} />
+              </Modal>
+            )}
+          </AnimatePresence>
+
+          {matches.length === 0 ? (
+            <p className='text-gray-600'>Todavía no guardaste ningún partido</p>
+          ) : visibleMatches.length === 0 ? (
+            <p className='text-gray-600'>No hay partidos con ese filtro</p>
+          ) : (
+            <ul className='space-y-4'>
+              {[...visibleMatches]
+                .toSorted(({ date: dateA }: Match, { date: dateB }: Match): number => {
+                  if (!dateA && !dateB) {
+                    return 0;
+                  }
+                  if (!dateA) {
+                    return -1;
+                  }
+                  if (!dateB) {
+                    return 1;
+                  }
+                  return new Date(dateB).getTime() - new Date(dateA).getTime();
+                })
+                .map(
+                  (match: Match): React.JSX.Element => (
+                    <li
+                      key={match._id}
+                      className={`flex flex-col gap-[15px] border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 ease-in-out ${matchBorderColor(match.result)}`}
+                    >
+                      <MatchCard
+                        match={match}
+                        setMatches={setMatches}
+                        selectMode={selectMode}
+                        selected={selectedIds.has(match._id)}
+                        onToggleSelect={toggleSelect}
+                      />
+                    </li>
+                  )
+                )}
+            </ul>
+          )}
         </div>
 
-        {selectMode && selectedIds.size > 0 && (
-          <div className='flex items-center justify-between bg-gray-100 border border-gray-300 rounded-md px-4 py-2 mb-4 text-sm'>
-            <span className='text-gray-700'>
-              {selectedIds.size}{' '}
-              {selectedIds.size === 1 ? 'partido seleccionado' : 'partidos seleccionados'}
-            </span>
-
-            <button
-              className='flex items-center gap-2 px-3 py-1 rounded-md bg-red-500 white-text hover:bg-red-600 transition-colors duration-200 ease-in-out cursor-pointer'
-              onClick={() => void deleteSelected()}
-            >
-              Eliminar
-            </button>
-          </div>
-        )}
-
-        <AnimatePresence>
-          {newMatchModal && (
-            <Modal
-              label='Agregar partido'
-              className='max-w-2xl overflow-y-auto max-h-[90vh]'
-              onClose={() => {
-                setNewMatchModal(false);
-              }}
-            >
-              <h3 className='text-lg font-semibold text-gray-800 text-center mb-2'>
-                Agregar partido
-              </h3>
-
-              <NewMatchForm setMatches={setMatches} setNewMatchModal={setNewMatchModal} />
-            </Modal>
-          )}
-        </AnimatePresence>
-
-        {matches.length === 0 ? (
-          <p className='text-gray-600'>Todavía no guardaste ningún partido</p>
-        ) : visibleMatches.length === 0 ? (
-          <p className='text-gray-600'>No hay partidos con ese resultado</p>
-        ) : (
-          <ul className='space-y-4'>
-            {[...visibleMatches]
-              .toSorted(({ date: dateA }: Match, { date: dateB }: Match): number => {
-                if (!dateA && !dateB) {
-                  return 0;
-                }
-                if (!dateA) {
-                  return -1;
-                }
-                if (!dateB) {
-                  return 1;
-                }
-                return new Date(dateB).getTime() - new Date(dateA).getTime();
-              })
-              .map(
-                (match: Match): React.JSX.Element => (
-                  <li
-                    key={match._id}
-                    className={`flex flex-col gap-[15px] border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 ease-in-out ${matchBorderColor(match.result)}`}
-                  >
-                    <MatchCard
-                      match={match}
-                      setMatches={setMatches}
-                      selectMode={selectMode}
-                      selected={selectedIds.has(match._id)}
-                      onToggleSelect={toggleSelect}
-                    />
-                  </li>
-                )
-              )}
-          </ul>
-        )}
+        <PerformanceChart
+          matches={visibleMatches}
+          className={mobileTab === 'performance' ? '' : 'hidden lg:block'}
+        />
       </div>
-
-      <PerformanceChart
-        matches={matches}
-        className={mobileTab === 'performance' ? '' : 'hidden lg:block'}
-      />
     </div>
   );
 };

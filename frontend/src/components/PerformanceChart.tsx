@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   CartesianGrid,
   Legend,
@@ -10,11 +9,10 @@ import {
   YAxis,
 } from 'recharts';
 
-import type { Match, MatchGoals, PeriodFilter } from '#utils/types.ts';
+import type { Match, MatchGoals } from '#utils/types.ts';
 
 import { MatchStats } from '#components/MatchesStats.tsx';
-import { PeriodSelector } from '#components/PeriodSelector.tsx';
-import { chronologicalMatches, filterByPeriod, matchGoals } from '#utils/matches.ts';
+import { chronologicalMatches, matchGoals } from '#utils/matches.ts';
 
 type PerformanceChartProps = {
   matches: Match[];
@@ -28,11 +26,7 @@ type ChartMatch = {
 };
 
 const PerformanceChart = ({ matches, className }: PerformanceChartProps) => {
-  const [period, setPeriod] = useState<PeriodFilter>({ preset: 'all', customCount: null });
-
-  const periodMatches: Match[] = filterByPeriod(matches, period);
-
-  const chartData: ChartMatch[] = chronologicalMatches(periodMatches)
+  const chartData: ChartMatch[] = chronologicalMatches(matches)
     .map((match: Match): MatchGoals | null => matchGoals(match))
     .filter((goals: MatchGoals | null): goals is MatchGoals => goals !== null)
     .map(
@@ -45,8 +39,6 @@ const PerformanceChart = ({ matches, className }: PerformanceChartProps) => {
   return (
     <div className={`w-full lg:w-[450px] ${className}`}>
       <h3 className='hidden lg:block text-xl font-semibold mb-4 text-center'>Rendimiento</h3>
-
-      <PeriodSelector period={period} onChange={setPeriod} />
 
       <div className='w-full h-72'>
         <ResponsiveContainer width='100%' height='100%'>
@@ -92,7 +84,7 @@ const PerformanceChart = ({ matches, className }: PerformanceChartProps) => {
         </ResponsiveContainer>
       </div>
 
-      <MatchStats matches={periodMatches} />
+      <MatchStats matches={matches} />
     </div>
   );
 };
