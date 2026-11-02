@@ -1,4 +1,11 @@
-import type { Match, MatchGoals, MatchStatsSummary, PeriodFilter, Result } from '#utils/types.ts';
+import type {
+  Match,
+  MatchGoals,
+  MatchStatsSummary,
+  PeriodFilter,
+  PlayedResult,
+  Result,
+} from '#utils/types.ts';
 
 const chronologicalMatches: (matches: Match[]) => Match[] = (matches: Match[]): Match[] =>
   [...matches]
@@ -74,6 +81,16 @@ const filterByPeriod: (matches: Match[], period: PeriodFilter) => Match[] = (
   }
 };
 
+const filterMatches: (
+  matches: Match[],
+  period: PeriodFilter,
+  results: PlayedResult[]
+) => Match[] = (matches: Match[], period: PeriodFilter, results: PlayedResult[]): Match[] =>
+  filterByPeriod(matches, period).filter(
+    (match: Match): boolean =>
+      results.length === 3 || (match.result !== '' && results.includes(match.result))
+  );
+
 const computeStats: (matches: Match[]) => MatchStatsSummary | null = (
   matches: Match[]
 ): MatchStatsSummary | null => {
@@ -138,4 +155,4 @@ const computeStats: (matches: Match[]) => MatchStatsSummary | null = (
   };
 };
 
-export { canBeDraw, chronologicalMatches, computeStats, filterByPeriod, matchGoals };
+export { canBeDraw, chronologicalMatches, computeStats, filterByPeriod, filterMatches, matchGoals };

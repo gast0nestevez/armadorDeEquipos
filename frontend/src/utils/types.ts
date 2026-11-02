@@ -12,6 +12,8 @@ type Team = {
 
 type Result = 'Win' | 'Draw' | 'Lose' | '';
 
+type PlayedResult = Exclude<Result, ''>;
+
 type Match = {
   _id: string;
   players: Player[];
@@ -82,6 +84,7 @@ export type {
   MatchStatsSummary,
   PeriodFilter,
   PeriodPreset,
+  PlayedResult,
   Player,
   PlayerInput,
   Result,
