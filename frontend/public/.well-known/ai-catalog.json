@@ -1,0 +1,23 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "Armador de Equipos",
+    "identifier": "armador-de-equipos.vercel.app"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:armador-de-equipos.vercel.app:web:app",
+      "displayName": "Armador de Equipos",
+      "type": "text/html",
+      "url": "https://armador-de-equipos.vercel.app/",
+      "description": "Aplicación web gratuita para armar equipos de fútbol balanceados puntuando a los jugadores por habilidad."
+    },
+    {
+      "identifier": "urn:air:armador-de-equipos.vercel.app:knowledge:llms-txt",
+      "displayName": "Armador de Equipos llms.txt",
+      "type": "text/markdown",
+      "url": "https://armador-de-equipos.vercel.app/llms.txt",
+      "description": "Índice en Markdown del sitio pensado para modelos de lenguaje."
+    }
+  ]
+}

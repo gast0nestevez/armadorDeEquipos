@@ -1,0 +1,16 @@
+# Armador de Equipos
+
+> Aplicación web gratuita para armar equipos de fútbol balanceados: se puntúa a cada jugador por habilidad y se generan equipos parejos automáticamente. Permite guardar formaciones y partidos con estadísticas de rendimiento.
+
+## Páginas
+
+- [Inicio](https://armador-de-equipos.vercel.app/): presentación de la aplicación y cómo funciona.
+- [Armar equipos](https://armador-de-equipos.vercel.app/armar): generador de equipos balanceados a partir de una lista de jugadores y sus puntajes.
+
+## Legal
+
+- [Política de privacidad](https://armador-de-equipos.vercel.app/privacy.html): qué datos se usan y cómo se tratan.
+
+## Optional
+
+- [Sitemap](https://armador-de-equipos.vercel.app/sitemap.xml): listado de páginas públicas del sitio.
