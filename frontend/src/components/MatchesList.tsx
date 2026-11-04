@@ -151,7 +151,7 @@ const MatchesList = ({
               {matches.length > 0 && (
                 <div>
                   <button
-                    className='flex items-center gap-1 px-3 py-1 rounded-md bg-gray-300 black-text border border-gray-300 hover:bg-gray-400 transition-colors duration-200 ease-in-out cursor-pointer'
+                    className='flex items-center gap-1 px-3 py-1 rounded-md bg-gray-200 text-gray-600 transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-300'
                     onClick={() => {
                       setSelectedIds(new Set<string>());
                       setSelectMode(!selectMode);
@@ -165,7 +165,7 @@ const MatchesList = ({
 
               <div>
                 <button
-                  className='flex items-center gap-1 px-3 py-1 rounded-md bg-gray-300 black-text border border-gray-300 hover:bg-gray-400 transition-colors duration-200 ease-in-out cursor-pointer'
+                  className='flex items-center gap-1 px-3 py-1 rounded-md bg-gray-200 text-gray-600 transition-colors duration-200 ease-in-out cursor-pointer hover:bg-gray-300'
                   onClick={() => {
                     setNewMatchModal(true);
                   }}
